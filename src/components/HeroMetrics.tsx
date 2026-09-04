@@ -4,13 +4,23 @@ import React, { useState } from 'react';
 import { DiscoveryStats } from '@/lib/types';
 import { Shield, AlertTriangle, Database, Activity, Search, ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
 
+import { UserSession } from '@/lib/quota';
+
 interface HeroMetricsProps {
   stats: DiscoveryStats;
   onAuditUrl: (url: string) => void;
   isAuditing?: boolean;
+  session?: UserSession;
+  onOpenAuth?: () => void;
 }
 
-export const HeroMetrics: React.FC<HeroMetricsProps> = ({ stats, onAuditUrl, isAuditing }) => {
+export const HeroMetrics: React.FC<HeroMetricsProps> = ({
+  stats,
+  onAuditUrl,
+  isAuditing,
+  session,
+  onOpenAuth,
+}) => {
   const [inputUrl, setInputUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -90,6 +100,38 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({ stats, onAuditUrl, isA
                 DrowLink/trusty-ai
               </button>
             </div>
+
+            {/* VirusTotal Quota indicator */}
+            {session && (
+              <div className="mt-3.5 flex items-center justify-between p-2.5 rounded bg-zinc-950/80 border border-white/[0.08] text-[11px] font-mono">
+                {session.isAuthenticated ? (
+                  <div className="flex items-center space-x-2 text-emerald-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>Authenticated Session ({session.email}) • <strong className="text-white font-semibold">Unlimited Inspections</strong></span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-400" />
+                      <span className="text-zinc-400">
+                        Anonymous Quota:{' '}
+                        <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-zinc-200'}>
+                          {session.queriesRemaining}/10
+                        </strong>{' '}
+                        free scans remaining
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onOpenAuth}
+                      className="text-emerald-400 hover:text-emerald-300 underline decoration-emerald-800 underline-offset-2 ml-2 flex-shrink-0 font-medium"
+                    >
+                      {session.queriesRemaining <= 0 ? 'Authenticate to unlock' : 'Unlock unlimited'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </form>
         </div>
 

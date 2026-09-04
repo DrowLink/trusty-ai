@@ -1,19 +1,28 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, BookOpen, Plus, Github, ExternalLink } from 'lucide-react';
+import { ShieldCheck, BookOpen, Plus, Github, Lock, UserCheck } from 'lucide-react';
+import { UserSession } from '@/lib/quota';
 
 interface NavbarProps {
   onOpenEvaluate: () => void;
   onOpenSpecs: () => void;
+  onOpenAuth: () => void;
   totalAgents: number;
+  session: UserSession;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenEvaluate, onOpenSpecs, totalAgents }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onOpenEvaluate,
+  onOpenSpecs,
+  onOpenAuth,
+  totalAgents,
+  session,
+}) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/[0.08] bg-[#090a10]/95 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-        {/* Left: Brand & Authority */}
+        {/* Left: Brand */}
         <div className="flex items-center space-x-3 min-w-0">
           <div className="flex items-center space-x-2">
             <div className="w-7 h-7 rounded-md bg-zinc-900 border border-white/[0.12] flex items-center justify-center text-emerald-400">
@@ -24,20 +33,35 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEvaluate, onOpenSpecs, tot
                 TRUSTY<span className="text-zinc-500">.ai</span>
               </span>
               <span className="text-[10px] font-mono text-zinc-500 hidden xs:inline border-l border-zinc-800 pl-2">
-                REPUTATION LAYER
+                SECURITY LAYER
               </span>
             </div>
           </div>
         </div>
 
-        {/* Center/Right: Actions */}
+        {/* Center/Right: Quota & Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Live Counter */}
-          <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded bg-zinc-900/90 border border-white/[0.08] text-[11px] font-mono text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-            <span>INDEXED:</span>
-            <span className="font-semibold text-zinc-200 tabular-nums">{totalAgents}</span>
-          </div>
+          {/* VirusTotal Quota Pill */}
+          {session.isAuthenticated ? (
+            <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded bg-emerald-950/40 border border-emerald-800/60 text-[11px] font-mono text-emerald-300">
+              <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="truncate max-w-[140px]">{session.email}</span>
+              <span className="text-emerald-500 font-bold">• UNLIMITED</span>
+            </div>
+          ) : (
+            <button
+              onClick={onOpenAuth}
+              title="Daily Anonymous Quota. Click to authenticate."
+              className="flex items-center space-x-1.5 px-2.5 py-1 rounded bg-zinc-900 border border-white/[0.08] text-[11px] font-mono text-zinc-300 hover:border-white/[0.2] transition"
+            >
+              <Lock className="w-3 h-3 text-amber-400 flex-shrink-0" />
+              <span className="text-zinc-500 hidden md:inline">QUOTA:</span>
+              <span className={`font-semibold tabular-nums ${session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-zinc-200'}`}>
+                {session.queriesRemaining}/10
+              </span>
+              <span className="text-[10px] text-zinc-500 hidden lg:inline">FREE</span>
+            </button>
+          )}
 
           {/* GitHub Repo */}
           <a
@@ -65,7 +89,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenEvaluate, onOpenSpecs, tot
             className="flex items-center space-x-1 px-3 py-1.5 rounded text-xs font-mono font-medium text-white bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Audit Agent</span>
+            <span className="hidden sm:inline">Audit Agent</span>
+            <span className="sm:hidden">Audit</span>
           </button>
         </div>
       </div>

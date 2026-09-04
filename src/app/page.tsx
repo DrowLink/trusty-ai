@@ -9,6 +9,8 @@ import { TrustLeaderboard } from '@/components/TrustLeaderboard';
 import { AgentDetailModal } from '@/components/AgentDetailModal';
 import { EvaluateModal } from '@/components/EvaluateModal';
 import { SpecsModal } from '@/components/SpecsModal';
+import { AuthModal } from '@/components/AuthModal';
+import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
 import { Github, ExternalLink } from 'lucide-react';
 
 export default function HomePage() {
@@ -33,6 +35,14 @@ export default function HomePage() {
   const [selectedAgent, setSelectedAgent] = useState<AgentWithScore | null>(null);
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [session, setSession] = useState<UserSession>({
+    email: null,
+    isAuthenticated: false,
+    queriesRemaining: 10,
+    maxQueries: 10,
+    tier: 'anonymous',
+  });
 
   const fetchAgents = async () => {
     try {
@@ -51,8 +61,28 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    setSession(getUserSession());
     fetchAgents();
   }, []);
+
+  const checkAndConsumeQuota = (): boolean => {
+    const currentSession = getUserSession();
+    if (currentSession.isAuthenticated) {
+      return true;
+    }
+    if (currentSession.queriesRemaining <= 0) {
+      setIsAuthOpen(true);
+      return false;
+    }
+    const { allowed } = decrementQueryQuota();
+    const updated = getUserSession();
+    setSession(updated);
+    if (!allowed) {
+      setIsAuthOpen(true);
+      return false;
+    }
+    return true;
+  };
 
   const handleEvaluationComplete = (newAgent: AgentWithScore) => {
     setAgents(prev => [newAgent, ...prev.filter(a => a.id !== newAgent.id)]);
@@ -62,6 +92,10 @@ export default function HomePage() {
 
   // Instant Hero URL Audit Handler
   const handleHeroAudit = async (urlOrName: string) => {
+    if (!checkAndConsumeQuota()) {
+      return;
+    }
+
     setIsAuditingLive(true);
     try {
       const isGithub = urlOrName.includes('github.com');
@@ -92,18 +126,29 @@ export default function HomePage() {
     <div className="flex-1 flex flex-col min-h-screen bg-[#08090d]">
       {/* Top Navigation */}
       <Navbar
-        onOpenEvaluate={() => setIsEvaluateOpen(true)}
+        onOpenEvaluate={() => {
+          const s = getUserSession();
+          if (!s.isAuthenticated && s.queriesRemaining <= 0) {
+            setIsAuthOpen(true);
+          } else {
+            setIsEvaluateOpen(true);
+          }
+        }}
         onOpenSpecs={() => setIsSpecsOpen(true)}
+        onOpenAuth={() => setIsAuthOpen(true)}
         totalAgents={stats.totalAgents}
+        session={session}
       />
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* Command Center Hero with live audit bar and risk distribution */}
+        {/* Command Center Hero with live audit bar, risk distribution and quota status */}
         <HeroMetrics
           stats={stats}
           onAuditUrl={handleHeroAudit}
           isAuditing={isAuditingLive}
+          session={session}
+          onOpenAuth={() => setIsAuthOpen(true)}
         />
 
         {/* Discovery Crawler Control */}
@@ -167,12 +212,24 @@ export default function HomePage() {
         isOpen={isEvaluateOpen}
         onClose={() => setIsEvaluateOpen(false)}
         onEvaluationComplete={handleEvaluationComplete}
+        onCheckQuota={checkAndConsumeQuota}
       />
 
       {/* Specs Viewer */}
       <SpecsModal
         isOpen={isSpecsOpen}
         onClose={() => setIsSpecsOpen(false)}
+      />
+
+      {/* VirusTotal Quota Auth Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onAuthenticate={(email) => {
+          const newSession = authenticateWithEmail(email);
+          setSession(newSession);
+          setIsAuthOpen(false);
+        }}
       />
     </div>
   );

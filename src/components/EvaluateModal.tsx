@@ -8,12 +8,14 @@ interface EvaluateModalProps {
   isOpen: boolean;
   onClose: () => void;
   onEvaluationComplete: (agent: AgentWithScore) => void;
+  onCheckQuota?: () => boolean;
 }
 
 export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   isOpen,
   onClose,
   onEvaluationComplete,
+  onCheckQuota,
 }) => {
   const [githubUrl, setGithubUrl] = useState('');
   const [name, setName] = useState('');
@@ -64,6 +66,11 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
       return;
     }
 
+    if (onCheckQuota && !onCheckQuota()) {
+      onClose();
+      return;
+    }
+
     setIsEvaluating(true);
     setError(null);
 
@@ -94,6 +101,11 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
     e.preventDefault();
     if (!name.trim()) {
       setError('Please provide an agent name.');
+      return;
+    }
+
+    if (onCheckQuota && !onCheckQuota()) {
+      onClose();
       return;
     }
 
