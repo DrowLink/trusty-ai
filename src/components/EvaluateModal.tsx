@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Sparkles, AlertTriangle, ShieldCheck, Terminal, Bot, Github, ArrowRight } from 'lucide-react';
+import { X, ShieldCheck, AlertTriangle, Terminal, Github, ArrowRight, Shield } from 'lucide-react';
 import { AgentWithScore } from '@/lib/types';
 
 interface EvaluateModalProps {
@@ -60,7 +60,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   const handleLiveGitHubAudit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!githubUrl.trim() || !githubUrl.includes('github.com')) {
-      setError('Please provide a valid GitHub repository URL (e.g. https://github.com/crewAIInc/crewAI)');
+      setError('Provide a valid GitHub repository URL (e.g. https://github.com/crewAIInc/crewAI)');
       return;
     }
 
@@ -130,28 +130,28 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-2xl glass-panel rounded-2xl border border-slate-700/80 shadow-2xl overflow-hidden my-auto">
-        <div className="p-5 border-b border-slate-800 bg-slate-900/90 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
-              <Bot className="w-5 h-5" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-2xl security-card rounded-lg shadow-2xl overflow-hidden my-auto">
+        <div className="p-4 sm:p-5 border-b border-white/[0.08] bg-zinc-950 flex items-center justify-between">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-8 h-8 rounded bg-zinc-900 border border-white/[0.1] flex items-center justify-center text-emerald-400">
+              <Shield className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Live Real-Time Agent Audit</h3>
-              <p className="text-xs text-slate-400">Evaluate any real GitHub agent repository or custom manifest</p>
+              <h3 className="text-sm sm:text-base font-bold text-zinc-100 font-mono">Agent Security Audit</h3>
+              <p className="text-[11px] text-zinc-500 font-sans">Evaluate repository code, permissions, and threat vectors</p>
             </div>
           </div>
-          <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="p-1 text-zinc-500 hover:text-zinc-200">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Section 1: Live Real GitHub Audit */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950/60">
-          <div className="flex items-center space-x-1.5 text-xs font-mono text-sky-400 font-semibold mb-2">
-            <Github className="w-4 h-4" />
-            <span>Audit Any Live Public GitHub Repository:</span>
+        {/* Section 1: Real GitHub Audit */}
+        <div className="p-4 sm:p-5 border-b border-white/[0.08] bg-zinc-900/30">
+          <div className="flex items-center space-x-1.5 text-xs font-mono text-zinc-300 font-semibold mb-2">
+            <Github className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Audit Any Public GitHub Repository in Real-Time:</span>
           </div>
           <form onSubmit={handleLiveGitHubAudit} className="flex gap-2">
             <input
@@ -159,104 +159,104 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
               value={githubUrl}
               onChange={e => setGithubUrl(e.target.value)}
               placeholder="e.g. https://github.com/crewAIInc/crewAI"
-              className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500 font-mono"
+              className="flex-1 px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white focus:outline-none focus:border-zinc-500 font-mono"
             />
             <button
               type="submit"
               disabled={isEvaluating}
-              className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-xs font-medium transition flex items-center space-x-1 disabled:opacity-50 flex-shrink-0"
+              className="px-3.5 py-1.5 bg-zinc-100 hover:bg-white text-zinc-900 font-mono font-medium rounded text-xs transition flex items-center space-x-1 disabled:opacity-50 flex-shrink-0"
             >
               <span>{isEvaluating ? 'Auditing...' : 'Audit Live Repo'}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </form>
-          <p className="text-[11px] text-slate-500 mt-1.5">
-            Fetches live metadata directly from GitHub API: stars, commits, security workflows, and analyzes declared tools.
+          <p className="text-[11px] text-zinc-500 mt-1.5 font-sans">
+            Queries GitHub REST API live: parses commits, stars, license, dependencies, and runs the 20-signal audit.
           </p>
         </div>
 
-        {/* Section 2: Quick Presets */}
-        <div className="p-4 border-b border-slate-800 bg-slate-950/40">
-          <div className="text-xs font-mono text-slate-400 mb-2">Or test synthetic threat scenarios:</div>
+        {/* Section 2: Scenarios */}
+        <div className="p-3 sm:p-4 border-b border-white/[0.08] bg-zinc-900/20">
+          <div className="text-[11px] font-mono text-zinc-500 mb-2">Or test synthetic threat scenarios:</div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => loadPreset('safe')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-emerald-950/80 text-emerald-300 border border-emerald-800 hover:bg-emerald-900 transition flex items-center space-x-1"
+              className="px-2 py-1 rounded text-[11px] font-mono bg-zinc-900 text-zinc-300 border border-white/[0.08] hover:text-white transition flex items-center space-x-1"
             >
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Safe Enterprise Copilot</span>
+              <ShieldCheck className="w-3 h-3 text-emerald-400" />
+              <span>Enterprise Copilot</span>
             </button>
             <button
               type="button"
               onClick={() => loadPreset('overprivileged')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-amber-950/80 text-amber-300 border border-amber-800 hover:bg-amber-900 transition flex items-center space-x-1"
+              className="px-2 py-1 rounded text-[11px] font-mono bg-zinc-900 text-zinc-300 border border-white/[0.08] hover:text-white transition flex items-center space-x-1"
             >
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Overprivileged Calendar Bot</span>
+              <AlertTriangle className="w-3 h-3 text-amber-400" />
+              <span>Overprivileged Calendar</span>
             </button>
             <button
               type="button"
               onClick={() => loadPreset('trojan')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-rose-950/80 text-rose-300 border border-rose-800 hover:bg-rose-900 transition flex items-center space-x-1"
+              className="px-2 py-1 rounded text-[11px] font-mono bg-rose-950/80 text-rose-300 border border-rose-800 hover:bg-rose-900 transition flex items-center space-x-1"
             >
-              <Terminal className="w-3.5 h-3.5" />
+              <Terminal className="w-3 h-3 text-rose-400" />
               <span>Trojan Credential Stealer</span>
             </button>
           </div>
         </div>
 
-        {/* Section 3: Manual Manifest Form */}
-        <form onSubmit={handleEvaluate} className="p-5 space-y-4">
+        {/* Section 3: Custom Form */}
+        <form onSubmit={handleEvaluate} className="p-4 sm:p-5 space-y-3.5 text-xs font-sans">
           {error && (
-            <div className="p-3 rounded-lg bg-rose-950 text-rose-300 text-xs border border-rose-800">
+            <div className="p-2.5 rounded bg-rose-950/80 text-rose-300 text-xs border border-rose-800 font-mono">
               {error}
             </div>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Agent Name *</label>
+              <label className="block text-[11px] font-mono text-zinc-400 mb-1">Agent Name *</label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="e.g. FinanceSync Agent"
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500"
+                className="w-full px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white focus:outline-none focus:border-zinc-500 font-sans"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Publisher Name</label>
+              <label className="block text-[11px] font-mono text-zinc-400 mb-1">Publisher Name</label>
               <input
                 type="text"
                 value={publisherName}
                 onChange={e => setPublisherName(e.target.value)}
                 placeholder="e.g. Acme Corp or Anon"
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500"
+                className="w-full px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white focus:outline-none focus:border-zinc-500 font-sans"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Publisher Domain</label>
+              <label className="block text-[11px] font-mono text-zinc-400 mb-1">Publisher Domain</label>
               <input
                 type="text"
                 value={domain}
                 onChange={e => setDomain(e.target.value)}
-                placeholder="e.g. acme.com (leave blank if anon)"
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500"
+                placeholder="e.g. acme.com"
+                className="w-full px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white focus:outline-none focus:border-zinc-500 font-sans"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono text-slate-400 mb-1">Category</label>
+              <label className="block text-[11px] font-mono text-zinc-400 mb-1">Category</label>
               <select
                 value={category}
                 onChange={e => setCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500"
+                className="w-full px-2.5 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
               >
                 <option value="productivity">Productivity</option>
                 <option value="coding">Coding / DevTools</option>
@@ -269,54 +269,54 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-mono text-slate-400 mb-1">
-              Requested Permissions (comma separated scopes)
+            <label className="block text-[11px] font-mono text-zinc-400 mb-1">
+              Requested Permissions (comma separated)
             </label>
             <input
               type="text"
               value={permissions}
               onChange={e => setPermissions(e.target.value)}
-              placeholder="e.g. calendar:read, gmail:read_all, terminal:exec, stripe:charge"
-              className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-mono focus:outline-none focus:border-sky-500"
+              placeholder="e.g. calendar:read, gmail:read_all, terminal:exec"
+              className="w-full px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white font-mono focus:outline-none focus:border-zinc-500"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <label className="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-sans">
+            <label className="flex items-center space-x-2 text-xs text-zinc-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={isSandboxed}
                 onChange={e => setIsSandboxed(e.target.checked)}
-                className="rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0"
+                className="rounded bg-zinc-950 border-zinc-700 text-emerald-500 focus:ring-0"
               />
-              <span>Runs in Sandbox / Jail (WASM/Docker)</span>
+              <span>Runs in Sandbox (gVisor/WASM)</span>
             </label>
 
-            <label className="flex items-center space-x-2 text-xs text-slate-300 cursor-pointer">
+            <label className="flex items-center space-x-2 text-xs text-zinc-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={requiresHumanApproval}
                 onChange={e => setRequiresHumanApproval(e.target.checked)}
-                className="rounded bg-slate-900 border-slate-700 text-sky-500 focus:ring-0"
+                className="rounded bg-zinc-950 border-zinc-700 text-emerald-500 focus:ring-0"
               />
-              <span>Requires Human Approval for Writes</span>
+              <span>Human Approval Gate for Writes</span>
             </label>
           </div>
 
-          <div className="pt-4 flex items-center justify-end space-x-3">
+          <div className="pt-3 flex items-center justify-end space-x-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs rounded-lg text-slate-400 hover:text-white"
+              className="px-3 py-1.5 text-xs font-mono text-zinc-400 hover:text-zinc-200"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isEvaluating}
-              className="px-5 py-2 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 shadow-glow disabled:opacity-50 transition"
+              className="px-4 py-1.5 rounded text-xs font-mono font-medium text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 transition"
             >
-              {isEvaluating ? 'Running 20-Signal Audit...' : 'Audit Custom Manifest'}
+              {isEvaluating ? 'Auditing...' : 'Audit Custom Manifest'}
             </button>
           </div>
         </form>

@@ -9,6 +9,7 @@ import { TrustLeaderboard } from '@/components/TrustLeaderboard';
 import { AgentDetailModal } from '@/components/AgentDetailModal';
 import { EvaluateModal } from '@/components/EvaluateModal';
 import { SpecsModal } from '@/components/SpecsModal';
+import { Github, ExternalLink } from 'lucide-react';
 
 export default function HomePage() {
   const [agents, setAgents] = useState<AgentWithScore[]>([]);
@@ -59,7 +60,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-screen">
       {/* Top Navigation */}
       <Navbar
         onOpenEvaluate={() => setIsEvaluateOpen(true)}
@@ -67,15 +68,15 @@ export default function HomePage() {
         totalAgents={stats.totalAgents}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="flex-1">
-        {/* Hero Section & Real-Time Stats */}
+        {/* Mission & Real-Time Stats */}
         <HeroMetrics stats={stats} />
 
-        {/* Discovery Crawler Control Bar */}
+        {/* Discovery Crawler Control */}
         <DiscoveryBar onRefresh={fetchAgents} />
 
-        {/* Trust Leaderboard (Challenge Bonus Feature) */}
+        {/* Trust Leaderboard */}
         <TrustLeaderboard
           agents={agents}
           onSelectAgent={agent => setSelectedAgent(agent)}
@@ -83,28 +84,46 @@ export default function HomePage() {
         />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#060913] py-8 text-xs text-slate-500 font-mono text-center">
+      {/* Institutional Footer */}
+      <footer className="border-t border-white/[0.08] bg-[#07080c] py-6 text-xs text-zinc-500 font-mono">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div>
-            <span className="text-slate-300 font-bold">TRUSTY.ai</span> — Independent Trust & Reputation Infrastructure for AI Agents
+          <div className="flex items-center space-x-2">
+            <span className="text-zinc-300 font-bold">TRUSTY.ai</span>
+            <span>—</span>
+            <span>Independent Agent Trust Layer</span>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-4 text-[11px]">
+            <a
+              href="https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-emerald-400 hover:text-emerald-300 transition flex items-center space-x-1"
+            >
+              <span>Vercel Live App</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            <span>•</span>
+            <a
+              href="https://github.com/DrowLink/trusty-ai"
+              target="_blank"
+              rel="noreferrer"
+              className="text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1"
+            >
+              <Github className="w-3 h-3" />
+              <span>DrowLink/trusty-ai</span>
+            </a>
+            <span>•</span>
             <button
               onClick={() => setIsSpecsOpen(true)}
-              className="text-sky-400 hover:underline"
+              className="text-zinc-400 hover:text-zinc-200 transition"
             >
-              Specs & Documentation
+              Specifications (.md)
             </button>
-            <span>•</span>
-            <span>Next.js App Router</span>
-            <span>•</span>
-            <span>Ready for Vercel</span>
           </div>
         </div>
       </footer>
 
-      {/* Detail / Explainability Inspector Modal */}
+      {/* Detail / Explainability Inspector */}
       <AgentDetailModal
         agent={selectedAgent}
         onClose={() => setSelectedAgent(null)}
@@ -117,7 +136,7 @@ export default function HomePage() {
         onEvaluationComplete={handleEvaluationComplete}
       />
 
-      {/* Specs Viewer Modal */}
+      {/* Specs Viewer */}
       <SpecsModal
         isOpen={isSpecsOpen}
         onClose={() => setIsSpecsOpen(false)}

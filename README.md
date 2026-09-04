@@ -1,5 +1,15 @@
 # TRUSTY.ai — The Independent Trust & Reputation Layer for AI Agents
 
+[![Live Production Demo](https://img.shields.io/badge/LIVE%20DEMO-trusty--ai.vercel.app-10b981?style=for-the-badge&logo=vercel&logoColor=white)](https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+
+> 🚀 **LIVE DEPLOYMENT (VERCEL)**:  
+> **[https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/](https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/)**  
+> *Ready to test in production with real-time multi-source crawling, 20-signal scoring, and on-demand repository audits.*
+
+---
+
 > **"VirusTotal + Moody's + credit bureau — but for AI agents."**
 
 Before giving an AI agent access to your Gmail, Google Drive, Slack, Bank Accounts, CRM, or Company Infrastructure, there should be a simple, explainable answer to one question: **Can I trust this agent?**

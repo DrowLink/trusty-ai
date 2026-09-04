@@ -1,6 +1,6 @@
 import React from 'react';
 import { DiscoveryStats } from '@/lib/types';
-import { Shield, AlertTriangle, Cpu, Globe2 } from 'lucide-react';
+import { Shield, AlertTriangle, Database, Activity } from 'lucide-react';
 
 interface HeroMetricsProps {
   stats: DiscoveryStats;
@@ -8,78 +8,90 @@ interface HeroMetricsProps {
 
 export const HeroMetrics: React.FC<HeroMetricsProps> = ({ stats }) => {
   return (
-    <div className="relative pt-4 sm:pt-6 pb-2 sm:pb-4 px-3 sm:px-6">
-      {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-48 bg-sky-500/5 blur-3xl pointer-events-none -z-10 rounded-full" />
-
-      <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
-        <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-slate-900/80 border border-slate-700/60 text-slate-300 text-[10px] sm:text-xs font-mono mb-3 sm:mb-4">
-          <span className="text-sky-400">●</span>
-          <span>Trust & Reputation Layer for the Agentic Internet</span>
+    <section className="pt-6 sm:pt-10 pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
+      {/* Title & Mission */}
+      <div className="max-w-3xl mb-6 sm:mb-8">
+        <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded bg-zinc-900 border border-white/[0.08] text-[10px] sm:text-xs font-mono text-zinc-400 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>INDEPENDENT TRUST & REPUTATION LAYER FOR AI AGENTS</span>
         </div>
-        <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-          Before clicking <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">“START AGENT”</span>,
-          <br /> ask: <span className="italic underline decoration-sky-500/40">Can I trust it?</span>
+
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-zinc-100 font-sans leading-tight">
+          Before clicking <span className="font-mono text-emerald-400 uppercase tracking-normal">“START AGENT”</span>,
+          <br className="hidden sm:inline" /> ask: <span className="text-zinc-400 italic">Can I trust this agent?</span>
         </h1>
-        <p className="mt-2.5 sm:mt-3 text-xs sm:text-base text-slate-400 max-w-2xl mx-auto px-2">
-          Continuous discovery across open agent ecosystems. Deterministic, explainable 
-          <strong className="text-slate-200 font-semibold"> 0–100 TRUSTY Scores </strong> 
-          evaluating identity, permissions, security, and governance.
+
+        <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl font-sans">
+          Automated multi-source discovery across open ecosystems. Deterministic, explainable 
+          <strong className="text-zinc-200 font-medium"> 0–100 TRUSTY Scores </strong> 
+          evaluating identity, permission scope, sandbox containment, and historical incident signals.
         </p>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 max-w-5xl mx-auto">
+      {/* Institutional Telemetry Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 security-card rounded-lg divide-y lg:divide-y-0 divide-x-0 sm:divide-x divide-white/[0.08] overflow-hidden">
         {/* Total Indexed */}
-        <div className="glass-panel p-3 sm:p-4 rounded-xl border border-slate-800 flex items-center space-x-2.5 sm:space-x-3.5">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 flex-shrink-0">
-            <Cpu className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="p-3.5 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-500 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Indexed Agents</span>
+            <Database className="w-3.5 h-3.5 text-zinc-400" />
           </div>
-          <div className="min-w-0">
-            <div className="text-lg sm:text-2xl font-bold font-mono text-white leading-none">{stats.totalAgents}</div>
-            <div className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 truncate">Agents Indexed</div>
+          <div className="flex items-baseline space-x-1.5">
+            <span className="text-2xl sm:text-3xl font-bold font-mono text-zinc-100 tabular-nums">
+              {stats.totalAgents}
+            </span>
+            <span className="text-[11px] font-mono text-emerald-400">Live</span>
           </div>
+          <div className="text-[10px] text-zinc-500 font-mono mt-1">Cross-Ecosystem Index</div>
         </div>
 
-        {/* Avg Trust Score */}
-        <div className="glass-panel p-3 sm:p-4 rounded-xl border border-slate-800 flex items-center space-x-2.5 sm:space-x-3.5">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
-            <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+        {/* Avg Score */}
+        <div className="p-3.5 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-500 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Avg Trust Score</span>
+            <Shield className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <div className="min-w-0">
-            <div className="text-lg sm:text-2xl font-bold font-mono text-emerald-400 leading-none">
-              {stats.avgTrustScore}<span className="text-[10px] sm:text-xs text-slate-500 font-normal">/100</span>
-            </div>
-            <div className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 truncate">Avg TRUSTY Score</div>
+          <div className="flex items-baseline space-x-1">
+            <span className="text-2xl sm:text-3xl font-bold font-mono text-emerald-400 tabular-nums">
+              {stats.avgTrustScore}
+            </span>
+            <span className="text-xs font-mono text-zinc-500">/100</span>
           </div>
+          <div className="text-[10px] text-zinc-500 font-mono mt-1">Weighted 20 Signals</div>
         </div>
 
         {/* Critical & High Risk */}
-        <div className="glass-panel p-3 sm:p-4 rounded-xl border border-slate-800 flex items-center space-x-2.5 sm:space-x-3.5">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 flex-shrink-0">
-            <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5" />
+        <div className="p-3.5 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-500 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider">High Risk / Malicious</span>
+            <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
           </div>
-          <div className="min-w-0">
-            <div className="text-lg sm:text-2xl font-bold font-mono text-rose-400 leading-none">
+          <div className="flex items-baseline space-x-1.5">
+            <span className="text-2xl sm:text-3xl font-bold font-mono text-rose-400 tabular-nums">
               {stats.criticalRiskCount + stats.highRiskCount}
-            </div>
-            <div className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 truncate">High/Critical Risks</div>
+            </span>
+            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-rose-950/80 text-rose-300 border border-rose-800/60">
+              Quarantined
+            </span>
           </div>
+          <div className="text-[10px] text-zinc-500 font-mono mt-1">Circuit Breakers Active</div>
         </div>
 
-        {/* Ecosystems Active */}
-        <div className="glass-panel p-3 sm:p-4 rounded-xl border border-slate-800 flex items-center space-x-2.5 sm:space-x-3.5">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 flex-shrink-0">
-            <Globe2 className="w-4 h-4 sm:w-5 sm:h-5" />
+        {/* Monitored Ecosystems */}
+        <div className="p-3.5 sm:p-5 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-zinc-500 mb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Ecosystem Crawlers</span>
+            <Activity className="w-3.5 h-3.5 text-zinc-400" />
           </div>
-          <div className="min-w-0">
-            <div className="text-lg sm:text-2xl font-bold font-mono text-purple-300 leading-none">
-              3 Sources
-            </div>
-            <div className="text-[10px] sm:text-xs text-slate-400 font-medium mt-1 truncate">GitHub·MCP·Market</div>
+          <div className="flex items-baseline space-x-1">
+            <span className="text-2xl sm:text-3xl font-bold font-mono text-zinc-200 tabular-nums">
+              3
+            </span>
+            <span className="text-xs font-mono text-zinc-500">Sources Active</span>
           </div>
+          <div className="text-[10px] text-zinc-400 font-mono mt-1 truncate">GitHub · MCP · HuggingFace</div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
