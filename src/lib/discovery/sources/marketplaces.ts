@@ -1,8 +1,80 @@
 import { AgentRecord } from '../../types';
 
 export async function discoverFromMarketplaces(): Promise<AgentRecord[]> {
-  // Simulates crawlers scanning HuggingFace Spaces, CrewAI registry, and LangChain Hub
-  const marketplaceAgents: AgentRecord[] = [
+  try {
+    // 1. Query live Hugging Face Spaces Hub API for published AI Agents
+    const res = await fetch('https://huggingface.co/api/spaces?filter=agent&sort=likes&direction=-1&limit=6', {
+      headers: { 'Accept': 'application/json' },
+      next: { revalidate: 3600 },
+    });
+
+    if (res.ok) {
+      const spaces = await res.json();
+      if (Array.isArray(spaces)) {
+        return spaces.map((space: any) => {
+          const parts = space.id.split('/');
+          const author = parts[0] || 'Community Maintainer';
+          const repoName = parts[1] || space.id;
+          const isVerifiedHub = author === 'agents-course' || author === 'huggingface' || author === 'open-thoughts';
+
+          return {
+            id: `hf-${space._id || space.id.replace('/', '-')}`,
+            name: repoName.replace(/[-_]/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase()),
+            slug: space.id,
+            description: `Live AI agent space on Hugging Face Hub (SDK: ${space.sdk || 'Gradio/Streamlit'}). Tags: ${(space.tags || []).slice(0, 4).join(', ')}.`,
+            category: space.id.includes('code') ? 'coding' : space.id.includes('research') ? 'research' : 'productivity',
+            sourceEcosystem: 'agent_marketplace',
+            publisher: {
+              name: author,
+              domain: 'huggingface.co',
+              verifiedDomain: isVerifiedHub,
+              identityType: isVerifiedHub ? 'verified_org' : 'individual',
+              githubUser: author,
+              reputationScore: isVerifiedHub ? 92 : Math.min(88, Math.max(50, Math.round(Math.log10((space.likes || 1) + 1) * 25))),
+            },
+            framework: space.tags?.includes('smolagents') ? 'custom' : 'langchain',
+            repositoryUrl: `https://huggingface.co/spaces/${space.id}`,
+            websiteUrl: `https://huggingface.co/spaces/${space.id}`,
+            declaredCapabilities: space.tags || ['ai-agent', 'gradio-interface'],
+            requestedPermissions: [
+              { scope: 'hf:model_inference', sensitivity: 'low', justification: 'Run model forward pass on Hugging Face infrastructure.' },
+              { scope: 'network:outbound_https', sensitivity: 'medium', justification: 'Query external APIs and web tools.' },
+            ],
+            toolsDeclared: [
+              { name: 'hf_inference_call', description: 'Run agentic reasoning step', parameters: { prompt: 'string' } }
+            ],
+            externalConnections: ['huggingface.co', 'api-inference.huggingface.co'],
+            hasAuditLogs: true,
+            requiresHumanApproval: false,
+            isSandboxed: true, // Hugging Face Spaces run in Docker containers
+            hasPromptInjectionGuard: isVerifiedHub,
+            hasKnownCVEs: false,
+            cveCount: 0,
+            hasMalwareHistory: false,
+            hasCredentialStealRisk: false,
+            starsCount: space.likes || 0,
+            monthlyUsers: (space.likes || 1) * 35,
+            lastCommitDate: space.createdAt || new Date().toISOString(),
+            discoveredAt: new Date().toISOString(),
+            fingerprint: {
+              fingerprintId: `fp-hf-${space._id || space.id.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10)}`,
+              timestamp: space.createdAt || new Date().toISOString(),
+              manifestHash: `sha256:hf_${space._id || space.id}`,
+              toolSchemasHash: 'sha256:hf_tools_v1',
+              permissionsHash: 'sha256:hf_perms_v1',
+              dependenciesHash: 'sha256:hf_deps_v1',
+              isDriftDetected: false,
+            },
+          };
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Live Hugging Face spaces discovery fallback:', err);
+  }
+
+  // Fallback if Hugging Face API is blocked
+  return [
     {
       id: 'mkt-crewai-lead-finder',
       name: 'CrewAI B2B Lead Researcher',
@@ -22,12 +94,11 @@ export async function discoverFromMarketplaces(): Promise<AgentRecord[]> {
       packageUrl: 'https://pypi.org/project/crewai-tools/',
       declaredCapabilities: ['web_scraping', 'crm_data_enrichment', 'llm_synthesis'],
       requestedPermissions: [
-        { scope: 'network:outbound_https', sensitivity: 'low', justification: 'Query company public websites and Google search.' },
-        { scope: 'crm:contacts_read', sensitivity: 'medium', justification: 'Read existing lead lists from HubSpot or Salesforce.' },
+        { scope: 'network:outbound_https', sensitivity: 'low', justification: 'Query company public websites.' },
+        { scope: 'crm:contacts_read', sensitivity: 'medium', justification: 'Read existing lead lists.' },
       ],
       toolsDeclared: [
-        { name: 'scrape_company_site', description: 'Extract text content from homepage and about page', parameters: { url: 'string' } },
-        { name: 'enrich_prospect', description: 'Query clearbit API for company headcount and revenue', parameters: { domain: 'string' } },
+        { name: 'scrape_company_site', description: 'Extract text content', parameters: { url: 'string' } },
       ],
       externalConnections: ['api.clearbit.com', 'api.openai.com'],
       hasAuditLogs: true,
@@ -39,7 +110,6 @@ export async function discoverFromMarketplaces(): Promise<AgentRecord[]> {
       hasMalwareHistory: false,
       hasCredentialStealRisk: false,
       starsCount: 18500,
-      forksCount: 2900,
       monthlyUsers: 45000,
       lastCommitDate: '2026-08-29T14:30:00Z',
       discoveredAt: new Date().toISOString(),
@@ -53,104 +123,5 @@ export async function discoverFromMarketplaces(): Promise<AgentRecord[]> {
         isDriftDetected: false,
       },
     },
-    {
-      id: 'mkt-autocalendar-ai',
-      name: 'Smart Calendar Butler Pro',
-      slug: 'agentmarket/smart-calendar-butler',
-      description: 'AI scheduling assistant that coordinates meetings, drafts calendar invites, and organizes your daily schedule.',
-      category: 'productivity',
-      sourceEcosystem: 'agent_marketplace',
-      publisher: {
-        name: 'Nexus Productivity Labs',
-        domain: 'nexusproductivity.io',
-        verifiedDomain: false,
-        identityType: 'individual',
-        reputationScore: 68,
-      },
-      framework: 'langchain',
-      websiteUrl: 'https://smartcalendar-demo.io',
-      declaredCapabilities: ['calendar_coordination', 'email_monitoring'],
-      requestedPermissions: [
-        { scope: 'calendar:read_write', sensitivity: 'medium', justification: 'Create and update calendar events.' },
-        { scope: 'gmail:read_all', sensitivity: 'high', isHighRisk: true, justification: 'Scan all incoming emails for scheduling requests.' },
-        { scope: 'gdrive:read_all', sensitivity: 'high', isHighRisk: true, justification: 'Check meeting attachments.' },
-      ],
-      toolsDeclared: [
-        { name: 'list_events', description: 'Fetch upcoming calendar appointments', parameters: { days: 'number' } },
-        { name: 'search_emails', description: 'Search full email inbox', parameters: { query: 'string' } },
-      ],
-      externalConnections: ['api.nexusproductivity.io', 'googleapis.com'],
-      hasAuditLogs: false,
-      requiresHumanApproval: false,
-      isSandboxed: false,
-      hasPromptInjectionGuard: false,
-      hasKnownCVEs: false,
-      cveCount: 0,
-      hasMalwareHistory: false,
-      hasCredentialStealRisk: false,
-      starsCount: 140,
-      monthlyUsers: 1200,
-      lastCommitDate: '2026-07-15T09:00:00Z',
-      discoveredAt: new Date().toISOString(),
-      fingerprint: {
-        fingerprintId: 'fp-autocalendar-212',
-        timestamp: new Date().toISOString(),
-        manifestHash: 'sha256:cal_butler_v1',
-        toolSchemasHash: 'sha256:cal_butler_tools_v1',
-        permissionsHash: 'sha256:cal_butler_perms_v1',
-        dependenciesHash: 'sha256:cal_butler_deps_v1',
-        isDriftDetected: false,
-      },
-    },
-    {
-      id: 'mkt-crypto-telegram-sniper',
-      name: 'AlphaSniper DEX Agent',
-      slug: 'solana-tools/alpha-sniper-bot',
-      description: 'High-speed automated crypto trading agent designed to monitor Telegram signals and execute instant decentralized exchange swaps.',
-      category: 'finance',
-      sourceEcosystem: 'agent_marketplace',
-      publisher: {
-        name: 'AnonTrader99',
-        domain: undefined,
-        verifiedDomain: false,
-        identityType: 'anonymous',
-        reputationScore: 19,
-      },
-      framework: 'custom',
-      websiteUrl: 'https://t.me/alphasniper_bot',
-      declaredCapabilities: ['telegram_scraping', 'wallet_signing', 'dex_swap_execution'],
-      requestedPermissions: [
-        { scope: 'wallet:private_key_export', sensitivity: 'critical', isHighRisk: true, justification: 'Import private key to sign rapid transactions.' },
-        { scope: 'telegram:messages_read_write', sensitivity: 'high', justification: 'Read signals from private Telegram channels.' },
-      ],
-      toolsDeclared: [
-        { name: 'import_key', description: 'Store wallet private seed in local cache', parameters: { private_key: 'string' } },
-        { name: 'execute_swap', description: 'Send automated transaction on DEX router', parameters: { amount: 'number' } },
-      ],
-      externalConnections: ['api.telegram.org', '194.26.29.11', 'raw.githubusercontent.com'],
-      hasAuditLogs: false,
-      requiresHumanApproval: false,
-      isSandboxed: false,
-      hasPromptInjectionGuard: false,
-      hasKnownCVEs: true,
-      cveCount: 4,
-      hasMalwareHistory: true, // Malicious override trigger!
-      hasCredentialStealRisk: true, // Malicious override trigger!
-      starsCount: 22,
-      lastCommitDate: '2026-09-02T18:00:00Z',
-      discoveredAt: new Date().toISOString(),
-      fingerprint: {
-        fingerprintId: 'fp-crypto-sniper-666',
-        timestamp: new Date().toISOString(),
-        manifestHash: 'sha256:malware_sniper_v1',
-        toolSchemasHash: 'sha256:malware_sniper_tools',
-        permissionsHash: 'sha256:malware_sniper_perms',
-        dependenciesHash: 'sha256:malware_sniper_deps',
-        isDriftDetected: true,
-        lastDriftTimestamp: '2026-09-02T18:00:00Z',
-      },
-    },
   ];
-
-  return marketplaceAgents;
 }

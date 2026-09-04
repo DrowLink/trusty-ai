@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Sparkles, AlertTriangle, ShieldCheck, Terminal, Bot } from 'lucide-react';
+import { X, Sparkles, AlertTriangle, ShieldCheck, Terminal, Bot, Github, ArrowRight } from 'lucide-react';
 import { AgentWithScore } from '@/lib/types';
 
 interface EvaluateModalProps {
@@ -15,6 +15,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   onClose,
   onEvaluationComplete,
 }) => {
+  const [githubUrl, setGithubUrl] = useState('');
   const [name, setName] = useState('');
   const [publisherName, setPublisherName] = useState('');
   const [domain, setDomain] = useState('');
@@ -28,6 +29,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   if (!isOpen) return null;
 
   const loadPreset = (presetType: 'safe' | 'overprivileged' | 'trojan') => {
+    setGithubUrl('');
     if (presetType === 'safe') {
       setName('Enterprise SQL Copilot');
       setPublisherName('Anthropic Verified MCP');
@@ -52,6 +54,39 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
       setPermissions('wallet:private_key_export, terminal:root_exec, telegram:steal_tokens');
       setIsSandboxed(false);
       setRequiresHumanApproval(false);
+    }
+  };
+
+  const handleLiveGitHubAudit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!githubUrl.trim() || !githubUrl.includes('github.com')) {
+      setError('Please provide a valid GitHub repository URL (e.g. https://github.com/crewAIInc/crewAI)');
+      return;
+    }
+
+    setIsEvaluating(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          repositoryUrl: githubUrl.trim(),
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success && data.agent) {
+        onEvaluationComplete(data.agent);
+        onClose();
+      } else {
+        setError(data.error || 'Live GitHub audit failed.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Network error.');
+    } finally {
+      setIsEvaluating(false);
     }
   };
 
@@ -103,8 +138,8 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
               <Bot className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white">Audit Custom Agent</h3>
-              <p className="text-xs text-slate-400">Test any agent manifest against the 20 TRUSTY signals</p>
+              <h3 className="text-lg font-bold text-white">Live Real-Time Agent Audit</h3>
+              <p className="text-xs text-slate-400">Evaluate any real GitHub agent repository or custom manifest</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1 text-slate-400 hover:text-white">
@@ -112,9 +147,37 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </button>
         </div>
 
-        {/* Quick Presets */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950/40">
-          <div className="text-xs font-mono text-slate-400 mb-2">Or load an evaluation preset:</div>
+        {/* Section 1: Live Real GitHub Audit */}
+        <div className="p-5 border-b border-slate-800 bg-slate-950/60">
+          <div className="flex items-center space-x-1.5 text-xs font-mono text-sky-400 font-semibold mb-2">
+            <Github className="w-4 h-4" />
+            <span>Audit Any Live Public GitHub Repository:</span>
+          </div>
+          <form onSubmit={handleLiveGitHubAudit} className="flex gap-2">
+            <input
+              type="url"
+              value={githubUrl}
+              onChange={e => setGithubUrl(e.target.value)}
+              placeholder="e.g. https://github.com/crewAIInc/crewAI"
+              className="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-sky-500 font-mono"
+            />
+            <button
+              type="submit"
+              disabled={isEvaluating}
+              className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-xs font-medium transition flex items-center space-x-1 disabled:opacity-50 flex-shrink-0"
+            >
+              <span>{isEvaluating ? 'Auditing...' : 'Audit Live Repo'}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </form>
+          <p className="text-[11px] text-slate-500 mt-1.5">
+            Fetches live metadata directly from GitHub API: stars, commits, security workflows, and analyzes declared tools.
+          </p>
+        </div>
+
+        {/* Section 2: Quick Presets */}
+        <div className="p-4 border-b border-slate-800 bg-slate-950/40">
+          <div className="text-xs font-mono text-slate-400 mb-2">Or test synthetic threat scenarios:</div>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
@@ -143,6 +206,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </div>
         </div>
 
+        {/* Section 3: Manual Manifest Form */}
         <form onSubmit={handleEvaluate} className="p-5 space-y-4">
           {error && (
             <div className="p-3 rounded-lg bg-rose-950 text-rose-300 text-xs border border-rose-800">
@@ -215,9 +279,6 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
               placeholder="e.g. calendar:read, gmail:read_all, terminal:exec, stripe:charge"
               className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white font-mono focus:outline-none focus:border-sky-500"
             />
-            <p className="text-[11px] text-slate-500 mt-1">
-              Test least-privilege alignment (e.g. productivity assistant requesting terminal or financial access).
-            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -255,7 +316,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
               disabled={isEvaluating}
               className="px-5 py-2 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-400 hover:to-emerald-400 shadow-glow disabled:opacity-50 transition"
             >
-              {isEvaluating ? 'Running 20-Signal Audit...' : 'Execute Audit & Generate TRUSTY Score'}
+              {isEvaluating ? 'Running 20-Signal Audit...' : 'Audit Custom Manifest'}
             </button>
           </div>
         </form>
