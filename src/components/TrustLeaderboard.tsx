@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { AgentWithScore } from '@/lib/types';
-import { Search, ChevronRight, ShieldAlert, Shield, ArrowUpRight } from 'lucide-react';
+import { Search, ChevronRight, ShieldAlert, Mail, Wallet, Code2, RotateCcw } from 'lucide-react';
 
 interface TrustLeaderboardProps {
   agents: AgentWithScore[];
@@ -134,7 +134,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-      {/* Header & Preset Inquiries */}
+      {/* Header & Inquiries with authored Lucide icons instead of emojis */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
         <div>
           <div className="flex items-center space-x-2">
@@ -146,57 +146,61 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             </span>
           </div>
           <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 font-sans">
-            Independent evaluations across 20 cryptographic and behavioral signals.
+            Ranked by deterministic trust scores across 20 verified indicators.
           </p>
         </div>
 
-        {/* Preset Questions from challenge */}
+        {/* Authored SVG icons in place of emojis */}
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs no-scrollbar -mx-1 px-1">
           <span className="text-zinc-500 text-[10px] font-mono mr-1 hidden xl:inline flex-shrink-0">
             QUICK INQUIRIES:
           </span>
           <button
             onClick={() => applyPreset('email')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border ${
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
               selectedPermission === 'gmail'
                 ? 'bg-zinc-800 text-white border-white/[0.2]'
                 : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
             }`}
           >
-            Email Agents
+            <Mail className="w-3 h-3 text-zinc-400" />
+            <span>Email Agents</span>
           </button>
           <button
             onClick={() => applyPreset('finance')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border ${
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
               selectedCategory === 'finance'
                 ? 'bg-zinc-800 text-white border-white/[0.2]'
                 : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
             }`}
           >
-            Financial Agents
+            <Wallet className="w-3 h-3 text-zinc-400" />
+            <span>Financial Agents</span>
           </button>
           <button
             onClick={() => applyPreset('coding')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border ${
+            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
               selectedCategory === 'coding'
                 ? 'bg-zinc-800 text-white border-white/[0.2]'
                 : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
             }`}
           >
-            Coding & MCP
+            <Code2 className="w-3 h-3 text-zinc-400" />
+            <span>Coding & MCP</span>
           </button>
           {(selectedCategory !== 'all' || selectedPermission !== 'all' || selectedRisk !== 'all' || searchQuery) && (
             <button
               onClick={() => applyPreset('reset')}
-              className="px-2 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-zinc-300 text-[10px] font-mono border border-white/[0.06] flex-shrink-0"
+              className="px-2 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-zinc-300 text-[10px] font-mono border border-white/[0.06] flex items-center space-x-1 flex-shrink-0"
             >
-              Reset
+              <RotateCcw className="w-2.5 h-2.5" />
+              <span>Reset</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Control Strip (Search & Filters) */}
+      {/* Filter and Search Bar */}
       <div className="security-card p-2.5 sm:p-3 rounded-lg mb-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
           {/* Search */}
@@ -204,7 +208,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Filter by agent name, author, or scope..."
+              placeholder="Search agent name, author, or scope..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-sans"
@@ -293,7 +297,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center space-x-2 min-w-0">
-                    <span className="w-5 h-5 rounded bg-zinc-900 border border-white/[0.08] text-[10px] font-mono font-bold text-zinc-400 flex items-center justify-center flex-shrink-0">
+                    <span className="w-5 h-5 rounded bg-zinc-900 border border-white/[0.08] text-[10px] font-mono font-bold text-zinc-400 flex items-center justify-center flex-shrink-0 tabular-nums">
                       #{rank}
                     </span>
                     <div className="min-w-0">
@@ -343,7 +347,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
                 {/* Footer bar with Confidence */}
                 <div className="mt-2 flex items-center justify-between text-[10px] text-zinc-500 font-mono">
-                  <span>Confidence: <strong className="text-zinc-300">{agent.evaluation.confidence}%</strong></span>
+                  <span>Confidence: <strong className="text-zinc-300 tabular-nums">{agent.evaluation.confidence}%</strong></span>
                   <span className="text-zinc-300 flex items-center space-x-0.5">
                     <span>Inspect</span>
                     <ChevronRight className="w-3 h-3" />
@@ -388,12 +392,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       onClick={() => onSelectAgent(agent)}
                       className="hover:bg-zinc-900/50 cursor-pointer transition group"
                     >
-                      {/* Rank */}
-                      <td className="py-3.5 px-4 font-mono text-zinc-400 font-medium">
+                      <td className="py-3.5 px-4 font-mono text-zinc-400 font-medium tabular-nums">
                         #{rank}
                       </td>
 
-                      {/* Agent */}
                       <td className="py-3.5 px-4">
                         <div className="font-medium text-zinc-100 group-hover:text-white transition flex items-center space-x-1.5">
                           <span>{agent.name}</span>
@@ -409,7 +411,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      {/* Source & Framework */}
                       <td className="py-3.5 px-4">
                         <div className="flex flex-col space-y-0.5">
                           <span className="text-[10px] font-mono uppercase text-zinc-400">
@@ -421,7 +422,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      {/* Permissions */}
                       <td className="py-3.5 px-4 max-w-xs">
                         <div className="flex flex-wrap gap-1">
                           {agent.requestedPermissions.slice(0, 3).map((perm, pIdx) => (
@@ -446,7 +446,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      {/* Confidence */}
                       <td className="py-3.5 px-4 text-center font-mono">
                         <div className="text-zinc-300 font-semibold tabular-nums">{agent.evaluation.confidence}%</div>
                         <div className="w-14 h-1 bg-zinc-800 rounded-full mx-auto mt-1 overflow-hidden">
@@ -457,7 +456,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      {/* TRUSTY Score */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex flex-col items-center">
                           <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
@@ -469,7 +467,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      {/* Action */}
                       <td className="py-3.5 px-4 text-right">
                         <button
                           onClick={(e) => {
