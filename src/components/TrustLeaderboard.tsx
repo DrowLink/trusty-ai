@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { AgentWithScore } from '@/lib/types';
-import { Search, ChevronRight, ShieldAlert, Mail, Wallet, Code2, RotateCcw } from 'lucide-react';
+import { Search, ChevronRight, ShieldAlert, Mail, Wallet, Code2, RotateCcw, Shield, ExternalLink } from 'lucide-react';
 
 interface TrustLeaderboardProps {
   agents: AgentWithScore[];
@@ -91,6 +91,12 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
     return 0;
   });
 
+  // Category counts
+  const countCoding = agents.filter(a => a.category === 'coding').length;
+  const countProductivity = agents.filter(a => a.category === 'productivity').length;
+  const countFinance = agents.filter(a => a.category === 'finance').length;
+  const countResearch = agents.filter(a => a.category === 'research').length;
+
   const getRiskBadge = (tier: string) => {
     switch (tier) {
       case 'LOW_RISK':
@@ -133,103 +139,96 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-      {/* Header & Inquiries with authored Lucide icons instead of emojis */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
-        <div>
-          <div className="flex items-center space-x-2">
-            <h2 className="text-base sm:text-xl font-bold tracking-tight text-white font-mono">
-              Global Trust Leaderboard
-            </h2>
-            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-900 border border-white/[0.08] text-zinc-400">
-              {filteredAgents.length} Agents
-            </span>
-          </div>
-          <p className="text-[11px] sm:text-xs text-zinc-400 mt-0.5 font-sans">
-            Ranked by deterministic trust scores across 20 verified indicators.
-          </p>
-        </div>
-
-        {/* Authored SVG icons in place of emojis */}
-        <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs no-scrollbar -mx-1 px-1">
-          <span className="text-zinc-500 text-[10px] font-mono mr-1 hidden xl:inline flex-shrink-0">
-            QUICK INQUIRIES:
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5">
+      {/* Category Segmented Control Bar */}
+      <div className="flex items-center space-x-1 border-b border-white/[0.08] pb-3 mb-4 overflow-x-auto no-scrollbar">
+        <button
+          onClick={() => setSelectedCategory('all')}
+          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+            selectedCategory === 'all'
+              ? 'bg-zinc-100 text-zinc-900 shadow'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <span>All Ecosystem</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'all' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+            {agents.length}
           </span>
-          <button
-            onClick={() => applyPreset('email')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
-              selectedPermission === 'gmail'
-                ? 'bg-zinc-800 text-white border-white/[0.2]'
-                : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
-            }`}
-          >
-            <Mail className="w-3 h-3 text-zinc-400" />
-            <span>Email Agents</span>
-          </button>
-          <button
-            onClick={() => applyPreset('finance')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
-              selectedCategory === 'finance'
-                ? 'bg-zinc-800 text-white border-white/[0.2]'
-                : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
-            }`}
-          >
-            <Wallet className="w-3 h-3 text-zinc-400" />
-            <span>Financial Agents</span>
-          </button>
-          <button
-            onClick={() => applyPreset('coding')}
-            className={`px-2.5 py-1 rounded text-[11px] font-mono transition flex-shrink-0 border flex items-center space-x-1.5 ${
-              selectedCategory === 'coding'
-                ? 'bg-zinc-800 text-white border-white/[0.2]'
-                : 'bg-zinc-900 text-zinc-400 border-white/[0.06] hover:text-zinc-200'
-            }`}
-          >
-            <Code2 className="w-3 h-3 text-zinc-400" />
-            <span>Coding & MCP</span>
-          </button>
-          {(selectedCategory !== 'all' || selectedPermission !== 'all' || selectedRisk !== 'all' || searchQuery) && (
-            <button
-              onClick={() => applyPreset('reset')}
-              className="px-2 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-zinc-300 text-[10px] font-mono border border-white/[0.06] flex items-center space-x-1 flex-shrink-0"
-            >
-              <RotateCcw className="w-2.5 h-2.5" />
-              <span>Reset</span>
-            </button>
-          )}
-        </div>
+        </button>
+
+        <button
+          onClick={() => setSelectedCategory('coding')}
+          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+            selectedCategory === 'coding'
+              ? 'bg-zinc-100 text-zinc-900 shadow'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <Code2 className="w-3 h-3" />
+          <span>Coding & DevTools</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'coding' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+            {countCoding}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedCategory('productivity')}
+          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+            selectedCategory === 'productivity'
+              ? 'bg-zinc-100 text-zinc-900 shadow'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <Mail className="w-3 h-3" />
+          <span>Productivity</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'productivity' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+            {countProductivity}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedCategory('finance')}
+          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+            selectedCategory === 'finance'
+              ? 'bg-zinc-100 text-zinc-900 shadow'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <Wallet className="w-3 h-3" />
+          <span>Finance & Crypto</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'finance' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+            {countFinance}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setSelectedCategory('research')}
+          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+            selectedCategory === 'research'
+              ? 'bg-zinc-100 text-zinc-900 shadow'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+          }`}
+        >
+          <span>Research</span>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'research' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+            {countResearch}
+          </span>
+        </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="security-card p-2.5 sm:p-3 rounded-lg mb-4">
+      <div className="security-card p-3 rounded-lg mb-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
           {/* Search */}
           <div className="sm:col-span-2 relative">
             <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search agent name, author, or scope..."
+              placeholder="Search agent name, author, or capability..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-sans"
             />
-          </div>
-
-          {/* Category */}
-          <div>
-            <select
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
-            >
-              <option value="all">Category: All</option>
-              <option value="coding">Coding</option>
-              <option value="productivity">Productivity</option>
-              <option value="research">Research</option>
-              <option value="finance">Finance</option>
-              <option value="sysadmin">System Admin</option>
-              <option value="sales_marketing">Sales / Marketing</option>
-            </select>
           </div>
 
           {/* Risk Level */}
@@ -240,10 +239,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
             >
               <option value="all">Risk: All Tiers</option>
-              <option value="LOW_RISK">Low Risk</option>
-              <option value="MEDIUM_RISK">Medium Risk</option>
-              <option value="HIGH_RISK">High Risk</option>
-              <option value="CRITICAL_RISK">Critical Risk</option>
+              <option value="LOW_RISK">Low Risk [80-100]</option>
+              <option value="MEDIUM_RISK">Medium [60-79]</option>
+              <option value="HIGH_RISK">High Risk [40-59]</option>
+              <option value="CRITICAL_RISK">Critical [0-39]</option>
             </select>
           </div>
 
@@ -262,6 +261,21 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             </select>
           </div>
 
+          {/* Permissions filter */}
+          <div>
+            <select
+              value={selectedPermission}
+              onChange={e => setSelectedPermission(e.target.value)}
+              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+            >
+              <option value="all">Permissions: All</option>
+              <option value="git">Git Access</option>
+              <option value="gmail">Email / Gmail</option>
+              <option value="terminal">Terminal / Exec</option>
+              <option value="wallet">Crypto Wallet</option>
+            </select>
+          </div>
+
           {/* Sort */}
           <div>
             <select
@@ -269,7 +283,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               onChange={e => setSortBy(e.target.value as any)}
               className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-200 font-mono focus:outline-none focus:border-zinc-500"
             >
-              <option value="trust">Sort: Trust Score</option>
+              <option value="trust">Sort: Trusty Score</option>
               <option value="confidence">Sort: Confidence %</option>
               <option value="popularity">Sort: Stars / Users</option>
               <option value="recent">Sort: Most Recent</option>
@@ -278,7 +292,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
         </div>
       </div>
 
-      {/* MOBILE VIEW: Stacked Cards */}
+      {/* MOBILE VIEW: Cards */}
       <div className="block md:hidden space-y-2.5">
         {filteredAgents.length === 0 ? (
           <div className="security-card p-6 text-center text-zinc-500 text-xs rounded-lg font-mono">
@@ -345,7 +359,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                   ))}
                 </div>
 
-                {/* Footer bar with Confidence */}
+                {/* Footer bar */}
                 <div className="mt-2 flex items-center justify-between text-[10px] text-zinc-500 font-mono">
                   <span>Confidence: <strong className="text-zinc-300 tabular-nums">{agent.evaluation.confidence}%</strong></span>
                   <span className="text-zinc-300 flex items-center space-x-0.5">
@@ -359,16 +373,16 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
         )}
       </div>
 
-      {/* DESKTOP VIEW: High-density Table */}
+      {/* DESKTOP VIEW: High-density Table with 5-Dimension Mini Bar */}
       <div className="hidden md:block security-card rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-950/80 text-zinc-500 uppercase tracking-wider font-mono border-b border-white/[0.08] text-[10px]">
+            <thead className="bg-zinc-950/90 text-zinc-500 uppercase tracking-wider font-mono border-b border-white/[0.08] text-[10px]">
               <tr>
                 <th className="py-3 px-4 w-12">Rank</th>
                 <th className="py-3 px-4">Agent & Publisher</th>
                 <th className="py-3 px-4">Ecosystem</th>
-                <th className="py-3 px-4">Permissions</th>
+                <th className="py-3 px-4">5-Dimension Posture</th>
                 <th className="py-3 px-4 text-center">Confidence</th>
                 <th className="py-3 px-4 text-center">TRUSTY Score</th>
                 <th className="py-3 px-4 text-right">Audit</th>
@@ -377,7 +391,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <tbody className="divide-y divide-white/[0.06] font-sans">
               {filteredAgents.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-10 text-center text-zinc-500 font-mono text-xs">
+                  <td colSpan={7} className="py-12 text-center text-zinc-500 font-mono text-xs">
                     No agents match current filters.
                   </td>
                 </tr>
@@ -385,6 +399,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 filteredAgents.map((agent, index) => {
                   const rank = index + 1;
                   const score = agent.evaluation.trustyScore;
+                  const dims = agent.evaluation.dimensions;
 
                   return (
                     <tr
@@ -392,25 +407,30 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       onClick={() => onSelectAgent(agent)}
                       className="hover:bg-zinc-900/50 cursor-pointer transition group"
                     >
+                      {/* Rank */}
                       <td className="py-3.5 px-4 font-mono text-zinc-400 font-medium tabular-nums">
                         #{rank}
                       </td>
 
+                      {/* Agent */}
                       <td className="py-3.5 px-4">
                         <div className="font-medium text-zinc-100 group-hover:text-white transition flex items-center space-x-1.5">
                           <span>{agent.name}</span>
                           {agent.evaluation.overrideApplied && (
-                            <ShieldAlert className="w-3.5 h-3.5 text-rose-400 inline flex-shrink-0" />
+                            <span title={agent.evaluation.overrideApplied.reason} className="inline-flex">
+                              <ShieldAlert className="w-3.5 h-3.5 text-rose-400 inline flex-shrink-0" />
+                            </span>
                           )}
                         </div>
                         <div className="text-[11px] text-zinc-500 font-mono flex items-center space-x-1 mt-0.5">
                           <span>by {agent.publisher.name}</span>
                           {agent.publisher.verifiedDomain && (
-                            <span className="text-emerald-400">✓ Verified Org</span>
+                            <span className="text-emerald-400 font-sans">✓ Verified Org</span>
                           )}
                         </div>
                       </td>
 
+                      {/* Ecosystem */}
                       <td className="py-3.5 px-4">
                         <div className="flex flex-col space-y-0.5">
                           <span className="text-[10px] font-mono uppercase text-zinc-400">
@@ -422,33 +442,44 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
-                      <td className="py-3.5 px-4 max-w-xs">
-                        <div className="flex flex-wrap gap-1">
-                          {agent.requestedPermissions.slice(0, 3).map((perm, pIdx) => (
-                            <span
-                              key={pIdx}
-                              className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono ${
-                                perm.sensitivity === 'critical'
-                                  ? 'bg-rose-950/80 text-rose-300 border border-rose-800'
-                                  : perm.sensitivity === 'high'
-                                  ? 'bg-amber-950/80 text-amber-300 border border-amber-800'
-                                  : 'bg-zinc-900 text-zinc-400 border border-white/[0.06]'
-                              }`}
-                            >
-                              {perm.scope}
-                            </span>
-                          ))}
-                          {agent.requestedPermissions.length > 3 && (
-                            <span className="text-[10px] text-zinc-500 self-center font-mono">
-                              +{agent.requestedPermissions.length - 3}
-                            </span>
-                          )}
+                      {/* 5-Dimension Mini Bar */}
+                      <td className="py-3.5 px-4 min-w-[160px]">
+                        <div className="flex items-center space-x-1 mb-1">
+                          {/* Id */}
+                          <div
+                            className={`h-2 flex-1 rounded-sm ${dims.identity.score >= 80 ? 'bg-emerald-500' : dims.identity.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            title={`Identity: ${dims.identity.score}/100`}
+                          />
+                          {/* Perms */}
+                          <div
+                            className={`h-2 flex-1 rounded-sm ${dims.permissions.score >= 80 ? 'bg-emerald-500' : dims.permissions.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            title={`Permissions: ${dims.permissions.score}/100`}
+                          />
+                          {/* Sec */}
+                          <div
+                            className={`h-2 flex-1 rounded-sm ${dims.security.score >= 80 ? 'bg-emerald-500' : dims.security.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            title={`Security: ${dims.security.score}/100`}
+                          />
+                          {/* Gov */}
+                          <div
+                            className={`h-2 flex-1 rounded-sm ${dims.governance.score >= 80 ? 'bg-emerald-500' : dims.governance.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            title={`Governance: ${dims.governance.score}/100`}
+                          />
+                          {/* Rep */}
+                          <div
+                            className={`h-2 flex-1 rounded-sm ${dims.reputation.score >= 80 ? 'bg-emerald-500' : dims.reputation.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            title={`Reputation: ${dims.reputation.score}/100`}
+                          />
+                        </div>
+                        <div className="flex justify-between text-[9px] font-mono text-zinc-500">
+                          <span>Id·Perm·Sec·Gov·Rep</span>
                         </div>
                       </td>
 
+                      {/* Confidence */}
                       <td className="py-3.5 px-4 text-center font-mono">
                         <div className="text-zinc-300 font-semibold tabular-nums">{agent.evaluation.confidence}%</div>
-                        <div className="w-14 h-1 bg-zinc-800 rounded-full mx-auto mt-1 overflow-hidden">
+                        <div className="w-12 h-1 bg-zinc-800 rounded-full mx-auto mt-1 overflow-hidden">
                           <div
                             className="h-full bg-zinc-400 rounded-full"
                             style={{ width: `${agent.evaluation.confidence}%` }}
@@ -456,6 +487,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
+                      {/* TRUSTY Score */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex flex-col items-center">
                           <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
@@ -467,6 +499,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                         </div>
                       </td>
 
+                      {/* Action */}
                       <td className="py-3.5 px-4 text-right">
                         <button
                           onClick={(e) => {

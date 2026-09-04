@@ -29,6 +29,7 @@ export default function HomePage() {
   });
 
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuditingLive, setIsAuditingLive] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<AgentWithScore | null>(null);
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
@@ -59,8 +60,36 @@ export default function HomePage() {
     fetchAgents();
   };
 
+  // Instant Hero URL Audit Handler
+  const handleHeroAudit = async (urlOrName: string) => {
+    setIsAuditingLive(true);
+    try {
+      const isGithub = urlOrName.includes('github.com');
+      const payload = isGithub
+        ? { repositoryUrl: urlOrName.startsWith('http') ? urlOrName : `https://github.com/${urlOrName}` }
+        : { name: urlOrName, permissions: 'network:read, tasks:execute' };
+
+      const res = await fetch('/api/evaluate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success && data.agent) {
+        handleEvaluationComplete(data.agent);
+      } else {
+        alert(data.error || 'Audit failed');
+      }
+    } catch (err: any) {
+      alert(`Error auditing agent: ${err.message}`);
+    } finally {
+      setIsAuditingLive(false);
+    }
+  };
+
   return (
-    <div className="flex-1 flex flex-col min-h-screen">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#08090d]">
       {/* Top Navigation */}
       <Navbar
         onOpenEvaluate={() => setIsEvaluateOpen(true)}
@@ -68,15 +97,19 @@ export default function HomePage() {
         totalAgents={stats.totalAgents}
       />
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <main className="flex-1">
-        {/* Mission & Real-Time Stats */}
-        <HeroMetrics stats={stats} />
+        {/* Command Center Hero with live audit bar and risk distribution */}
+        <HeroMetrics
+          stats={stats}
+          onAuditUrl={handleHeroAudit}
+          isAuditing={isAuditingLive}
+        />
 
         {/* Discovery Crawler Control */}
         <DiscoveryBar onRefresh={fetchAgents} />
 
-        {/* Trust Leaderboard */}
+        {/* Trust Leaderboard with 5-dimension mini bars & category tabs */}
         <TrustLeaderboard
           agents={agents}
           onSelectAgent={agent => setSelectedAgent(agent)}
@@ -84,7 +117,7 @@ export default function HomePage() {
         />
       </main>
 
-      {/* Institutional Footer */}
+      {/* Footer */}
       <footer className="border-t border-white/[0.08] bg-[#07080c] py-6 text-xs text-zinc-500 font-mono">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
