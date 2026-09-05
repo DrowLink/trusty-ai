@@ -145,13 +145,47 @@ export interface TrustEvaluationResult {
   summaryReasoning: string;
 }
 
+export type CreditTier = 'AAA' | 'AA' | 'A' | 'BBB' | 'BB' | 'B' | 'SUBPRIME_D';
+
+export interface PaymentRailConnection {
+  rail: 'visa' | 'stripe' | 'plaid' | 'mastercard';
+  name: string;
+  status: 'simulated_active' | 'certified' | 'restricted';
+  networkTier: string;
+}
+
+export interface CreditSignal {
+  name: string;
+  score: number; // 0 - 100
+  weight: number;
+  status: 'positive' | 'neutral' | 'negative';
+  evidence: string;
+  publicSource: string; // e.g. 'Public GitHub Org', 'Public Package Registry', 'Public Domain Registration'
+}
+
+export interface AgentCreditProfile {
+  creditScore: number; // 0 - 100
+  creditTier: CreditTier;
+  estimatedDailyCapacity: number; // e.g. 25000 ($25,000 / day)
+  humanApprovalThreshold: number; // e.g. 5000 (> $5,000 / txn)
+  receiveCapacityDaily: number; // e.g. 100000 ($100,000 / day)
+  maxSingleAutonomousTxn: number; // e.g. 5000
+  isFinanciallyActive: boolean;
+  connectedRails: PaymentRailConnection[];
+  signals: CreditSignal[];
+  underwritingSummary: string;
+}
+
 export interface AgentWithScore extends AgentRecord {
   evaluation: TrustEvaluationResult;
+  creditProfile: AgentCreditProfile;
 }
 
 export interface DiscoveryStats {
   totalAgents: number;
   avgTrustScore: number;
+  avgCreditScore?: number;
+  totalDailyCapacity?: number;
   lowRiskCount: number;
   mediumRiskCount: number;
   highRiskCount: number;

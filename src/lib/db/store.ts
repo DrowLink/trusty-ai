@@ -1,6 +1,7 @@
 import { AgentRecord, AgentWithScore, DiscoveryStats } from '../types';
 import { SEED_AGENTS } from './seed';
 import { evaluateAgentTrust } from '../scoring/engine';
+import { evaluateAgentCredit } from '../scoring/creditEngine';
 import { fetchFirestoreAgents, saveAgentToFirestore, bulkSaveAgentsToFirestore, isFirebaseConfigured } from './firebase';
 import fs from 'fs';
 import path from 'path';
@@ -80,10 +81,15 @@ class AgentTrustStore {
   }
 
   public getAll(): AgentWithScore[] {
-    const list = Array.from(this.agents.values()).map(agent => ({
-      ...agent,
-      evaluation: evaluateAgentTrust(agent),
-    }));
+    const list = Array.from(this.agents.values()).map(agent => {
+      const evaluation = evaluateAgentTrust(agent);
+      const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
+      return {
+        ...agent,
+        evaluation,
+        creditProfile,
+      };
+    });
 
     // Default sort by trustyScore desc
     return list.sort((a, b) => b.evaluation.trustyScore - a.evaluation.trustyScore);
@@ -92,9 +98,12 @@ class AgentTrustStore {
   public getById(id: string): AgentWithScore | null {
     const agent = this.agents.get(id);
     if (!agent) return null;
+    const evaluation = evaluateAgentTrust(agent);
+    const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
     return {
       ...agent,
-      evaluation: evaluateAgentTrust(agent),
+      evaluation,
+      creditProfile,
     };
   }
 
@@ -109,9 +118,13 @@ class AgentTrustStore {
       });
     }
 
+    const evaluation = evaluateAgentTrust(agent);
+    const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
+
     return {
       ...agent,
-      evaluation: evaluateAgentTrust(agent),
+      evaluation,
+      creditProfile,
     };
   }
 
@@ -119,9 +132,12 @@ class AgentTrustStore {
     const results: AgentWithScore[] = [];
     for (const agent of agents) {
       this.agents.set(agent.id, agent);
+      const evaluation = evaluateAgentTrust(agent);
+      const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
       results.push({
         ...agent,
-        evaluation: evaluateAgentTrust(agent),
+        evaluation,
+        creditProfile,
       });
     }
     this.persistToLocalCache();
@@ -139,6 +155,8 @@ class AgentTrustStore {
     const all = this.getAll();
     const total = all.length;
     const avgTrust = total > 0 ? Math.round(all.reduce((acc, a) => acc + a.evaluation.trustyScore, 0) / total) : 0;
+    const avgCredit = total > 0 ? Math.round(all.reduce((acc, a) => acc + (a.creditProfile?.creditScore || 50), 0) / total) : 0;
+    const totalDailyCapacity = all.reduce((acc, a) => acc + (a.creditProfile?.estimatedDailyCapacity || 0), 0);
 
     let lowRisk = 0;
     let medRisk = 0;
@@ -166,6 +184,8 @@ class AgentTrustStore {
     return {
       totalAgents: total,
       avgTrustScore: avgTrust,
+      avgCreditScore: avgCredit,
+      totalDailyCapacity,
       lowRiskCount: lowRisk,
       mediumRiskCount: medRisk,
       highRiskCount: highRisk,

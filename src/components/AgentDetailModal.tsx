@@ -4,6 +4,8 @@ import React from 'react';
 import { AgentWithScore, PermissionScope } from '@/lib/types';
 import { X, ShieldAlert, CheckCircle2, AlertTriangle, Lock, Activity, Hash, Eye, Edit3, Terminal, Shield, Sparkles } from 'lucide-react';
 import { translatePermission } from '@/lib/scanner/permissionTranslator';
+import { AgentCreditCard } from './AgentCreditCard';
+import { evaluateAgentCredit } from '@/lib/scoring/creditEngine';
 
 interface AgentDetailModalProps {
   agent: AgentWithScore | null;
@@ -150,6 +152,13 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
               </div>
             </div>
           </div>
+
+          {/* Part 2 & Part 3: Agent Credit Profile & Payment Rails Simulator */}
+          <AgentCreditCard
+            agentName={agent.name}
+            trustScore={score}
+            creditProfile={agent.creditProfile || evaluateAgentCredit(agent, score)}
+          />
 
           {/* Section 2: ANALYZED CAPABILITIES & PERMISSIONS (MOVED TO TOP) */}
           <div className="p-3.5 sm:p-4 rounded bg-zinc-950 border border-white/[0.08]">

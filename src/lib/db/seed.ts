@@ -1,7 +1,61 @@
 import { AgentRecord } from '../types';
 
 export const SEED_AGENTS: AgentRecord[] = [
-  // 1. High Trust - Verified MCP Anthropic Git Server
+  // 1. Featured Financial Procurement Agent - ProcurementBot-847
+  {
+    id: 'agent-procurement-847',
+    name: 'ProcurementBot-847',
+    slug: 'enterprise-ops/procurement-bot-847',
+    description: 'Enterprise autonomous procurement & vendor invoice settlement agent. Manages purchase orders, inventory restocking, and B2B vendor payments.',
+    category: 'finance',
+    sourceEcosystem: 'github',
+    publisher: {
+      name: 'Autonomous Operations Core',
+      domain: 'enterprise-procure.io',
+      verifiedDomain: true,
+      identityType: 'verified_org',
+      githubUser: 'enterprise-ops',
+      reputationScore: 94,
+    },
+    framework: 'crewai',
+    repositoryUrl: 'https://github.com/enterprise-ops/procurement-bot-847',
+    packageUrl: 'https://www.npmjs.com/package/@enterprise-ops/procurement-bot',
+    declaredCapabilities: ['vendor_invoicing', 'po_reconciliation', 'automated_disbursements', 'visa_settlement'],
+    requestedPermissions: [
+      { scope: 'bank:transfer', sensitivity: 'high', justification: 'Execute verified B2B vendor invoice settlement via Visa Commercial Network.' },
+      { scope: 'db:read_write', sensitivity: 'medium', justification: 'Update enterprise ERP purchase order status and reconciliation ledgers.' },
+      { scope: 'network:outbound_https', sensitivity: 'low', justification: 'Connect to verified corporate banking APIs and supplier punchouts.' },
+    ],
+    toolsDeclared: [
+      { name: 'verify_invoice', description: 'Match invoice against approved purchase order line items', parameters: { po_id: 'string' } },
+      { name: 'settle_disbursement', description: 'Initiate commercial card payment to vendor account', parameters: { vendor_id: 'string', amount: 'number' }, requiresApproval: true },
+    ],
+    externalConnections: ['api.visa.com', 'api.stripe.com', 'api.enterprise-procure.io'],
+    hasAuditLogs: true,
+    requiresHumanApproval: true,
+    isSandboxed: true,
+    hasPromptInjectionGuard: true,
+    hasKnownCVEs: false,
+    cveCount: 0,
+    hasMalwareHistory: false,
+    hasCredentialStealRisk: false,
+    starsCount: 8470,
+    forksCount: 1120,
+    monthlyUsers: 85000,
+    lastCommitDate: '2026-09-02T12:00:00Z',
+    discoveredAt: '2026-08-20T10:00:00Z',
+    fingerprint: {
+      fingerprintId: 'fp-procurement-847',
+      timestamp: '2026-09-02T12:00:00Z',
+      manifestHash: 'sha256:procurement_847_v2',
+      toolSchemasHash: 'sha256:tools_procure_v2',
+      permissionsHash: 'sha256:perms_procure_v2',
+      dependenciesHash: 'sha256:deps_procure_v2',
+      isDriftDetected: false,
+    },
+  },
+
+  // 2. High Trust - Verified MCP Anthropic Git Server
   {
     id: 'agent-mcp-git',
     name: 'Git MCP Server (Official)',

@@ -90,7 +90,10 @@ export function mergeAgentsWithLocal(serverAgents: AgentWithScore[]): {
   }
 
   // Combine: missingFromServer at top, then server agents
-  const merged = [...missingFromServer, ...serverAgents];
+  const merged = [...missingFromServer, ...serverAgents].map(a => ({
+    ...a,
+    creditProfile: a.creditProfile || evaluateAgentCredit(a, a.evaluation?.trustyScore || 70),
+  }));
 
   return {
     merged,
@@ -98,12 +101,16 @@ export function mergeAgentsWithLocal(serverAgents: AgentWithScore[]): {
   };
 }
 
+import { evaluateAgentCredit } from '../scoring/creditEngine';
+
 /**
  * Computes live statistics across an agent collection
  */
 export function computeDiscoveryStats(all: AgentWithScore[]): DiscoveryStats {
   const total = all.length;
   const avgTrust = total > 0 ? Math.round(all.reduce((acc, a) => acc + (a.evaluation?.trustyScore || 50), 0) / total) : 0;
+  const avgCredit = total > 0 ? Math.round(all.reduce((acc, a) => acc + (a.creditProfile?.creditScore || 50), 0) / total) : 0;
+  const totalDailyCapacity = all.reduce((acc, a) => acc + (a.creditProfile?.estimatedDailyCapacity || 0), 0);
 
   let lowRisk = 0;
   let medRisk = 0;
@@ -134,6 +141,8 @@ export function computeDiscoveryStats(all: AgentWithScore[]): DiscoveryStats {
   return {
     totalAgents: total,
     avgTrustScore: avgTrust,
+    avgCreditScore: avgCredit,
+    totalDailyCapacity,
     lowRiskCount: lowRisk,
     mediumRiskCount: medRisk,
     highRiskCount: highRisk,

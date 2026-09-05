@@ -23,7 +23,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   const [selectedRisk, setSelectedRisk] = useState('all');
   const [selectedEcosystem, setSelectedEcosystem] = useState('all');
   const [selectedPermission, setSelectedPermission] = useState('all');
-  const [sortBy, setSortBy] = useState<'trust' | 'confidence' | 'popularity' | 'recent'>('trust');
+  const [sortBy, setSortBy] = useState<'trust' | 'credit' | 'capacity' | 'confidence' | 'popularity' | 'recent'>('trust');
 
   const applyPreset = (preset: string) => {
     if (preset === 'email') {
@@ -33,7 +33,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
     } else if (preset === 'finance') {
       setSelectedCategory('finance');
       setSelectedPermission('all');
-      setSortBy('trust');
+      setSortBy('credit');
     } else if (preset === 'coding') {
       setSelectedCategory('coding');
       setSelectedPermission('all');
@@ -84,6 +84,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   filteredAgents.sort((a, b) => {
     if (sortBy === 'trust') {
       return b.evaluation.trustyScore - a.evaluation.trustyScore;
+    } else if (sortBy === 'credit') {
+      return (b.creditProfile?.creditScore || 0) - (a.creditProfile?.creditScore || 0);
+    } else if (sortBy === 'capacity') {
+      return (b.creditProfile?.estimatedDailyCapacity || 0) - (a.creditProfile?.estimatedDailyCapacity || 0);
     } else if (sortBy === 'confidence') {
       return b.evaluation.confidence - a.evaluation.confidence;
     } else if (sortBy === 'popularity') {
@@ -295,6 +299,8 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-200 font-mono focus:outline-none focus:border-zinc-500"
             >
               <option value="trust">Sort: Trusty Score</option>
+              <option value="credit">Sort: Credit Score (Beta)</option>
+              <option value="capacity">Sort: Daily Spend Capacity</option>
               <option value="confidence">Sort: Confidence %</option>
               <option value="popularity">Sort: Stars / Users</option>
               <option value="recent">Sort: Most Recent</option>
@@ -340,14 +346,23 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       </div>
                     </div>
                   </div>
-
-                  {/* Score */}
-                  <div className="flex flex-col items-end flex-shrink-0">
-                    <div className={`text-xs font-mono font-bold px-1.5 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
-                      {score} <span className="text-[9px] opacity-70">/100</span>
+                  {/* Scores: Trusty + Credit */}
+                  <div className="flex items-center space-x-2 flex-shrink-0">
+                    <div className="flex flex-col items-end">
+                      <div className={`text-xs font-mono font-bold px-1.5 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
+                        {score} <span className="text-[9px] opacity-70">/100</span>
+                      </div>
+                      <div className="mt-1">
+                        {getRiskBadge(agent.evaluation.riskTier)}
+                      </div>
                     </div>
-                    <div className="mt-1">
-                      {getRiskBadge(agent.evaluation.riskTier)}
+                    <div className="flex flex-col items-end border-l border-white/[0.08] pl-2">
+                      <div className="text-xs font-mono font-bold px-1.5 py-0.5 rounded border border-purple-500/30 bg-purple-500/10 text-purple-300 tabular-nums">
+                        CR {agent.creditProfile?.creditScore ?? 75}
+                      </div>
+                      <div className="text-[9px] font-mono text-cyan-400 mt-1 tabular-nums font-semibold">
+                        ${(agent.creditProfile?.estimatedDailyCapacity ?? 5000).toLocaleString()}/d
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -396,13 +411,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 <th className="py-3 px-4">5-Dimension Posture</th>
                 <th className="py-3 px-4 text-center">Confidence</th>
                 <th className="py-3 px-4 text-center">TRUSTY Score</th>
+                <th className="py-3 px-4 text-center">Credit & Limit (Beta)</th>
                 <th className="py-3 px-4 text-right">Audit</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/[0.06] font-sans">
               {filteredAgents.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-zinc-500 font-mono text-xs">
+                  <td colSpan={8} className="py-12 text-center text-zinc-500 font-mono text-xs">
                     No agents match current filters.
                   </td>
                 </tr>
@@ -416,52 +432,59 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                     <tr
                       key={agent.id}
                       onClick={() => onSelectAgent(agent)}
-                      className="hover:bg-zinc-900/50 cursor-pointer transition group"
+                      className={`hover:bg-white/[0.03] transition cursor-pointer ${
+                        agent.evaluation.overrideApplied ? 'bg-rose-950/10' : ''
+                      }`}
                     >
                       {/* Rank */}
-                      <td className="py-3.5 px-4 font-mono text-zinc-400 font-medium tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-zinc-500 font-bold tabular-nums">
                         #{rank}
                       </td>
 
-                      {/* Agent */}
+                      {/* Agent & Publisher */}
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-zinc-100 group-hover:text-white transition flex items-center space-x-1.5">
-                          <span>{agent.name}</span>
-                          {agent.evaluation.overrideApplied && (
-                            <span title={agent.evaluation.overrideApplied.reason} className="inline-flex">
-                              <ShieldAlert className="w-3.5 h-3.5 text-rose-400 inline flex-shrink-0" />
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-[11px] text-zinc-500 font-mono flex items-center space-x-1 mt-0.5">
-                          <span>by {agent.publisher.name}</span>
-                          {agent.publisher.verifiedDomain && (
-                            <span className="text-emerald-400 font-sans">✓ Verified Org</span>
-                          )}
+                        <div className="flex items-center space-x-2">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-zinc-100 flex items-center space-x-1.5">
+                              <span className="truncate">{agent.name}</span>
+                              {agent.evaluation.overrideApplied && (
+                                <ShieldAlert className="w-4 h-4 text-rose-400 flex-shrink-0" />
+                              )}
+                            </div>
+                            <div className="text-[11px] text-zinc-500 font-mono flex items-center space-x-1.5 mt-0.5">
+                              <span className="truncate">{agent.publisher.name}</span>
+                              {agent.publisher.verifiedDomain && (
+                                <span className="text-emerald-400 flex items-center space-x-0.5 text-[10px] font-sans">
+                                  <span>✓</span>
+                                  <span>Verified Org</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </td>
 
-                      {/* Ecosystem */}
+                      {/* Ecosystem & Type */}
                       <td className="py-3.5 px-4">
-                        <div className="flex flex-col space-y-0.5">
-                          <span className="text-[10px] font-mono uppercase text-zinc-400">
+                        <div className="flex flex-col space-y-1">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-zinc-900 border border-white/[0.08] text-zinc-400 w-fit">
                             {agent.sourceEcosystem.replace('_', ' ')}
                           </span>
-                          <span className="text-[11px] text-zinc-500 font-mono">
-                            {agent.framework.toUpperCase()}
+                          <span className="text-[10px] text-zinc-500 font-mono">
+                            {agent.framework} · {agent.category}
                           </span>
                         </div>
                       </td>
 
                       {/* 5-Dimension Mini Bar */}
-                      <td className="py-3.5 px-4 min-w-[160px]">
-                        <div className="flex items-center space-x-1 mb-1">
+                      <td className="py-3.5 px-4 min-w-[170px]">
+                        <div className="flex space-x-1 mb-1">
                           {/* Id */}
                           <div
                             className={`h-2 flex-1 rounded-sm ${dims.identity.score >= 80 ? 'bg-emerald-500' : dims.identity.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
                             title={`Identity: ${dims.identity.score}/100`}
                           />
-                          {/* Perms */}
+                          {/* Perm */}
                           <div
                             className={`h-2 flex-1 rounded-sm ${dims.permissions.score >= 80 ? 'bg-emerald-500' : dims.permissions.score >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
                             title={`Permissions: ${dims.permissions.score}/100`}
@@ -506,6 +529,23 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                           </div>
                           <div className="mt-1">
                             {getRiskBadge(agent.evaluation.riskTier)}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Credit & Limit (Beta) */}
+                      <td className="py-3.5 px-4 text-center">
+                        <div className="flex flex-col items-center justify-center">
+                          <div className="flex items-center space-x-1.5 font-mono">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono bg-purple-500/10 text-purple-300 border border-purple-500/25 tabular-nums">
+                              CR {agent.creditProfile?.creditScore ?? 75}
+                            </span>
+                            <span className="text-[10px] text-purple-400/80 font-bold uppercase">
+                              {agent.creditProfile?.creditTier ?? 'A'}
+                            </span>
+                          </div>
+                          <div className="text-[10px] font-mono text-cyan-400 font-semibold tabular-nums mt-1">
+                            ${(agent.creditProfile?.estimatedDailyCapacity ?? 5000).toLocaleString()}/day
                           </div>
                         </div>
                       </td>
