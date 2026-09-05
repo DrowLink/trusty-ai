@@ -1,0 +1,274 @@
+import { PermissionScope, ToolDefinition } from '../types';
+import { translatePermission } from './permissionTranslator';
+
+export interface RepoScanResult {
+  permissions: PermissionScope[];
+  toolsDeclared: ToolDefinition[];
+  framework: 'mcp' | 'langchain' | 'crewai' | 'autogen' | 'custom';
+  category: 'productivity' | 'coding' | 'finance' | 'sysadmin' | 'sales_marketing' | 'research';
+  declaredCapabilities: string[];
+  externalConnections: string[];
+  hasAuditLogs: boolean;
+  requiresHumanApproval: boolean;
+  isSandboxed: boolean;
+  hasPromptInjectionGuard: boolean;
+  detectedFeatures: string[];
+}
+
+export async function scanRepositoryPermissions(
+  owner: string,
+  repo: string,
+  defaultBranch = 'main',
+  topics: string[] = [],
+  description = ''
+): Promise<RepoScanResult> {
+  const detectedScopes = new Set<string>();
+  const detectedFeatures: string[] = [];
+  const externalConnections = new Set<string>();
+  const declaredCapabilities = new Set<string>(topics);
+  const toolsDeclared: ToolDefinition[] = [];
+
+  let framework: RepoScanResult['framework'] = 'custom';
+  let category: RepoScanResult['category'] = 'coding';
+  let isSandboxed = true;
+  let requiresHumanApproval = true;
+  let hasAuditLogs = true;
+  let hasPromptInjectionGuard = false;
+
+  // Always base permissions for GitHub repos
+  detectedScopes.add('git:repo_read');
+  detectedScopes.add('network:outbound_https');
+  externalConnections.add('api.github.com');
+
+  // 1. Fetch Repository Files via GitHub API
+  let packageJsonContent = '';
+  let requirementsContent = '';
+  let pyprojectContent = '';
+  let mcpJsonContent = '';
+
+  const headers = {
+    'User-Agent': 'TRUSTY-ai-Repo-Security-Scanner/1.0',
+    'Accept': 'application/vnd.github.v3.raw',
+  };
+
+  const fetchRepoFile = async (filePath: string): Promise<string> => {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
+        headers,
+      });
+      if (res.ok) {
+        return await res.text();
+      }
+    } catch {
+      // Ignored for optional files
+    }
+    return '';
+  };
+
+  // Parallel fetch of manifest candidates
+  const [pkg, reqs, pyproj, mcp] = await Promise.all([
+    fetchRepoFile('package.json'),
+    fetchRepoFile('requirements.txt'),
+    fetchRepoFile('pyproject.toml'),
+    fetchRepoFile('mcp.json'),
+  ]);
+
+  packageJsonContent = pkg;
+  requirementsContent = reqs;
+  pyprojectContent = pyproj;
+  mcpJsonContent = mcp;
+
+  const combinedContent = (
+    packageJsonContent + ' ' +
+    requirementsContent + ' ' +
+    pyprojectContent + ' ' +
+    mcpJsonContent + ' ' +
+    description + ' ' +
+    topics.join(' ')
+  ).toLowerCase();
+
+  // 2. Framework Identification
+  if (combinedContent.includes('@modelcontextprotocol') || combinedContent.includes('mcp') || topics.includes('mcp')) {
+    framework = 'mcp';
+    detectedFeatures.push('Framework: Model Context Protocol (MCP)');
+  } else if (combinedContent.includes('crewai') || topics.includes('crewai')) {
+    framework = 'crewai';
+    detectedFeatures.push('Framework: CrewAI Autonomous Multi-Agent');
+  } else if (combinedContent.includes('langchain') || topics.includes('langchain')) {
+    framework = 'langchain';
+    detectedFeatures.push('Framework: LangChain / LangGraph');
+  } else if (combinedContent.includes('autogen') || topics.includes('autogen')) {
+    framework = 'autogen';
+    detectedFeatures.push('Framework: Microsoft AutoGen');
+  }
+
+  // 3. Category Inference
+  if (combinedContent.includes('research') || combinedContent.includes('arxiv') || combinedContent.includes('paper')) {
+    category = 'research';
+  } else if (combinedContent.includes('finance') || combinedContent.includes('trading') || combinedContent.includes('crypto') || combinedContent.includes('dex')) {
+    category = 'finance';
+  } else if (combinedContent.includes('calendar') || combinedContent.includes('email') || combinedContent.includes('assistant') || combinedContent.includes('productivity')) {
+    category = 'productivity';
+  } else if (combinedContent.includes('devops') || combinedContent.includes('docker') || combinedContent.includes('kubernetes') || combinedContent.includes('sentry')) {
+    category = 'sysadmin';
+  } else {
+    category = 'coding';
+  }
+
+  // 4. Permission Inference based on Dependencies and Code Patterns
+
+  // A. Terminal & Host Execution
+  if (
+    combinedContent.includes('child_process') ||
+    combinedContent.includes('subprocess') ||
+    combinedContent.includes('os.system') ||
+    combinedContent.includes('exec(') ||
+    combinedContent.includes('shell=true') ||
+    combinedContent.includes('psutil') ||
+    combinedContent.includes('bash')
+  ) {
+    detectedScopes.add('terminal:exec');
+    detectedFeatures.push('Detección de ejecución de comandos en shell/terminal (ej. subprocess, child_process)');
+    requiresHumanApproval = false; // Elevated risk: terminal commands without human gate
+  }
+
+  // B. Filesystem Write & Alteration
+  if (
+    combinedContent.includes('fs/promises') ||
+    combinedContent.includes('writefile') ||
+    combinedContent.includes('shutil') ||
+    combinedContent.includes('open(') ||
+    combinedContent.includes('pathlib') ||
+    combinedContent.includes('tempfile')
+  ) {
+    detectedScopes.add('fs:workspace_write');
+    detectedFeatures.push('Capacidad de lectura y escritura en sistema de archivos local');
+  }
+
+  // C. Databases & Persistence
+  if (
+    combinedContent.includes('prisma') ||
+    combinedContent.includes('sqlalchemy') ||
+    combinedContent.includes('sqlite3') ||
+    combinedContent.includes('pg') ||
+    combinedContent.includes('mysql') ||
+    combinedContent.includes('mongodb') ||
+    combinedContent.includes('redis') ||
+    combinedContent.includes('duckdb')
+  ) {
+    detectedScopes.add('db:read_write');
+    detectedFeatures.push('Conexión y ejecución de consultas en bases de datos');
+  }
+
+  // D. Browser Automation & Scraping
+  if (
+    combinedContent.includes('playwright') ||
+    combinedContent.includes('puppeteer') ||
+    combinedContent.includes('selenium') ||
+    combinedContent.includes('beautifulsoup4') ||
+    combinedContent.includes('cheerio') ||
+    combinedContent.includes('crawl')
+  ) {
+    detectedScopes.add('browser:automation');
+    detectedFeatures.push('Automatización de navegador web / Web scraping headless');
+  }
+
+  // E. Web3, Cryptography & Wallets
+  if (
+    combinedContent.includes('web3') ||
+    combinedContent.includes('ethers') ||
+    combinedContent.includes('solana') ||
+    combinedContent.includes('private_key') ||
+    combinedContent.includes('bip39')
+  ) {
+    detectedScopes.add('wallet:crypto_operations');
+    detectedFeatures.push('Riesgo financiero: interacción con billeteras o contratos criptográficos');
+  }
+
+  // F. Email, Slack & Messaging
+  if (
+    combinedContent.includes('@slack/bolt') ||
+    combinedContent.includes('discord.js') ||
+    combinedContent.includes('nodemailer') ||
+    combinedContent.includes('resend') ||
+    combinedContent.includes('sendgrid') ||
+    combinedContent.includes('gmail')
+  ) {
+    detectedScopes.add('gmail:read_all');
+    detectedFeatures.push('Integración con servicios de correo electrónico o mensajería');
+  }
+
+  // G. Environment Variables & Secret Handling
+  if (
+    combinedContent.includes('dotenv') ||
+    combinedContent.includes('os.environ') ||
+    combinedContent.includes('process.env')
+  ) {
+    detectedScopes.add('credentials:env_read');
+  }
+
+  // 5. Build Final Translated Permissions
+  const permissions: PermissionScope[] = Array.from(detectedScopes).map(scope => {
+    let detectedVia = 'Análisis automático de código y dependencias del repositorio';
+    if (scope === 'terminal:exec') detectedVia = 'Dependencia de consola detectada (ej. subprocess / child_process)';
+    if (scope === 'browser:automation') detectedVia = 'Librería de automatización web (ej. Playwright / Puppeteer / BS4)';
+    if (scope === 'db:read_write') detectedVia = 'Driver o cliente de base de datos detectado (ej. SQLite / Prisma / SQLAlchemy)';
+    if (scope === 'fs:workspace_write') detectedVia = 'Operaciones de entrada/salida de disco en manifiesto';
+    if (scope === 'git:repo_read') detectedVia = 'Manifiesto de repositorio GitHub público';
+    if (scope === 'network:outbound_https') detectedVia = 'Cliente HTTP de salida para llamadas de red';
+    if (scope === 'wallet:crypto_operations') detectedVia = 'Librería Web3 / Criptográfica identificada';
+    if (scope === 'gmail:read_all') detectedVia = 'Integración de correo electrónico / mensajería';
+    if (scope === 'credentials:env_read') detectedVia = 'Gestión de configuración y credenciales por entorno';
+
+    return translatePermission(scope, undefined, detectedVia);
+  });
+
+  // 6. Tools declared based on repository identity
+  toolsDeclared.push({
+    name: 'repo_analyzer',
+    description: `Inspección de código fuente y AST para ${owner}/${repo}`,
+    parameters: { branch: 'string' },
+    requiresApproval: false,
+  });
+
+  if (detectedScopes.has('terminal:exec')) {
+    toolsDeclared.push({
+      name: 'system_execute',
+      description: 'Invocación de subprocesos y comandos en host',
+      parameters: { command: 'string' },
+      requiresApproval: true,
+    });
+  }
+
+  if (detectedScopes.has('db:read_write')) {
+    toolsDeclared.push({
+      name: 'database_query',
+      description: 'Ejecución de consultas SQL / NoSQL',
+      parameters: { query: 'string' },
+      requiresApproval: false,
+    });
+  }
+
+  if (detectedScopes.has('browser:automation')) {
+    toolsDeclared.push({
+      name: 'browser_fetch',
+      description: 'Extracción de contenido dinámico mediante navegador web',
+      parameters: { url: 'string' },
+      requiresApproval: false,
+    });
+  }
+
+  return {
+    permissions,
+    toolsDeclared,
+    framework,
+    category,
+    declaredCapabilities: Array.from(declaredCapabilities),
+    externalConnections: Array.from(externalConnections),
+    hasAuditLogs,
+    requiresHumanApproval,
+    isSandboxed,
+    hasPromptInjectionGuard,
+    detectedFeatures,
+  };
+}

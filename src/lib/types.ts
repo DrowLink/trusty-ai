@@ -12,11 +12,18 @@ export type AgentCategory =
 
 export type SensitivityLevel = 'low' | 'medium' | 'high' | 'critical';
 
+export type AccessType = 'read_only' | 'read_write' | 'execute_admin';
+
 export interface PermissionScope {
   scope: string; // e.g., 'gmail:read', 'terminal:exec', 'fs:write'
   sensitivity: SensitivityLevel;
   justification?: string;
   isHighRisk?: boolean;
+  humanLabel?: string;
+  humanImpact?: string;
+  detectedVia?: string; // e.g. 'Dependency: subprocess', 'Manifest: mcp.json'
+  accessType?: AccessType;
+  categoryGroup?: 'system' | 'network' | 'filesystem' | 'database' | 'personal_data' | 'financial' | 'browser' | 'code';
 }
 
 export interface AgentPublisher {

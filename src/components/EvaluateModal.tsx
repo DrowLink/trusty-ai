@@ -281,9 +281,14 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono text-zinc-400 mb-1">
-              Requested Permissions (comma separated)
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-[11px] font-mono text-zinc-400">
+                Capacidades y Permisos Solicitados
+              </label>
+              <span className="text-[10px] text-zinc-500 font-mono">
+                (O pega arriba el repo para inferirlos automáticamente)
+              </span>
+            </div>
             <input
               type="text"
               value={permissions}
@@ -291,6 +296,38 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
               placeholder="e.g. calendar:read, gmail:read_all, terminal:exec"
               className="w-full px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white font-mono focus:outline-none focus:border-zinc-500"
             />
+            {/* Quick Human Permission Chips */}
+            <div className="flex flex-wrap items-center gap-1.5 mt-2">
+              <span className="text-[10px] font-mono text-zinc-500">Insertar:</span>
+              <button
+                type="button"
+                onClick={() => setPermissions(prev => prev ? `${prev}, db:read_only` : 'db:read_only')}
+                className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/[0.06] transition"
+              >
+                + Base de Datos (Lectura)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPermissions(prev => prev ? `${prev}, network:outbound_https` : 'network:outbound_https')}
+                className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/[0.06] transition"
+              >
+                + Acceso a Internet
+              </button>
+              <button
+                type="button"
+                onClick={() => setPermissions(prev => prev ? `${prev}, fs:workspace_write` : 'fs:workspace_write')}
+                className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-white/[0.06] transition"
+              >
+                + Guardar Archivos
+              </button>
+              <button
+                type="button"
+                onClick={() => setPermissions(prev => prev ? `${prev}, terminal:exec` : 'terminal:exec')}
+                className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/40 transition"
+              >
+                + Terminal (Crítico)
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-sans">

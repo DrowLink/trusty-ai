@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { AgentRecord } from '@/lib/types';
 import { evaluateAgentTrust } from '@/lib/scoring/engine';
 import { agentStore } from '@/lib/db/store';
+import { scanRepositoryPermissions } from '@/lib/scanner/permissionScanner';
+import { translatePermission } from '@/lib/scanner/permissionTranslator';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +12,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     let { name, publisherName, domain, category, permissions, repositoryUrl, isSandboxed, requiresHumanApproval, framework } = body;
 
-    // --- REAL LIVE GITHUB REPO INSPECTION ---
+    // --- REAL LIVE GITHUB REPO INSPECTION & AUTO PERMISSION SCANNER ---
     if (repositoryUrl && repositoryUrl.includes('github.com')) {
       const match = repositoryUrl.match(/github\.com\/([^\/]+)\/([^\/\?#]+)/);
       if (match) {
@@ -30,12 +32,22 @@ export async function POST(request: NextRequest) {
             publisherName = publisherName || ghData.owner.login;
             domain = domain || (ghData.homepage ? new URL(ghData.homepage).hostname : `${ghData.owner.login}.github.io`);
             body.description = ghData.description || body.description;
-            category = category || (ghData.name.includes('code') || ghData.topics?.includes('dev') ? 'coding' : 'productivity');
-            framework = framework || (ghData.topics?.includes('mcp') ? 'mcp' : ghData.topics?.includes('crewai') ? 'crewai' : 'langchain');
 
             const isOrg = ghData.owner.type === 'Organization';
             const stars = ghData.stargazers_count || 0;
             const forks = ghData.forks_count || 0;
+
+            // Run our Automated Code & Manifest Permission Scanner
+            const scan = await scanRepositoryPermissions(
+              owner,
+              repo,
+              ghData.default_branch || 'main',
+              ghData.topics || [],
+              ghData.description || ''
+            );
+
+            category = category || scan.category;
+            framework = framework || scan.framework;
 
             const id = `live-gh-${ghData.id}`;
             const agentRecord: AgentRecord = {
@@ -55,19 +67,14 @@ export async function POST(request: NextRequest) {
               },
               framework: framework || 'mcp',
               repositoryUrl: ghData.html_url,
-              declaredCapabilities: ghData.topics || ['ai-agent', 'github-repo'],
-              requestedPermissions: [
-                { scope: 'git:repo_read', sensitivity: 'low', justification: 'Inspect repository metadata and files.' },
-                { scope: 'network:outbound_https', sensitivity: 'low', justification: 'Communicate with external APIs.' },
-              ],
-              toolsDeclared: [
-                { name: 'repo_inspect', description: 'Analyze codebase AST', parameters: {} }
-              ],
-              externalConnections: ['api.github.com'],
-              hasAuditLogs: true,
-              requiresHumanApproval: true,
-              isSandboxed: true,
-              hasPromptInjectionGuard: stars > 500,
+              declaredCapabilities: Array.from(new Set([...(ghData.topics || []), ...scan.declaredCapabilities])),
+              requestedPermissions: scan.permissions,
+              toolsDeclared: scan.toolsDeclared,
+              externalConnections: scan.externalConnections,
+              hasAuditLogs: scan.hasAuditLogs,
+              requiresHumanApproval: scan.requiresHumanApproval,
+              isSandboxed: scan.isSandboxed,
+              hasPromptInjectionGuard: stars > 500 || scan.hasPromptInjectionGuard,
               hasKnownCVEs: false,
               cveCount: 0,
               hasMalwareHistory: false,
@@ -80,9 +87,9 @@ export async function POST(request: NextRequest) {
                 fingerprintId: `fp-live-gh-${ghData.id}`,
                 timestamp: new Date().toISOString(),
                 manifestHash: `sha256:gh_${ghData.id}_${ghData.default_branch}`,
-                toolSchemasHash: 'sha256:tools_live_v1',
-                permissionsHash: 'sha256:perms_live_v1',
-                dependenciesHash: 'sha256:deps_live_v1',
+                toolSchemasHash: 'sha256:tools_live_v2',
+                permissionsHash: `sha256:perms_live_${scan.permissions.length}`,
+                dependenciesHash: 'sha256:deps_live_v2',
                 isDriftDetected: false,
               },
             };
@@ -93,6 +100,8 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({
               success: true,
               isRealGitHubLiveAudit: true,
+              autoScannedPermissions: true,
+              detectedFeatures: scan.detectedFeatures,
               agent: saved,
               evaluation,
             });
@@ -113,15 +122,7 @@ export async function POST(request: NextRequest) {
 
     const id = `custom-${Date.now()}`;
     const rawPermissions = Array.isArray(permissions) ? permissions : (typeof permissions === 'string' ? permissions.split(',').map((s: string) => s.trim()) : []);
-    const parsedPermissions = rawPermissions.map((scopeStr: string) => {
-      const isCritical = scopeStr.includes('root') || scopeStr.includes('private_key') || scopeStr.includes('financial') || scopeStr.includes('steal');
-      const isHigh = scopeStr.includes('all_emails') || scopeStr.includes('exec') || scopeStr.includes('write_all');
-      return {
-        scope: scopeStr,
-        sensitivity: isCritical ? 'critical' : isHigh ? 'high' : 'medium',
-        justification: `User submitted capability request for ${scopeStr}`,
-      };
-    });
+    const parsedPermissions = rawPermissions.map((scopeStr: string) => translatePermission(scopeStr));
 
     const isMaliciousScope = rawPermissions.some((p: string) => 
       p.toLowerCase().includes('steal') || p.toLowerCase().includes('private_key') || p.toLowerCase().includes('malware')
