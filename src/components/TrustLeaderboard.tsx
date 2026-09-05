@@ -1,8 +1,35 @@
 'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AgentWithScore } from '@/lib/types';
-import { Search, ChevronRight, ShieldAlert, Mail, Wallet, Code2, RotateCcw, Shield, ExternalLink } from 'lucide-react';
+import { 
+  Search, 
+  ChevronRight, 
+  ShieldAlert, 
+  Mail, 
+  Wallet, 
+  Code2, 
+  RotateCcw, 
+  Shield, 
+  ExternalLink,
+  ChevronLeft,
+  ChevronsLeft,
+  ChevronsRight
+} from 'lucide-react';
+
+function generatePageNumbers(current: number, total: number): (number | string)[] {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const pages: (number | string)[] = [];
+  if (current <= 3) {
+    pages.push(1, 2, 3, 4, '...', total);
+  } else if (current >= total - 2) {
+    pages.push(1, '...', total - 3, total - 2, total - 1, total);
+  } else {
+    pages.push(1, '...', current - 1, current, current + 1, '...', total);
+  }
+  return pages;
+}
 
 interface TrustLeaderboardProps {
   agents: AgentWithScore[];
@@ -24,6 +51,13 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   const [selectedEcosystem, setSelectedEcosystem] = useState('all');
   const [selectedPermission, setSelectedPermission] = useState('all');
   const [sortBy, setSortBy] = useState<'trust' | 'credit' | 'capacity' | 'confidence' | 'popularity' | 'recent'>('trust');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Reset to page 1 on search, filter, or sort change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, selectedRisk, selectedEcosystem, selectedPermission, sortBy]);
 
   const applyPreset = (preset: string) => {
     if (preset === 'email') {
@@ -97,6 +131,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
     }
     return 0;
   });
+
+  // Pagination slice
+  const totalItems = filteredAgents.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+  const safeCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (safeCurrentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  const paginatedAgents = filteredAgents.slice(startIndex, endIndex);
 
   // Category counts
   const countCoding = agents.filter(a => a.category === 'coding').length;
@@ -316,8 +358,8 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             No agents match active filters.
           </div>
         ) : (
-          filteredAgents.map((agent, index) => {
-            const rank = index + 1;
+          paginatedAgents.map((agent, index) => {
+            const rank = startIndex + index + 1;
             const score = agent.evaluation.trustyScore;
 
             return (
@@ -423,8 +465,8 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                   </td>
                 </tr>
               ) : (
-                filteredAgents.map((agent, index) => {
-                  const rank = index + 1;
+                paginatedAgents.map((agent, index) => {
+                  const rank = startIndex + index + 1;
                   const score = agent.evaluation.trustyScore;
                   const dims = agent.evaluation.dimensions;
 
@@ -571,6 +613,105 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
           </table>
         </div>
       </div>
+
+      {/* PAGINATION BAR */}
+      {totalItems > 0 && (
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-3.5 py-3 bg-zinc-950/70 border border-white/[0.08] rounded-lg text-xs font-mono">
+          {/* Item range info */}
+          <div className="text-zinc-400 flex items-center space-x-1.5 text-center sm:text-left">
+            <span>
+              Showing <strong className="text-zinc-200 tabular-nums">{startIndex + 1}</strong>–<strong className="text-zinc-200 tabular-nums">{endIndex}</strong> of{' '}
+              <strong className="text-zinc-200 tabular-nums">{totalItems}</strong> agents
+            </span>
+          </div>
+
+          {/* Controls: Rows selector + Page buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {/* Rows per page selector */}
+            <div className="flex items-center space-x-1.5">
+              <span className="text-zinc-500 text-[11px]">Rows:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="bg-zinc-900 border border-white/[0.08] text-zinc-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-zinc-700"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={safeCurrentPage === 1}
+                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                title="First Page"
+              >
+                <ChevronsLeft className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={safeCurrentPage === 1}
+                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                title="Previous Page"
+              >
+                <ChevronLeft className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Page numbers */}
+              <div className="flex items-center space-x-1 px-1">
+                {generatePageNumbers(safeCurrentPage, totalPages).map((p, idx) => {
+                  if (p === '...') {
+                    return (
+                      <span key={`dots-${idx}`} className="px-1 text-zinc-600 select-none">
+                        ...
+                      </span>
+                    );
+                  }
+                  const pageNum = Number(p);
+                  const isActive = pageNum === safeCurrentPage;
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`w-7 h-7 rounded text-xs font-mono font-medium transition flex items-center justify-center tabular-nums ${
+                        isActive
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
+                          : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-white/[0.08]'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={safeCurrentPage === totalPages}
+                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                title="Next Page"
+              >
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={safeCurrentPage === totalPages}
+                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                title="Last Page"
+              >
+                <ChevronsRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
