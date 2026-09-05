@@ -169,7 +169,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-[#08090d]">
+    <div className="flex-1 flex flex-col min-h-screen bg-transparent">
       {/* Top Navigation */}
       <Navbar
         onOpenSpecs={() => setIsSpecsOpen(true)}
@@ -207,12 +207,12 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.08] bg-[#07080c] py-6 text-xs text-zinc-500 font-mono">
+      <footer className="border-t border-slate-800/80 bg-[#070a11]/90 backdrop-blur py-6 text-xs text-slate-400 font-mono">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
-            <span className="text-zinc-300 font-bold">TRUSTY.ai</span>
+            <span className="text-slate-200 font-bold">TRUSTY.ai</span>
             <span>—</span>
-            <span>Independent Agent Trust Layer</span>
+            <span className="text-slate-400">Independent Agent Trust Layer</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[11px]">
             <a

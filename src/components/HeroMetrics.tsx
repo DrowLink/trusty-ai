@@ -98,31 +98,32 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   const critRiskPct = stats.totalAgents > 0 ? Math.round(((stats.criticalRiskCount + stats.highRiskCount) / stats.totalAgents) * 100) : 0;
 
   return (
-    <section className="pt-5 sm:pt-10 pb-5 px-3 sm:px-6 max-w-7xl mx-auto border-b border-white/[0.08]">
+    <section className="pt-6 sm:pt-10 pb-6 px-3 sm:px-6 max-w-7xl mx-auto border-b border-slate-800/80">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         {/* Left Column (7 cols on desktop, 12 on mobile): Mission & Universal Omnibox */}
         <div className="lg:col-span-7">
-          <div className="flex items-center space-x-2 text-[11px] sm:text-xs font-mono text-zinc-400 mb-1.5 sm:mb-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="uppercase tracking-wider font-semibold text-zinc-300 hidden xs:inline">TRUSTY.ai</span>
-            <span className="text-zinc-500 font-medium">VirusTotal for AI Agents</span>
+          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-400 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-slate-300 font-semibold">VirusTotal for AI Agents</span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-400">Security & Reputation Registry</span>
           </div>
 
-          <h1 className="text-xl sm:text-3xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
-            Before clicking &ldquo;START AGENT&rdquo;, ask: <span className="text-emerald-400 italic">Can I trust it?</span>
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
+            Before clicking &ldquo;START AGENT&rdquo;, ask: <span className="text-emerald-400 font-extrabold">Can I trust it?</span>
           </h1>
 
-          <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
-            Continuous security discovery across AI agent ecosystems. 0–100 TRUSTY Scores evaluating identity, permissions, CVEs, and spend capacity.
+          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans max-w-xl">
+            Continuous security discovery across AI agent ecosystems. Deterministic 0–100 TRUSTY Scores evaluating identity, permissions, CVEs, and spend capacity.
           </p>
 
           {/* Universal Hero Omnibox with Autocomplete & Direct Audit */}
           <div className="relative mt-4 sm:mt-6 max-w-xl">
             <form onSubmit={handleSubmit}>
-              <div className={`relative flex items-center rounded-lg bg-zinc-950 border transition shadow-xl p-1 ${
-                isFocused ? 'border-emerald-500 ring-1 ring-emerald-500/30' : 'border-white/[0.14] hover:border-white/[0.25]'
+              <div className={`relative flex items-center rounded-xl bg-slate-900/95 border transition shadow-2xl p-1.5 ${
+                isFocused ? 'border-sky-500 ring-2 ring-sky-500/20 shadow-sky-500/10' : 'border-slate-700/70 hover:border-slate-600'
               }`}>
-                <Search className="w-4 h-4 text-zinc-400 ml-2.5 sm:ml-3 flex-shrink-0" />
+                <Search className="w-4 h-4 text-slate-400 ml-2.5 sm:ml-3 flex-shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -133,8 +134,8 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Search agent or paste GitHub repo link..."
-                  className="w-full px-2.5 sm:px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-sans"
+                  placeholder="Search agent name or paste GitHub repo URL..."
+                  className="w-full px-2.5 sm:px-3 py-2 bg-transparent text-xs sm:text-sm text-slate-100 placeholder-slate-400 focus:outline-none font-sans"
                 />
 
                 {/* Clear button if text exists */}
@@ -145,46 +146,36 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                       onSearchChange('');
                       setSelectedIndex(-1);
                     }}
-                    className="p-1 text-zinc-500 hover:text-zinc-300 mr-1"
-                    title="Clear search"
+                    className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition mr-1"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 )}
 
-                {/* Dynamic Submit / Action Button */}
+                {/* Direct Action Button */}
                 <button
                   type="submit"
-                  disabled={isAuditing || !searchQuery.trim()}
-                  className={`flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded text-xs font-mono font-medium disabled:opacity-40 transition flex-shrink-0 ${
-                    isInputUrl
-                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md'
-                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200'
-                  }`}
+                  disabled={isAuditing}
+                  className="flex items-center space-x-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-xs font-mono font-bold transition flex-shrink-0 shadow-sm bg-sky-500 hover:bg-sky-400 active:bg-sky-600 text-sky-950 disabled:opacity-50"
                 >
                   {isAuditing ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       <span className="hidden xs:inline">Auditing...</span>
                     </>
-                  ) : isInputUrl ? (
-                    <>
-                      <span>Audit</span>
-                      <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
-                    </>
                   ) : (
                     <>
-                      <span>Search</span>
-                      <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
+                      <span>{isInputUrl ? 'Audit Repo' : 'Search'}</span>
+                      <ArrowRight className="w-3 h-3" />
                     </>
                   )}
                 </button>
               </div>
             </form>
 
-            {/* Smart Autocomplete Dropdown */}
+            {/* Instant Autocomplete Suggestions Dropdown */}
             {isFocused && matchingAgents.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 rounded-lg bg-[#0c0e14] border border-white/[0.12] shadow-2xl z-30 overflow-hidden font-sans divide-y divide-white/[0.06]">
+              <div className="absolute top-full left-0 right-0 mt-1.5 rounded-xl bg-[#0d131f] border border-slate-700 shadow-2xl z-30 overflow-hidden font-sans divide-y divide-slate-800">
                 <div className="px-3 py-1.5 bg-zinc-950/90 text-[10px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
                   <span>Matching Indexed Agents ({matchingAgents.length})</span>
                   <span className="text-zinc-600">Press Enter or click to inspect</span>
@@ -255,15 +246,15 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
             )}
 
             {/* Quick Presets / Try links */}
-            <div className="flex items-center space-x-1.5 mt-2.5 text-[11px] text-zinc-500 font-mono overflow-x-auto no-scrollbar py-0.5">
-              <span className="flex-shrink-0">Try:</span>
+            <div className="flex items-center space-x-1.5 mt-2.5 text-[11px] text-slate-500 font-mono overflow-x-auto no-scrollbar py-0.5">
+              <span className="flex-shrink-0 text-slate-400">Try:</span>
               <button
                 type="button"
                 onClick={() => {
                   onSearchChange('https://github.com/crewAIInc/crewAI');
                   onAuditUrl('https://github.com/crewAIInc/crewAI');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
+                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
               >
                 crewAI
               </button>
@@ -273,7 +264,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   onSearchChange('https://github.com/browser-use/browser-use');
                   onAuditUrl('https://github.com/browser-use/browser-use');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
+                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
               >
                 browser-use
               </button>
@@ -282,7 +273,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                 onClick={() => {
                   onSearchChange('Git');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
+                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
               >
                 Filter &ldquo;Git&rdquo;
               </button>
@@ -290,12 +281,12 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
 
             {/* VirusTotal Quota indicator */}
             {session && !session.isAuthenticated && (
-              <div className="mt-2.5 flex items-center justify-between px-2.5 py-1.5 rounded bg-zinc-950/60 border border-white/[0.06] text-[11px] font-mono">
-                <div className="flex items-center space-x-1.5 text-zinc-400">
+              <div className="mt-2.5 flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px] font-mono">
+                <div className="flex items-center space-x-1.5 text-slate-400">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
                   <span>
                     Quota:{' '}
-                    <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-zinc-200'}>
+                    <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-slate-200'}>
                       {session.queriesRemaining}/10
                     </strong>{' '}
                     free
@@ -304,22 +295,22 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                 <button
                   type="button"
                   onClick={onOpenAuth}
-                  className="text-emerald-400 hover:text-emerald-300 font-medium"
+                  className="text-sky-400 hover:text-sky-300 font-medium transition"
                 >
-                  {session.queriesRemaining <= 0 ? 'Authenticate' : 'Unlock'}
+                  {session.queriesRemaining <= 0 ? 'Authenticate' : 'Unlock unlimited'}
                 </button>
               </div>
             )}
 
             {/* Mobile-only compact telemetry pill bar (clean like VirusTotal) */}
-            <div className="lg:hidden mt-3 p-2.5 rounded-lg bg-zinc-950/80 border border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
+            <div className="lg:hidden mt-3 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between text-[11px] font-mono">
               <div className="flex items-center space-x-1.5">
                 <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                <span className="text-zinc-200 font-semibold">{stats.totalAgents} Agents Monitored</span>
+                <span className="text-slate-200 font-semibold">{stats.totalAgents} Agents Monitored</span>
               </div>
               <div className="flex items-center space-x-2 text-[10px]">
                 <span className="text-emerald-400 font-medium">{stats.lowRiskCount} Safe</span>
-                <span className="text-zinc-600">•</span>
+                <span className="text-slate-600">•</span>
                 <span className="text-rose-400 font-medium">{stats.criticalRiskCount + stats.highRiskCount} Flagged</span>
               </div>
             </div>
@@ -328,13 +319,13 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
 
         {/* Right Column (5 cols): Real-time Risk Distribution Radar (Desktop Only) */}
         <div className="hidden lg:block lg:col-span-5">
-          <div className="security-card p-4 sm:p-5 rounded-lg">
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-3">
+          <div className="security-card p-4 sm:p-5 rounded-xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
               <div className="flex items-center space-x-2">
                 <Shield className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-mono font-bold uppercase text-zinc-200">Ecosystem Risk Radar</span>
+                <span className="text-xs font-mono font-bold uppercase text-slate-200">Ecosystem Risk Radar</span>
               </div>
-              <span className="text-[10px] font-mono text-zinc-500 uppercase tabular-nums">
+              <span className="text-[10px] font-mono text-slate-400 uppercase tabular-nums">
                 {stats.totalAgents} Agents Monitored
               </span>
             </div>
@@ -343,51 +334,51 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
             <div className="space-y-3">
               {/* Segmented spectrum bar */}
               <div>
-                <div className="flex justify-between text-[11px] font-mono text-zinc-400 mb-1.5">
+                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1.5">
                   <span>Trust Distribution</span>
-                  <span className="text-zinc-500">Benchmark: {stats.avgTrustScore}/100</span>
+                  <span className="text-slate-400">Benchmark: {stats.avgTrustScore}/100</span>
                 </div>
-                <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden flex">
-                  <div style={{ width: `${lowRiskPct}%` }} className="bg-emerald-500" title={`Low Risk: ${stats.lowRiskCount}`} />
+                <div className="h-2.5 w-full bg-slate-900 rounded-full overflow-hidden flex p-0.5 border border-slate-800">
+                  <div style={{ width: `${lowRiskPct}%` }} className="bg-emerald-500 rounded-l-full" title={`Low Risk: ${stats.lowRiskCount}`} />
                   <div style={{ width: `${medRiskPct}%` }} className="bg-amber-500" title={`Medium Risk: ${stats.mediumRiskCount}`} />
-                  <div style={{ width: `${critRiskPct}%` }} className="bg-rose-500" title={`Critical: ${stats.criticalRiskCount + stats.highRiskCount}`} />
+                  <div style={{ width: `${critRiskPct}%` }} className="bg-rose-500 rounded-r-full" title={`Critical: ${stats.criticalRiskCount + stats.highRiskCount}`} />
                 </div>
               </div>
 
               {/* Breakdown Matrix */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06] text-center">
-                <div className="p-2 rounded bg-zinc-950 border border-white/[0.06]">
+              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-center">
+                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
                   <div className="text-lg font-bold font-mono text-emerald-400 tabular-nums leading-none">
                     {stats.lowRiskCount}
                   </div>
-                  <div className="text-[10px] font-mono text-zinc-400 mt-1">Low Risk</div>
-                  <div className="text-[9px] text-zinc-600 font-mono">80–100</div>
+                  <div className="text-[10px] font-mono text-slate-300 mt-1.5 font-medium">Low Risk</div>
+                  <div className="text-[9px] text-slate-500 font-mono">80–100</div>
                 </div>
 
-                <div className="p-2 rounded bg-zinc-950 border border-white/[0.06]">
+                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
                   <div className="text-lg font-bold font-mono text-amber-400 tabular-nums leading-none">
                     {stats.mediumRiskCount}
                   </div>
-                  <div className="text-[10px] font-mono text-zinc-400 mt-1">Elevated</div>
-                  <div className="text-[9px] text-zinc-600 font-mono">60–79</div>
+                  <div className="text-[10px] font-mono text-slate-300 mt-1.5 font-medium">Elevated</div>
+                  <div className="text-[9px] text-slate-500 font-mono">60–79</div>
                 </div>
 
-                <div className="p-2 rounded bg-zinc-950 border border-white/[0.06]">
+                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
                   <div className="text-lg font-bold font-mono text-rose-400 tabular-nums leading-none">
                     {stats.criticalRiskCount + stats.highRiskCount}
                   </div>
-                  <div className="text-[10px] font-mono text-rose-400 mt-1">Quarantine</div>
-                  <div className="text-[9px] text-rose-500/70 font-mono">0–59</div>
+                  <div className="text-[10px] font-mono text-rose-300 mt-1.5 font-medium">Quarantine</div>
+                  <div className="text-[9px] text-rose-400/70 font-mono">0–59</div>
                 </div>
               </div>
 
               {/* Crawler Telemetry line */}
-              <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500 pt-2 border-t border-white/[0.06]">
-                <span className="flex items-center space-x-1">
-                  <Activity className="w-3 h-3 text-zinc-400" />
+              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-2 border-t border-slate-800">
+                <span className="flex items-center space-x-1.5">
+                  <Activity className="w-3.5 h-3.5 text-sky-400" />
                   <span>3 Crawlers Connected:</span>
                 </span>
-                <span className="text-zinc-400">GitHub · NPM · HuggingFace</span>
+                <span className="text-slate-300">GitHub · NPM · HuggingFace</span>
               </div>
             </div>
           </div>

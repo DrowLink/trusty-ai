@@ -190,87 +190,87 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5">
       {/* Category Segmented Control Bar */}
-      <div className="flex items-center space-x-1.5 border-b border-white/[0.08] pb-2.5 mb-3 overflow-x-auto no-scrollbar">
+      <div className="flex items-center space-x-1.5 border-b border-slate-800/80 pb-2.5 mb-3 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'all'
-              ? 'bg-zinc-100 text-zinc-900 shadow'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
           }`}
         >
           <span>All</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'all' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'all' ? 'bg-slate-900 text-sky-400' : 'bg-slate-900/80 text-slate-500'}`}>
             {agents.length}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('coding')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'coding'
-              ? 'bg-zinc-100 text-zinc-900 shadow'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Code2 className="w-3 h-3" />
+          <Code2 className="w-3 h-3 text-sky-400" />
           <span>Coding</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'coding' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'coding' ? 'bg-slate-900 text-sky-400' : 'bg-slate-900/80 text-slate-500'}`}>
             {countCoding}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('productivity')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'productivity'
-              ? 'bg-zinc-100 text-zinc-900 shadow'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Mail className="w-3 h-3" />
+          <Mail className="w-3 h-3 text-emerald-400" />
           <span>Productivity</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'productivity' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'productivity' ? 'bg-slate-900 text-sky-400' : 'bg-slate-900/80 text-slate-500'}`}>
             {countProductivity}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('finance')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'finance'
-              ? 'bg-zinc-100 text-zinc-900 shadow'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Wallet className="w-3 h-3" />
+          <Wallet className="w-3 h-3 text-amber-400" />
           <span>Finance</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'finance' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'finance' ? 'bg-slate-900 text-sky-400' : 'bg-slate-900/80 text-slate-500'}`}>
             {countFinance}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('research')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'research'
-              ? 'bg-zinc-100 text-zinc-900 shadow'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
+              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent'
           }`}
         >
           <span>Research</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'research' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'research' ? 'bg-slate-900 text-sky-400' : 'bg-slate-900/80 text-slate-500'}`}>
             {countResearch}
           </span>
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="security-card p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4">
+      <div className="security-card p-2.5 sm:p-3 rounded-xl mb-3 sm:mb-4">
         {searchQuery && (
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] text-xs font-mono text-zinc-300">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 text-xs font-mono text-slate-300">
             <span className="flex items-center space-x-1.5">
-              <span className="text-zinc-500">Filtering by:</span>
+              <span className="text-slate-400">Filtering by:</span>
               <span className="text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/40">
                 &ldquo;{searchQuery}&rdquo;
               </span>
@@ -278,7 +278,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             {onClearSearch && (
               <button
                 onClick={onClearSearch}
-                className="text-[11px] text-zinc-500 hover:text-zinc-300 transition underline"
+                className="text-[11px] text-slate-400 hover:text-slate-200 transition underline"
               >
                 Clear filter
               </button>
@@ -292,7 +292,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-200 font-mono focus:outline-none focus:border-zinc-500"
+              className="w-full px-2 py-1.5 bg-[#090d16] border border-slate-800 rounded-lg text-xs text-slate-200 font-mono focus:outline-none focus:border-sky-500/80"
             >
               <option value="trust">Sort: Trusty Score</option>
               <option value="credit">Sort: Credit Score (Beta)</option>
@@ -308,7 +308,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedRisk}
               onChange={e => setSelectedRisk(e.target.value)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+              className="w-full px-2 py-1.5 bg-[#090d16] border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500/80 font-mono"
             >
               <option value="all">Risk: All Tiers</option>
               <option value="LOW_RISK">Low Risk [80-100]</option>
@@ -323,7 +323,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedEcosystem}
               onChange={e => setSelectedEcosystem(e.target.value)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+              className="w-full px-2 py-1.5 bg-[#090d16] border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500/80 font-mono"
             >
               <option value="all">Source: All</option>
               <option value="github">GitHub</option>
@@ -338,7 +338,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedPermission}
               onChange={e => setSelectedPermission(e.target.value)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-300 focus:outline-none focus:border-zinc-500 font-mono"
+              className="w-full px-2 py-1.5 bg-[#090d16] border border-slate-800 rounded-lg text-xs text-slate-200 focus:outline-none focus:border-sky-500/80 font-mono"
             >
               <option value="all">Permissions: All</option>
               <option value="git">Git Access</option>
@@ -441,10 +441,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
       </div>
 
       {/* DESKTOP VIEW: High-density Table with 5-Dimension Mini Bar */}
-      <div className="hidden md:block security-card rounded-lg overflow-hidden">
+      <div className="hidden md:block security-card rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-zinc-950/90 text-zinc-500 uppercase tracking-wider font-mono border-b border-white/[0.08] text-[10px]">
+            <thead className="bg-[#090d16]/95 text-slate-400 uppercase tracking-wider font-mono border-b border-slate-800 text-[10px]">
               <tr>
                 <th className="py-3 px-4 w-12">Rank</th>
                 <th className="py-3 px-4">Agent & Publisher</th>
@@ -456,10 +456,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 <th className="py-3 px-4 text-right">Audit</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.06] font-sans">
+            <tbody className="divide-y divide-slate-800/60 font-sans">
               {filteredAgents.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-zinc-500 font-mono text-xs">
+                  <td colSpan={8} className="py-12 text-center text-slate-400 font-mono text-xs">
                     No agents match current filters.
                   </td>
                 </tr>
@@ -473,12 +473,12 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                     <tr
                       key={agent.id}
                       onClick={() => onSelectAgent(agent)}
-                      className={`hover:bg-white/[0.03] transition cursor-pointer ${
-                        agent.evaluation.overrideApplied ? 'bg-rose-950/10' : ''
+                      className={`hover:bg-slate-800/30 transition cursor-pointer ${
+                        agent.evaluation.overrideApplied ? 'bg-rose-950/20' : ''
                       }`}
                     >
                       {/* Rank */}
-                      <td className="py-3.5 px-4 font-mono text-zinc-500 font-bold tabular-nums">
+                      <td className="py-3.5 px-4 font-mono text-slate-500 font-bold tabular-nums">
                         #{rank}
                       </td>
 
@@ -486,13 +486,13 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       <td className="py-3.5 px-4">
                         <div className="flex items-center space-x-2">
                           <div className="min-w-0">
-                            <div className="font-semibold text-zinc-100 flex items-center space-x-1.5">
-                              <span className="truncate">{agent.name}</span>
+                            <div className="font-semibold text-slate-100 flex items-center space-x-1.5">
+                              <span className="truncate hover:text-sky-300 transition">{agent.name}</span>
                               {agent.evaluation.overrideApplied && (
                                 <ShieldAlert className="w-4 h-4 text-rose-400 flex-shrink-0" />
                               )}
                             </div>
-                            <div className="text-[11px] text-zinc-500 font-mono flex items-center space-x-1.5 mt-0.5">
+                            <div className="text-[11px] text-slate-400 font-mono flex items-center space-x-1.5 mt-0.5">
                               <span className="truncate">{agent.publisher.name}</span>
                               {agent.publisher.verifiedDomain && (
                                 <span className="text-emerald-400 flex items-center space-x-0.5 text-[10px] font-sans">
@@ -508,10 +508,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       {/* Ecosystem & Type */}
                       <td className="py-3.5 px-4">
                         <div className="flex flex-col space-y-1">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-zinc-900 border border-white/[0.08] text-zinc-400 w-fit">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-900 border border-slate-800 text-slate-300 w-fit">
                             {agent.sourceEcosystem.replace('_', ' ')}
                           </span>
-                          <span className="text-[10px] text-zinc-500 font-mono">
+                          <span className="text-[10px] text-slate-400 font-mono">
                             {agent.framework} · {agent.category}
                           </span>
                         </div>
@@ -546,46 +546,46 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                             title={`Reputation: ${dims.reputation.score}/100`}
                           />
                         </div>
-                        <div className="flex justify-between text-[9px] font-mono text-zinc-500">
+                        <div className="flex justify-between text-[9px] font-mono text-slate-500">
                           <span>Id·Perm·Sec·Gov·Rep</span>
                         </div>
                       </td>
 
                       {/* Confidence */}
                       <td className="py-3.5 px-4 text-center font-mono">
-                        <div className="text-zinc-300 font-semibold tabular-nums">{agent.evaluation.confidence}%</div>
-                        <div className="w-12 h-1 bg-zinc-800 rounded-full mx-auto mt-1 overflow-hidden">
+                        <div className="text-slate-200 font-semibold tabular-nums">{agent.evaluation.confidence}%</div>
+                        <div className="w-12 h-1 bg-slate-800 rounded-full mx-auto mt-1 overflow-hidden">
                           <div
-                            className="h-full bg-zinc-400 rounded-full"
+                            className="h-full bg-slate-400 rounded-full"
                             style={{ width: `${agent.evaluation.confidence}%` }}
                           />
                         </div>
                       </td>
 
-                      {/* TRUSTY Score */}
+                      {/* Trusty Score */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex flex-col items-center">
-                          <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
-                            {score} <span className="text-[10px] opacity-70">/100</span>
-                          </div>
-                          <div className="mt-1">
+                          <span
+                            className={`inline-block px-2.5 py-1 rounded text-xs font-mono font-bold border tabular-nums ${getScoreColor(
+                              score
+                            )}`}
+                          >
+                            {score} / 100
+                          </span>
+                          <span className="mt-1">
                             {getRiskBadge(agent.evaluation.riskTier)}
-                          </div>
+                          </span>
                         </div>
                       </td>
 
-                      {/* Credit & Limit (Beta) */}
+                      {/* Credit Profile (Beta) */}
                       <td className="py-3.5 px-4 text-center">
-                        <div className="flex flex-col items-center justify-center">
-                          <div className="flex items-center space-x-1.5 font-mono">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono bg-purple-500/10 text-purple-300 border border-purple-500/25 tabular-nums">
-                              CR {agent.creditProfile?.creditScore ?? 75}
-                            </span>
-                            <span className="text-[10px] text-purple-400/80 font-bold uppercase">
-                              {agent.creditProfile?.creditTier ?? 'A'}
-                            </span>
+                        <div className="flex flex-col items-center">
+                          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded border border-indigo-800/60 bg-indigo-950/40 text-indigo-300 font-mono text-[11px] font-bold tabular-nums">
+                            <span>CR {agent.creditProfile?.creditScore ?? 75}</span>
+                            <span className="text-[9px] opacity-70">({agent.creditProfile?.creditTier ?? 'BBB'})</span>
                           </div>
-                          <div className="text-[10px] font-mono text-cyan-400 font-semibold tabular-nums mt-1">
+                          <div className="text-[10px] font-mono text-sky-400 mt-1 tabular-nums font-semibold">
                             ${(agent.creditProfile?.estimatedDailyCapacity ?? 5000).toLocaleString()}/day
                           </div>
                         </div>
@@ -598,7 +598,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                             e.stopPropagation();
                             onSelectAgent(agent);
                           }}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded text-xs font-mono font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-white/[0.08] transition"
+                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 transition"
                         >
                           <span>Inspect</span>
                           <ChevronRight className="w-3 h-3" />
@@ -615,12 +615,12 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
       {/* PAGINATION BAR */}
       {totalItems > 0 && (
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-3.5 py-3 bg-zinc-950/70 border border-white/[0.08] rounded-lg text-xs font-mono">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-3.5 py-3 bg-[#090d16]/80 border border-slate-800/80 rounded-xl text-xs font-mono">
           {/* Item range info */}
-          <div className="text-zinc-400 flex items-center space-x-1.5 text-center sm:text-left">
+          <div className="text-slate-400 flex items-center space-x-1.5 text-center sm:text-left">
             <span>
-              Showing <strong className="text-zinc-200 tabular-nums">{startIndex + 1}</strong>–<strong className="text-zinc-200 tabular-nums">{endIndex}</strong> of{' '}
-              <strong className="text-zinc-200 tabular-nums">{totalItems}</strong> agents
+              Showing <strong className="text-slate-200 tabular-nums">{startIndex + 1}</strong>–<strong className="text-slate-200 tabular-nums">{endIndex}</strong> of{' '}
+              <strong className="text-slate-200 tabular-nums">{totalItems}</strong> agents
             </span>
           </div>
 
@@ -628,14 +628,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
           <div className="flex flex-wrap items-center justify-center gap-3">
             {/* Rows per page selector */}
             <div className="flex items-center space-x-1.5">
-              <span className="text-zinc-500 text-[11px]">Rows:</span>
+              <span className="text-slate-400 text-[11px]">Rows:</span>
               <select
                 value={itemsPerPage}
                 onChange={(e) => {
                   setItemsPerPage(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="bg-zinc-900 border border-white/[0.08] text-zinc-300 rounded px-2 py-1 text-xs focus:outline-none focus:border-zinc-700"
+                className="bg-slate-900 border border-slate-800 text-slate-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:border-sky-500/80"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -649,7 +649,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={safeCurrentPage === 1}
-                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 border border-slate-800 transition"
                 title="First Page"
               >
                 <ChevronsLeft className="w-3.5 h-3.5" />
@@ -657,7 +657,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               <button
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={safeCurrentPage === 1}
-                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 border border-slate-800 transition"
                 title="Previous Page"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -668,7 +668,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 {generatePageNumbers(safeCurrentPage, totalPages).map((p, idx) => {
                   if (p === '...') {
                     return (
-                      <span key={`dots-${idx}`} className="px-1 text-zinc-600 select-none">
+                      <span key={`dots-${idx}`} className="px-1 text-slate-600 select-none">
                         ...
                       </span>
                     );
@@ -679,10 +679,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                     <button
                       key={pageNum}
                       onClick={() => setCurrentPage(pageNum)}
-                      className={`w-7 h-7 rounded text-xs font-mono font-medium transition flex items-center justify-center tabular-nums ${
+                      className={`w-7 h-7 rounded-lg text-xs font-mono font-medium transition flex items-center justify-center tabular-nums ${
                         isActive
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold'
-                          : 'bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-white/[0.08]'
+                          ? 'bg-slate-800 text-sky-300 border border-slate-700 font-bold shadow-sm'
+                          : 'bg-slate-900 hover:bg-slate-800 text-slate-400 border border-slate-800'
                       }`}
                     >
                       {pageNum}
@@ -694,7 +694,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               <button
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={safeCurrentPage === totalPages}
-                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 border border-slate-800 transition"
                 title="Next Page"
               >
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -702,7 +702,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={safeCurrentPage === totalPages}
-                className="p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed text-zinc-300 border border-white/[0.08] transition"
+                className="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 disabled:opacity-30 disabled:cursor-not-allowed text-slate-300 border border-slate-800 transition"
                 title="Last Page"
               >
                 <ChevronsRight className="w-3.5 h-3.5" />
