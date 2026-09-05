@@ -10,7 +10,6 @@ import { AgentDetailModal } from '@/components/AgentDetailModal';
 import { EvaluateModal } from '@/components/EvaluateModal';
 import { SpecsModal } from '@/components/SpecsModal';
 import { AuthModal } from '@/components/AuthModal';
-import { DatabaseModal } from '@/components/DatabaseModal';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
 import { 
   getLocalCustomAgents, 
@@ -44,7 +43,6 @@ export default function HomePage() {
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [isDbOpen, setIsDbOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [session, setSession] = useState<UserSession>({
     email: null,
@@ -176,7 +174,6 @@ export default function HomePage() {
       <Navbar
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
-        onOpenDb={() => setIsDbOpen(true)}
         totalAgents={stats.totalAgents}
         session={session}
       />
@@ -218,13 +215,6 @@ export default function HomePage() {
             <span>Independent Agent Trust Layer</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[11px]">
-            <button
-              onClick={() => setIsDbOpen(true)}
-              className="text-emerald-400 hover:text-emerald-300 transition flex items-center space-x-1"
-            >
-              <span>Database (Firestore + Local)</span>
-            </button>
-            <span>•</span>
             <a
               href="https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/"
               target="_blank"
@@ -284,13 +274,6 @@ export default function HomePage() {
           setSession(newSession);
           setIsAuthOpen(false);
         }}
-      />
-
-      {/* Database Status & Firebase Setup Modal */}
-      <DatabaseModal
-        isOpen={isDbOpen}
-        onClose={() => setIsDbOpen(false)}
-        totalAgents={stats.totalAgents}
       />
     </div>
   );
