@@ -193,9 +193,6 @@ export default function HomePage() {
           onOpenAuth={() => setIsAuthOpen(true)}
         />
 
-        {/* Discovery Crawler Control */}
-        <DiscoveryBar onRefresh={fetchAgents} />
-
         {/* Trust Leaderboard with 5-dimension mini bars & category tabs */}
         <TrustLeaderboard
           agents={agents}
@@ -204,6 +201,9 @@ export default function HomePage() {
           searchQuery={searchQuery}
           onClearSearch={() => setSearchQuery('')}
         />
+
+        {/* Discovery Crawler Control (Moved to the bottom) */}
+        <DiscoveryBar onRefresh={fetchAgents} />
       </main>
 
       {/* Footer */}
