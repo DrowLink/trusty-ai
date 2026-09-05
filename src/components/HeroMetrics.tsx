@@ -134,7 +134,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Buscar agente por nombre (ej. Git, Crew) o pegar URL de GitHub..."
+                  placeholder="Search agent by name (e.g. Git, Crew) or paste GitHub repository URL..."
                   className="w-full px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-sans"
                 />
 
@@ -147,7 +147,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                       setSelectedIndex(-1);
                     }}
                     className="p-1 text-zinc-500 hover:text-zinc-300 mr-1"
-                    title="Limpiar búsqueda"
+                    title="Clear search"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -166,16 +166,16 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   {isAuditing ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Auditando...</span>
+                      <span>Auditing...</span>
                     </>
                   ) : isInputUrl ? (
                     <>
-                      <span>Auditar Repo</span>
+                      <span>Audit Repo</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   ) : (
                     <>
-                      <span>Buscar</span>
+                      <span>Search</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
@@ -187,8 +187,8 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
             {isFocused && matchingAgents.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1.5 rounded-lg bg-[#0c0e14] border border-white/[0.12] shadow-2xl z-30 overflow-hidden font-sans divide-y divide-white/[0.06]">
                 <div className="px-3 py-1.5 bg-zinc-950/90 text-[10px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
-                  <span>Agentes Indexados Coincidentes ({matchingAgents.length})</span>
-                  <span className="text-zinc-600">Presiona Enter o haz clic</span>
+                  <span>Matching Indexed Agents ({matchingAgents.length})</span>
+                  <span className="text-zinc-600">Press Enter or click to inspect</span>
                 </div>
                 {matchingAgents.map((agent, index) => {
                   const isSelected = index === selectedIndex;
@@ -250,14 +250,14 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
               <div className="absolute top-full left-0 right-0 mt-1.5 p-2.5 rounded-lg bg-emerald-950/90 border border-emerald-800/80 text-emerald-300 text-xs font-mono shadow-2xl z-30 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                  <span>Enlace de repositorio detectado. Pulsa <strong>Enter</strong> o &ldquo;Auditar Repo&rdquo; para analizarlo.</span>
+                  <span>Repository link detected. Press <strong>Enter</strong> or click &ldquo;Audit Repo&rdquo; to scan.</span>
                 </div>
               </div>
             )}
 
             {/* Quick Presets / Try links */}
             <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-zinc-500 font-mono">
-              <span>Probar:</span>
+              <span>Quick test:</span>
               <button
                 type="button"
                 onClick={() => {
@@ -287,7 +287,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                 }}
                 className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
               >
-                Buscar &ldquo;Git&rdquo;
+                Filter &ldquo;Git&rdquo;
               </button>
             </div>
 

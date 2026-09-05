@@ -128,7 +128,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('bash')
   ) {
     detectedScopes.add('terminal:exec');
-    detectedFeatures.push('Detección de ejecución de comandos en shell/terminal (ej. subprocess, child_process)');
+    detectedFeatures.push('Shell / terminal command execution detected (e.g. subprocess, child_process)');
     requiresHumanApproval = false; // Elevated risk: terminal commands without human gate
   }
 
@@ -142,7 +142,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('tempfile')
   ) {
     detectedScopes.add('fs:workspace_write');
-    detectedFeatures.push('Capacidad de lectura y escritura en sistema de archivos local');
+    detectedFeatures.push('Local filesystem read/write capability');
   }
 
   // C. Databases & Persistence
@@ -157,7 +157,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('duckdb')
   ) {
     detectedScopes.add('db:read_write');
-    detectedFeatures.push('Conexión y ejecución de consultas en bases de datos');
+    detectedFeatures.push('Database client and query execution');
   }
 
   // D. Browser Automation & Scraping
@@ -170,7 +170,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('crawl')
   ) {
     detectedScopes.add('browser:automation');
-    detectedFeatures.push('Automatización de navegador web / Web scraping headless');
+    detectedFeatures.push('Browser automation & headless web scraping');
   }
 
   // E. Web3, Cryptography & Wallets
@@ -182,7 +182,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('bip39')
   ) {
     detectedScopes.add('wallet:crypto_operations');
-    detectedFeatures.push('Riesgo financiero: interacción con billeteras o contratos criptográficos');
+    detectedFeatures.push('Financial risk: crypto wallet or smart contract interaction');
   }
 
   // F. Email, Slack & Messaging
@@ -195,7 +195,7 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('gmail')
   ) {
     detectedScopes.add('gmail:read_all');
-    detectedFeatures.push('Integración con servicios de correo electrónico o mensajería');
+    detectedFeatures.push('Email or messaging integration');
   }
 
   // G. Environment Variables & Secret Handling
@@ -209,16 +209,16 @@ export async function scanRepositoryPermissions(
 
   // 5. Build Final Translated Permissions
   const permissions: PermissionScope[] = Array.from(detectedScopes).map(scope => {
-    let detectedVia = 'Análisis automático de código y dependencias del repositorio';
-    if (scope === 'terminal:exec') detectedVia = 'Dependencia de consola detectada (ej. subprocess / child_process)';
-    if (scope === 'browser:automation') detectedVia = 'Librería de automatización web (ej. Playwright / Puppeteer / BS4)';
-    if (scope === 'db:read_write') detectedVia = 'Driver o cliente de base de datos detectado (ej. SQLite / Prisma / SQLAlchemy)';
-    if (scope === 'fs:workspace_write') detectedVia = 'Operaciones de entrada/salida de disco en manifiesto';
-    if (scope === 'git:repo_read') detectedVia = 'Manifiesto de repositorio GitHub público';
-    if (scope === 'network:outbound_https') detectedVia = 'Cliente HTTP de salida para llamadas de red';
-    if (scope === 'wallet:crypto_operations') detectedVia = 'Librería Web3 / Criptográfica identificada';
-    if (scope === 'gmail:read_all') detectedVia = 'Integración de correo electrónico / mensajería';
-    if (scope === 'credentials:env_read') detectedVia = 'Gestión de configuración y credenciales por entorno';
+    let detectedVia = 'Automated code and dependency analysis';
+    if (scope === 'terminal:exec') detectedVia = 'Shell execution dependency (e.g. subprocess / child_process)';
+    if (scope === 'browser:automation') detectedVia = 'Web automation library (e.g. Playwright / Puppeteer / BS4)';
+    if (scope === 'db:read_write') detectedVia = 'Database driver/client detected (e.g. SQLite / Prisma / SQLAlchemy)';
+    if (scope === 'fs:workspace_write') detectedVia = 'Disk I/O operations in manifest';
+    if (scope === 'git:repo_read') detectedVia = 'Public GitHub repository manifest';
+    if (scope === 'network:outbound_https') detectedVia = 'Outbound HTTP client for network requests';
+    if (scope === 'wallet:crypto_operations') detectedVia = 'Web3 / Cryptographic library identified';
+    if (scope === 'gmail:read_all') detectedVia = 'Email / messaging integration';
+    if (scope === 'credentials:env_read') detectedVia = 'Environment secrets and configuration management';
 
     return translatePermission(scope, undefined, detectedVia);
   });
@@ -226,7 +226,7 @@ export async function scanRepositoryPermissions(
   // 6. Tools declared based on repository identity
   toolsDeclared.push({
     name: 'repo_analyzer',
-    description: `Inspección de código fuente y AST para ${owner}/${repo}`,
+    description: `Source code and AST inspection for ${owner}/${repo}`,
     parameters: { branch: 'string' },
     requiresApproval: false,
   });
@@ -234,7 +234,7 @@ export async function scanRepositoryPermissions(
   if (detectedScopes.has('terminal:exec')) {
     toolsDeclared.push({
       name: 'system_execute',
-      description: 'Invocación de subprocesos y comandos en host',
+      description: 'Host subprocess and command invocation',
       parameters: { command: 'string' },
       requiresApproval: true,
     });
@@ -243,7 +243,7 @@ export async function scanRepositoryPermissions(
   if (detectedScopes.has('db:read_write')) {
     toolsDeclared.push({
       name: 'database_query',
-      description: 'Ejecución de consultas SQL / NoSQL',
+      description: 'SQL / NoSQL query execution',
       parameters: { query: 'string' },
       requiresApproval: false,
     });
@@ -252,7 +252,7 @@ export async function scanRepositoryPermissions(
   if (detectedScopes.has('browser:automation')) {
     toolsDeclared.push({
       name: 'browser_fetch',
-      description: 'Extracción de contenido dinámico mediante navegador web',
+      description: 'Dynamic web page content extraction via browser',
       parameters: { url: 'string' },
       requiresApproval: false,
     });

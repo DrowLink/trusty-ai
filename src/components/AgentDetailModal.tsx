@@ -89,7 +89,7 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
 
         {/* Body */}
         <div className="p-4 sm:p-6 space-y-5 overflow-y-auto text-xs text-zinc-300">
-          {/* Top Score Box */}
+          {/* Top Score & Executive Synthesis Box */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Score Number */}
             <div className="p-4 rounded bg-zinc-950 border border-white/[0.08] flex flex-col items-center justify-center text-center">
@@ -151,7 +151,114 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
             </div>
           </div>
 
-          {/* The 5 Dimensions */}
+          {/* Section 2: ANALYZED CAPABILITIES & PERMISSIONS (MOVED TO TOP) */}
+          <div className="p-3.5 sm:p-4 rounded bg-zinc-950 border border-white/[0.08]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 pb-2 border-b border-white/[0.06]">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-300 flex items-center space-x-1.5 font-semibold">
+                <Lock className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
+                <span>ANALYZED CAPABILITIES & PERMISSIONS (EXPLAINED)</span>
+              </div>
+              <div className="flex items-center space-x-1 text-[10px] font-mono text-emerald-400">
+                <Sparkles className="w-3 h-3 flex-shrink-0" />
+                <span>Automated Code & Manifest Scan</span>
+              </div>
+            </div>
+
+            {(!agent.requestedPermissions || agent.requestedPermissions.length === 0) ? (
+              <div className="p-4 text-center text-zinc-500 font-mono text-xs">
+                No requested permissions or sensitive scopes declared.
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {agent.requestedPermissions.map((rawPerm, idx) => {
+                  const perm = rawPerm.humanLabel
+                    ? rawPerm
+                    : translatePermission(rawPerm.scope, rawPerm.justification, rawPerm.detectedVia);
+
+                  const isCrit = perm.sensitivity === 'critical' || perm.isHighRisk;
+                  const isHigh = perm.sensitivity === 'high';
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-2.5 sm:p-3 rounded border transition ${
+                        isCrit
+                          ? 'bg-rose-950/20 border-rose-900/60'
+                          : isHigh
+                          ? 'bg-amber-950/20 border-amber-900/50'
+                          : 'bg-zinc-900/80 border-white/[0.06]'
+                      }`}
+                    >
+                      {/* Card Header: Human Title + Access Badge */}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center space-x-2 min-w-0">
+                          <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
+                            perm.accessType === 'execute_admin' ? 'bg-rose-950 text-rose-400 border border-rose-800' :
+                            perm.accessType === 'read_write' ? 'bg-amber-950 text-amber-400 border border-amber-800' :
+                            'bg-emerald-950 text-emerald-400 border border-emerald-800'
+                          }`}>
+                            {perm.accessType === 'execute_admin' ? <Terminal className="w-3 h-3" /> :
+                             perm.accessType === 'read_write' ? <Edit3 className="w-3 h-3" /> :
+                             <Eye className="w-3 h-3" />}
+                          </div>
+                          <span className="text-xs sm:text-sm font-semibold text-zinc-100 font-sans truncate">
+                            {perm.humanLabel || perm.scope}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-1.5 flex-shrink-0">
+                          {/* Access Type Badge */}
+                          <span className={`px-2 py-0.5 rounded font-mono text-[9px] uppercase font-medium border ${
+                            perm.accessType === 'execute_admin'
+                              ? 'bg-rose-950 text-rose-300 border-rose-800'
+                              : perm.accessType === 'read_write'
+                              ? 'bg-amber-950 text-amber-300 border-amber-800'
+                              : 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                          }`}>
+                            {perm.accessType === 'execute_admin' ? 'Host Control (Root)' :
+                             perm.accessType === 'read_write' ? 'Read & Write' :
+                             'Read Only'}
+                          </span>
+
+                          {/* Sensitivity Pill */}
+                          <span className={`px-1.5 py-0.5 rounded font-mono text-[9px] uppercase font-semibold ${
+                            isCrit ? 'bg-rose-950/80 text-rose-300' :
+                            isHigh ? 'bg-amber-950/80 text-amber-300' :
+                            'bg-zinc-800 text-zinc-400'
+                          }`}>
+                            {perm.sensitivity}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Real-World Blast Radius Impact Explanation */}
+                      <p className="mt-1.5 text-xs text-zinc-300 leading-relaxed font-sans">
+                        {perm.humanImpact || perm.justification}
+                      </p>
+
+                      {/* Footer: Technical Scope & Detection Origin */}
+                      <div className="mt-2 pt-1.5 border-t border-white/[0.04] flex flex-wrap items-center justify-between gap-1 text-[10px] font-mono text-zinc-500">
+                        <div className="flex items-center space-x-1">
+                          <span className="text-zinc-600">API Scope:</span>
+                          <code className="text-zinc-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/[0.06]">
+                            {perm.scope}
+                          </code>
+                        </div>
+
+                        {perm.detectedVia && (
+                          <span className="text-zinc-400 truncate max-w-full">
+                            Source: <span className="text-zinc-300">{perm.detectedVia}</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Section 3: The 5 Dimensions */}
           <div className="p-4 rounded bg-zinc-950 border border-white/[0.08]">
             <div className="flex items-center justify-between mb-3 text-zinc-400 font-mono text-[10px] uppercase">
               <span>Dimension Breakdown</span>
@@ -236,7 +343,7 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
             </div>
           </div>
 
-          {/* Positive vs Risk Signals */}
+          {/* Section 4: Positive vs Risk Signals */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* Positive */}
             <div className="p-3.5 rounded bg-zinc-950 border border-emerald-900/30">
@@ -275,108 +382,7 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
             </div>
           </div>
 
-          {/* Human-Centered Permissions & Blast Radius Matrix */}
-          <div className="p-3.5 sm:p-4 rounded bg-zinc-950 border border-white/[0.08]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-3 pb-2 border-b border-white/[0.06]">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 flex items-center space-x-1.5 font-semibold">
-                <Lock className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
-                <span>Capacidades y Permisos Analizados (Traducción Humana)</span>
-              </div>
-              <div className="flex items-center space-x-1 text-[10px] font-mono text-emerald-400">
-                <Sparkles className="w-3 h-3 flex-shrink-0" />
-                <span>Detección Automática de Código</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5">
-              {agent.requestedPermissions.map((rawPerm, idx) => {
-                const perm = rawPerm.humanLabel
-                  ? rawPerm
-                  : translatePermission(rawPerm.scope, rawPerm.justification, rawPerm.detectedVia);
-
-                const isCrit = perm.sensitivity === 'critical' || perm.isHighRisk;
-                const isHigh = perm.sensitivity === 'high';
-
-                return (
-                  <div
-                    key={idx}
-                    className={`p-2.5 sm:p-3 rounded border transition ${
-                      isCrit
-                        ? 'bg-rose-950/20 border-rose-900/60'
-                        : isHigh
-                        ? 'bg-amber-950/20 border-amber-900/50'
-                        : 'bg-zinc-900/80 border-white/[0.06]'
-                    }`}
-                  >
-                    {/* Card Header: Human Title + Access Badge */}
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center space-x-2 min-w-0">
-                        <div className={`w-5 h-5 rounded flex items-center justify-center flex-shrink-0 ${
-                          perm.accessType === 'execute_admin' ? 'bg-rose-950 text-rose-400 border border-rose-800' :
-                          perm.accessType === 'read_write' ? 'bg-amber-950 text-amber-400 border border-amber-800' :
-                          'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                        }`}>
-                          {perm.accessType === 'execute_admin' ? <Terminal className="w-3 h-3" /> :
-                           perm.accessType === 'read_write' ? <Edit3 className="w-3 h-3" /> :
-                           <Eye className="w-3 h-3" />}
-                        </div>
-                        <span className="text-xs sm:text-sm font-semibold text-zinc-100 font-sans truncate">
-                          {perm.humanLabel || perm.scope}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center space-x-1.5 flex-shrink-0">
-                        {/* Access Type Badge */}
-                        <span className={`px-2 py-0.5 rounded font-mono text-[9px] uppercase font-medium border ${
-                          perm.accessType === 'execute_admin'
-                            ? 'bg-rose-950 text-rose-300 border-rose-800'
-                            : perm.accessType === 'read_write'
-                            ? 'bg-amber-950 text-amber-300 border-amber-800'
-                            : 'bg-emerald-950 text-emerald-300 border-emerald-800'
-                        }`}>
-                          {perm.accessType === 'execute_admin' ? 'Control Host' :
-                           perm.accessType === 'read_write' ? 'Lectura y Escritura' :
-                           'Solo Lectura'}
-                        </span>
-
-                        {/* Sensitivity Pill */}
-                        <span className={`px-1.5 py-0.5 rounded font-mono text-[9px] uppercase ${
-                          isCrit ? 'bg-rose-950/80 text-rose-300' :
-                          isHigh ? 'bg-amber-950/80 text-amber-300' :
-                          'bg-zinc-800 text-zinc-400'
-                        }`}>
-                          {perm.sensitivity}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Real-World Blast Radius Impact Explanation */}
-                    <p className="mt-1.5 text-xs text-zinc-300 leading-relaxed font-sans">
-                      {perm.humanImpact || perm.justification}
-                    </p>
-
-                    {/* Footer: Technical Scope & Detection Origin */}
-                    <div className="mt-2 pt-1.5 border-t border-white/[0.04] flex flex-wrap items-center justify-between gap-1 text-[10px] font-mono text-zinc-500">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-zinc-600">Scope API:</span>
-                        <code className="text-zinc-400 bg-zinc-950 px-1.5 py-0.5 rounded border border-white/[0.06]">
-                          {perm.scope}
-                        </code>
-                      </div>
-
-                      {perm.detectedVia && (
-                        <span className="text-zinc-400 truncate max-w-full">
-                          Origen: <span className="text-zinc-300">{perm.detectedVia}</span>
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Cryptographic Fingerprint */}
+          {/* Section 5: Cryptographic Fingerprint */}
           <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center space-x-1.5 text-[10px] font-mono text-zinc-400 font-semibold uppercase">
