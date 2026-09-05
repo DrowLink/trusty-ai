@@ -8,14 +8,17 @@ interface TrustLeaderboardProps {
   agents: AgentWithScore[];
   onSelectAgent: (agent: AgentWithScore) => void;
   isLoading: boolean;
+  searchQuery?: string;
+  onClearSearch?: () => void;
 }
 
 export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   agents,
   onSelectAgent,
   isLoading,
+  searchQuery = '',
+  onClearSearch,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedRisk, setSelectedRisk] = useState('all');
   const [selectedEcosystem, setSelectedEcosystem] = useState('all');
@@ -36,7 +39,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
       setSelectedPermission('all');
       setSortBy('trust');
     } else if (preset === 'reset') {
-      setSearchQuery('');
+      if (onClearSearch) onClearSearch();
       setSelectedCategory('all');
       setSelectedRisk('all');
       setSelectedEcosystem('all');
@@ -216,20 +219,28 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter Bar (Search is now unified in the Hero Omnibox) */}
       <div className="security-card p-3 rounded-lg mb-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
-          {/* Search */}
-          <div className="sm:col-span-2 relative">
-            <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search agent name, author, or capability..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-zinc-500 font-sans"
-            />
+        {searchQuery && (
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] text-xs font-mono text-zinc-300">
+            <span className="flex items-center space-x-1.5">
+              <span className="text-zinc-500">Filtrando por:</span>
+              <span className="text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/40">
+                "{searchQuery}"
+              </span>
+            </span>
+            {onClearSearch && (
+              <button
+                onClick={onClearSearch}
+                className="text-[11px] text-zinc-500 hover:text-zinc-300 transition underline"
+              >
+                Limpiar filtro
+              </button>
+            )}
           </div>
+        )}
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
 
           {/* Risk Level */}
           <div>

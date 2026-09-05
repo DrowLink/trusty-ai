@@ -36,6 +36,7 @@ export default function HomePage() {
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [session, setSession] = useState<UserSession>({
     email: null,
     isAuthenticated: false,
@@ -126,14 +127,6 @@ export default function HomePage() {
     <div className="flex-1 flex flex-col min-h-screen bg-[#08090d]">
       {/* Top Navigation */}
       <Navbar
-        onOpenEvaluate={() => {
-          const s = getUserSession();
-          if (!s.isAuthenticated && s.queriesRemaining <= 0) {
-            setIsAuthOpen(true);
-          } else {
-            setIsEvaluateOpen(true);
-          }
-        }}
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         totalAgents={stats.totalAgents}
@@ -142,10 +135,14 @@ export default function HomePage() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* Command Center Hero with live audit bar, risk distribution and quota status */}
+        {/* Universal Command Center Omnibox (Search, Autocomplete & Live Repo Audit) */}
         <HeroMetrics
           stats={stats}
+          agents={agents}
           onAuditUrl={handleHeroAudit}
+          onSelectAgent={agent => setSelectedAgent(agent)}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
           isAuditing={isAuditingLive}
           session={session}
           onOpenAuth={() => setIsAuthOpen(true)}
@@ -159,6 +156,8 @@ export default function HomePage() {
           agents={agents}
           onSelectAgent={agent => setSelectedAgent(agent)}
           isLoading={isLoading}
+          searchQuery={searchQuery}
+          onClearSearch={() => setSearchQuery('')}
         />
       </main>
 

@@ -5,7 +5,6 @@ import { ShieldCheck, BookOpen, Plus, Github, Lock, UserCheck } from 'lucide-rea
 import { UserSession } from '@/lib/quota';
 
 interface NavbarProps {
-  onOpenEvaluate: () => void;
   onOpenSpecs: () => void;
   onOpenAuth: () => void;
   totalAgents: number;
@@ -13,7 +12,6 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
-  onOpenEvaluate,
   onOpenSpecs,
   onOpenAuth,
   totalAgents,
@@ -81,16 +79,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="w-3.5 h-3.5 text-zinc-400" />
             <span className="hidden sm:inline">Specs</span>
-          </button>
-
-          {/* Audit CTA */}
-          <button
-            onClick={onOpenEvaluate}
-            className="flex items-center space-x-1 px-3 py-1.5 rounded text-xs font-mono font-medium text-white bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Audit Agent</span>
-            <span className="sm:hidden">Audit</span>
           </button>
         </div>
       </div>

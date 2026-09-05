@@ -5,10 +5,16 @@ import { DiscoveryStats } from '@/lib/types';
 import { Shield, AlertTriangle, Database, Activity, Search, ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 import { UserSession } from '@/lib/quota';
+import { AgentWithScore } from '@/lib/types';
+import { X, ExternalLink, ChevronRight, Sparkles, Loader2 } from 'lucide-react';
 
 interface HeroMetricsProps {
   stats: DiscoveryStats;
+  agents: AgentWithScore[];
   onAuditUrl: (url: string) => void;
+  onSelectAgent: (agent: AgentWithScore) => void;
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
   isAuditing?: boolean;
   session?: UserSession;
   onOpenAuth?: () => void;
@@ -16,17 +22,74 @@ interface HeroMetricsProps {
 
 export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   stats,
+  agents,
   onAuditUrl,
+  onSelectAgent,
+  searchQuery,
+  onSearchChange,
   isAuditing,
   session,
   onOpenAuth,
 }) => {
-  const [inputUrl, setInputUrl] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+
+  const isUrl = (text: string) => {
+    const trimmed = text.trim();
+    return (
+      trimmed.startsWith('http://') ||
+      trimmed.startsWith('https://') ||
+      trimmed.includes('github.com') ||
+      /^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+$/.test(trimmed)
+    );
+  };
+
+  const isInputUrl = isUrl(searchQuery);
+
+  // Matching suggestions from indexed agents
+  const matchingAgents = searchQuery.trim() && !isInputUrl
+    ? agents
+        .filter(a => {
+          const q = searchQuery.toLowerCase();
+          return (
+            a.name.toLowerCase().includes(q) ||
+            a.publisher.name.toLowerCase().includes(q) ||
+            a.category.toLowerCase().includes(q) ||
+            a.slug.toLowerCase().includes(q)
+          );
+        })
+        .slice(0, 5)
+    : [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputUrl.trim()) {
-      onAuditUrl(inputUrl.trim());
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    if (isInputUrl) {
+      onAuditUrl(query);
+      setIsFocused(false);
+    } else if (matchingAgents.length > 0) {
+      // If user presses Enter with suggestions, select first or selected
+      const target = selectedIndex >= 0 && selectedIndex < matchingAgents.length
+        ? matchingAgents[selectedIndex]
+        : matchingAgents[0];
+      onSelectAgent(target);
+      setIsFocused(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (matchingAgents.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev < matchingAgents.length - 1 ? prev + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : matchingAgents.length - 1));
+    } else if (e.key === 'Escape') {
+      setIsFocused(false);
     }
   };
 
@@ -37,7 +100,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   return (
     <section className="pt-6 sm:pt-10 pb-6 px-3 sm:px-6 max-w-7xl mx-auto border-b border-white/[0.08]">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-        {/* Left Column (7 cols): Mission & Instant Scan Bar */}
+        {/* Left Column (7 cols): Mission & Universal Omnibox */}
         <div className="lg:col-span-7">
           <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400 mb-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -47,38 +110,160 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
-            Can I trust this agent with my data?
+            Before clicking &ldquo;START AGENT&rdquo;, ask: <span className="text-emerald-400 italic">Can I trust it?</span>
           </h1>
 
           <p className="mt-3 text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
-            Evaluate permission boundaries, identity provenance, and sandbox security before authorizing an agent to access your GitHub, inbox, databases, or terminal.
+            Continuous discovery across open agent ecosystems. Deterministic, explainable 0–100 TRUSTY Scores evaluating identity, permissions, security, and governance.
           </p>
 
-          {/* Instant Audit Input Bar right in the Hero */}
-          <form onSubmit={handleSubmit} className="mt-5 max-w-xl">
-            <div className="relative flex items-center rounded-lg bg-zinc-950 border border-white/[0.14] focus-within:border-emerald-500 transition shadow-lg p-1">
-              <Search className="w-4 h-4 text-zinc-500 ml-3 flex-shrink-0" />
-              <input
-                type="text"
-                value={inputUrl}
-                onChange={e => setInputUrl(e.target.value)}
-                placeholder="Paste any GitHub repository URL (e.g. crewAIInc/crewAI)..."
-                className="w-full px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-mono"
-              />
-              <button
-                type="submit"
-                disabled={isAuditing || !inputUrl.trim()}
-                className="flex items-center space-x-1.5 px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white text-xs font-mono font-medium disabled:opacity-40 transition flex-shrink-0"
-              >
-                <span>{isAuditing ? 'Scanning...' : 'Audit Live'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+          {/* Universal Hero Omnibox with Autocomplete & Direct Audit */}
+          <div className="relative mt-6 max-w-xl">
+            <form onSubmit={handleSubmit}>
+              <div className={`relative flex items-center rounded-lg bg-zinc-950 border transition shadow-xl p-1 ${
+                isFocused ? 'border-emerald-500 ring-1 ring-emerald-500/30' : 'border-white/[0.14] hover:border-white/[0.25]'
+              }`}>
+                <Search className="w-4 h-4 text-zinc-400 ml-3 flex-shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => {
+                    onSearchChange(e.target.value);
+                    setSelectedIndex(-1);
+                  }}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Buscar agente por nombre (ej. Git, Crew) o pegar URL de GitHub..."
+                  className="w-full px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-sans"
+                />
+
+                {/* Clear button if text exists */}
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSearchChange('');
+                      setSelectedIndex(-1);
+                    }}
+                    className="p-1 text-zinc-500 hover:text-zinc-300 mr-1"
+                    title="Limpiar búsqueda"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+
+                {/* Dynamic Submit / Action Button */}
+                <button
+                  type="submit"
+                  disabled={isAuditing || !searchQuery.trim()}
+                  className={`flex items-center space-x-1.5 px-4 py-2 rounded text-xs font-mono font-medium disabled:opacity-40 transition flex-shrink-0 ${
+                    isInputUrl
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md'
+                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200'
+                  }`}
+                >
+                  {isAuditing ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Auditando...</span>
+                    </>
+                  ) : isInputUrl ? (
+                    <>
+                      <span>Auditar Repo</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  ) : (
+                    <>
+                      <span>Buscar</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+
+            {/* Smart Autocomplete Dropdown */}
+            {isFocused && matchingAgents.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-1.5 rounded-lg bg-[#0c0e14] border border-white/[0.12] shadow-2xl z-30 overflow-hidden font-sans divide-y divide-white/[0.06]">
+                <div className="px-3 py-1.5 bg-zinc-950/90 text-[10px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
+                  <span>Agentes Indexados Coincidentes ({matchingAgents.length})</span>
+                  <span className="text-zinc-600">Presiona Enter o haz clic</span>
+                </div>
+                {matchingAgents.map((agent, index) => {
+                  const isSelected = index === selectedIndex;
+                  const score = agent.evaluation.trustyScore;
+                  const isLowRisk = score >= 80;
+                  const isMedRisk = score >= 60 && score < 80;
+
+                  return (
+                    <div
+                      key={agent.id}
+                      onMouseDown={() => {
+                        onSelectAgent(agent);
+                        setIsFocused(false);
+                      }}
+                      className={`p-3 flex items-center justify-between cursor-pointer transition ${
+                        isSelected ? 'bg-zinc-800/80' : 'hover:bg-zinc-900/90'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                          isLowRisk ? 'bg-emerald-400' : isMedRisk ? 'bg-amber-400' : 'bg-rose-400'
+                        }`} />
+                        <div className="min-w-0">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs font-semibold text-zinc-100 truncate">
+                              {agent.name}
+                            </span>
+                            <span className="text-[10px] font-mono text-zinc-500 px-1.5 py-0.2 rounded bg-zinc-900 border border-white/[0.06]">
+                              {agent.category}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-zinc-400 truncate">
+                            by {agent.publisher.name}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2.5 flex-shrink-0">
+                        <div className="text-right">
+                          <span className={`text-xs font-mono font-bold ${
+                            isLowRisk ? 'text-emerald-400' : isMedRisk ? 'text-amber-400' : 'text-rose-400'
+                          }`}>
+                            {score}/100
+                          </span>
+                          <span className="block text-[9px] font-mono text-zinc-500 uppercase">
+                            {agent.evaluation.riskTier.replace('_', ' ')}
+                          </span>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* URL Detection Helper Notice */}
+            {isFocused && isInputUrl && (
+              <div className="absolute top-full left-0 right-0 mt-1.5 p-2.5 rounded-lg bg-emerald-950/90 border border-emerald-800/80 text-emerald-300 text-xs font-mono shadow-2xl z-30 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                  <span>Enlace de repositorio detectado. Pulsa <strong>Enter</strong> o &ldquo;Auditar Repo&rdquo; para analizarlo.</span>
+                </div>
+              </div>
+            )}
+
+            {/* Quick Presets / Try links */}
             <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-zinc-500 font-mono">
-              <span>Try:</span>
+              <span>Probar:</span>
               <button
                 type="button"
-                onClick={() => { setInputUrl('https://github.com/crewAIInc/crewAI'); onAuditUrl('https://github.com/crewAIInc/crewAI'); }}
+                onClick={() => {
+                  onSearchChange('https://github.com/crewAIInc/crewAI');
+                  onAuditUrl('https://github.com/crewAIInc/crewAI');
+                }}
                 className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
               >
                 crewAIInc/crewAI
@@ -86,7 +271,10 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
               <span>•</span>
               <button
                 type="button"
-                onClick={() => { setInputUrl('https://github.com/anthropics/anthropic-quickstarts'); onAuditUrl('https://github.com/anthropics/anthropic-quickstarts'); }}
+                onClick={() => {
+                  onSearchChange('https://github.com/anthropics/anthropic-quickstarts');
+                  onAuditUrl('https://github.com/anthropics/anthropic-quickstarts');
+                }}
                 className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
               >
                 anthropics/quickstarts
@@ -94,10 +282,12 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
               <span>•</span>
               <button
                 type="button"
-                onClick={() => { setInputUrl('https://github.com/DrowLink/trusty-ai'); onAuditUrl('https://github.com/DrowLink/trusty-ai'); }}
+                onClick={() => {
+                  onSearchChange('Git');
+                }}
                 className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
               >
-                DrowLink/trusty-ai
+                Buscar &ldquo;Git&rdquo;
               </button>
             </div>
 
@@ -132,7 +322,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                 )}
               </div>
             )}
-          </form>
+          </div>
         </div>
 
         {/* Right Column (5 cols): Real-time Risk Distribution Radar */}
