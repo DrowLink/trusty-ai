@@ -10,7 +10,15 @@ import { AgentDetailModal } from '@/components/AgentDetailModal';
 import { EvaluateModal } from '@/components/EvaluateModal';
 import { SpecsModal } from '@/components/SpecsModal';
 import { AuthModal } from '@/components/AuthModal';
+import { DatabaseModal } from '@/components/DatabaseModal';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
+import { 
+  getLocalCustomAgents, 
+  saveLocalCustomAgent, 
+  mergeAgentsWithLocal, 
+  computeDiscoveryStats, 
+  saveMultipleLocalCustomAgents 
+} from '@/lib/storage/clientStorage';
 import { Github, ExternalLink } from 'lucide-react';
 
 export default function HomePage() {
@@ -36,6 +44,7 @@ export default function HomePage() {
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isDbOpen, setIsDbOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [session, setSession] = useState<UserSession>({
     email: null,
@@ -50,12 +59,33 @@ export default function HomePage() {
       setIsLoading(true);
       const res = await fetch('/api/agents');
       const data = await res.json();
-      if (data.success) {
-        setAgents(data.agents);
-        setStats(data.stats);
+      if (data.success && Array.isArray(data.agents)) {
+        // Dual-Layer Resilience: Merge with locally stored custom audits so user never loses their 11+ agents
+        const { merged, newToSync } = mergeAgentsWithLocal(data.agents);
+        setAgents(merged);
+        setStats(computeDiscoveryStats(merged));
+
+        // Save server agents into local storage cache
+        saveMultipleLocalCustomAgents(merged);
+
+        // If client had audited agents that the server lost (e.g. serverless cold restart),
+        // sync them back to backend & Firestore in background
+        if (newToSync.length > 0) {
+          fetch('/api/agents/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ agents: newToSync }),
+          }).catch(e => console.warn('Background sync failed:', e));
+        }
       }
     } catch (err) {
       console.error('Failed to load agents:', err);
+      // Fallback directly to local storage
+      const local = getLocalCustomAgents();
+      if (local.length > 0) {
+        setAgents(local);
+        setStats(computeDiscoveryStats(local));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -86,9 +116,26 @@ export default function HomePage() {
   };
 
   const handleEvaluationComplete = (newAgent: AgentWithScore) => {
-    setAgents(prev => [newAgent, ...prev.filter(a => a.id !== newAgent.id)]);
+    // 1. Immediately persist to browser storage
+    saveLocalCustomAgent(newAgent);
+
+    // 2. Update local state
+    setAgents(prev => {
+      const updated = [newAgent, ...prev.filter(a => a.id !== newAgent.id)];
+      setStats(computeDiscoveryStats(updated));
+      return updated;
+    });
+
+    // 3. Open explainability drawer
     setSelectedAgent(newAgent);
-    fetchAgents();
+
+    // 4. Sync to server & Firestore
+    const { evaluation, ...agentRecord } = newAgent;
+    fetch('/api/agents/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agent: agentRecord }),
+    }).catch(e => console.warn('Background sync error:', e));
   };
 
   // Instant Hero URL Audit Handler
@@ -129,6 +176,7 @@ export default function HomePage() {
       <Navbar
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenDb={() => setIsDbOpen(true)}
         totalAgents={stats.totalAgents}
         session={session}
       />
@@ -170,11 +218,18 @@ export default function HomePage() {
             <span>Independent Agent Trust Layer</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-[11px]">
+            <button
+              onClick={() => setIsDbOpen(true)}
+              className="text-emerald-400 hover:text-emerald-300 transition flex items-center space-x-1"
+            >
+              <span>Database (Firestore + Local)</span>
+            </button>
+            <span>•</span>
             <a
               href="https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/"
               target="_blank"
               rel="noreferrer"
-              className="text-emerald-400 hover:text-emerald-300 transition flex items-center space-x-1"
+              className="text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1"
             >
               <span>Vercel Live App</span>
               <ExternalLink className="w-3 h-3" />
@@ -229,6 +284,13 @@ export default function HomePage() {
           setSession(newSession);
           setIsAuthOpen(false);
         }}
+      />
+
+      {/* Database Status & Firebase Setup Modal */}
+      <DatabaseModal
+        isOpen={isDbOpen}
+        onClose={() => setIsDbOpen(false)}
+        totalAgents={stats.totalAgents}
       />
     </div>
   );

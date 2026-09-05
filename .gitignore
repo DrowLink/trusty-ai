@@ -33,3 +33,6 @@ next-env.d.ts
 # OS
 .DS_Store
 *.pem
+
+# Local cache
+/.data/

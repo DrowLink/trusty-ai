@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    await agentStore.hydrate();
     let { name, publisherName, domain, category, permissions, repositoryUrl, isSandboxed, requiresHumanApproval, framework } = body;
 
     // --- REAL LIVE GITHUB REPO INSPECTION & AUTO PERMISSION SCANNER ---

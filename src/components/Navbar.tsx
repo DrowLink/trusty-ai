@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, BookOpen, Plus, Github, Lock, UserCheck } from 'lucide-react';
+import { ShieldCheck, BookOpen, Plus, Github, Lock, UserCheck, Database } from 'lucide-react';
 import { UserSession } from '@/lib/quota';
 
 interface NavbarProps {
   onOpenSpecs: () => void;
   onOpenAuth: () => void;
+  onOpenDb?: () => void;
   totalAgents: number;
   session: UserSession;
 }
@@ -14,6 +15,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenSpecs,
   onOpenAuth,
+  onOpenDb,
   totalAgents,
   session,
 }) => {
@@ -39,6 +41,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Center/Right: Quota & Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Database Persistence Status Pill */}
+          {onOpenDb && (
+            <button
+              onClick={onOpenDb}
+              title="Persistent Database: Local Browser Cache + Firebase Firestore Sync"
+              className="flex items-center space-x-1.5 px-2 py-1 rounded bg-zinc-900/90 border border-emerald-800/40 text-[11px] font-mono text-zinc-300 hover:border-emerald-600/60 transition group"
+            >
+              <Database className="w-3 h-3 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <span className="text-zinc-400 hidden sm:inline">DB:</span>
+              <span className="text-emerald-400 font-semibold text-[10px] sm:text-[11px]">SYNCED</span>
+            </button>
+          )}
+
           {/* VirusTotal Quota Pill */}
           {session.isAuthenticated ? (
             <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded bg-emerald-950/40 border border-emerald-800/60 text-[11px] font-mono text-emerald-300">

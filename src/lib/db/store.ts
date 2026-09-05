@@ -1,18 +1,82 @@
 import { AgentRecord, AgentWithScore, DiscoveryStats } from '../types';
 import { SEED_AGENTS } from './seed';
 import { evaluateAgentTrust } from '../scoring/engine';
+import { fetchFirestoreAgents, saveAgentToFirestore, bulkSaveAgentsToFirestore, isFirebaseConfigured } from './firebase';
+import fs from 'fs';
+import path from 'path';
+
+const DATA_DIR = path.join(process.cwd(), '.data');
+const LOCAL_CACHE_FILE = path.join(DATA_DIR, 'custom_agents.json');
 
 class AgentTrustStore {
   private agents: Map<string, AgentRecord> = new Map();
+  private isHydrated: boolean = false;
 
   constructor() {
     this.seed();
+    this.loadFromLocalCache();
   }
 
   private seed() {
     for (const agent of SEED_AGENTS) {
       this.agents.set(agent.id, agent);
     }
+  }
+
+  private loadFromLocalCache() {
+    try {
+      if (typeof window === 'undefined' && fs.existsSync(LOCAL_CACHE_FILE)) {
+        const raw = fs.readFileSync(LOCAL_CACHE_FILE, 'utf-8');
+        const list: AgentRecord[] = JSON.parse(raw);
+        if (Array.isArray(list)) {
+          for (const agent of list) {
+            this.agents.set(agent.id, agent);
+          }
+        }
+      }
+    } catch (err) {
+      // Ignored in read-only environments
+    }
+  }
+
+  private persistToLocalCache() {
+    try {
+      if (typeof window === 'undefined') {
+        if (!fs.existsSync(DATA_DIR)) {
+          fs.mkdirSync(DATA_DIR, { recursive: true });
+        }
+        // Only persist custom agents (not seed agents)
+        const seedIds = new Set(SEED_AGENTS.map(a => a.id));
+        const customAgents = Array.from(this.agents.values()).filter(a => !seedIds.has(a.id));
+        fs.writeFileSync(LOCAL_CACHE_FILE, JSON.stringify(customAgents, null, 2), 'utf-8');
+      }
+    } catch (err) {
+      // Ignored in read-only environments like Vercel serverless
+    }
+  }
+
+  /**
+   * Asynchronously hydrates from Firestore and local cache.
+   * Called by API routes to ensure latest cloud-persisted agents are loaded.
+   */
+  public async hydrate(): Promise<void> {
+    if (this.isHydrated && !isFirebaseConfigured) return;
+
+    this.loadFromLocalCache();
+
+    if (isFirebaseConfigured) {
+      try {
+        const firestoreAgents = await fetchFirestoreAgents();
+        for (const agent of firestoreAgents) {
+          this.agents.set(agent.id, agent);
+        }
+        this.persistToLocalCache();
+      } catch (err) {
+        console.warn('[Store] Hydration from Firestore failed:', err);
+      }
+    }
+
+    this.isHydrated = true;
   }
 
   public getAll(): AgentWithScore[] {
@@ -36,10 +100,39 @@ class AgentTrustStore {
 
   public upsert(agent: AgentRecord): AgentWithScore {
     this.agents.set(agent.id, agent);
+    this.persistToLocalCache();
+
+    // Async save to Firestore if configured
+    if (isFirebaseConfigured) {
+      saveAgentToFirestore(agent).catch(err => {
+        console.warn(`[Store] Firestore async save error for ${agent.id}:`, err);
+      });
+    }
+
     return {
       ...agent,
       evaluation: evaluateAgentTrust(agent),
     };
+  }
+
+  public bulkUpsert(agents: AgentRecord[]): AgentWithScore[] {
+    const results: AgentWithScore[] = [];
+    for (const agent of agents) {
+      this.agents.set(agent.id, agent);
+      results.push({
+        ...agent,
+        evaluation: evaluateAgentTrust(agent),
+      });
+    }
+    this.persistToLocalCache();
+
+    if (isFirebaseConfigured && agents.length > 0) {
+      bulkSaveAgentsToFirestore(agents).catch(err => {
+        console.warn('[Store] Firestore bulk save error:', err);
+      });
+    }
+
+    return results;
   }
 
   public getStats(): DiscoveryStats {

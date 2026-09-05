@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
   const search = searchParams.get('q')?.toLowerCase();
   const sort = searchParams.get('sort') || 'trust_desc';
 
+  await agentStore.hydrate();
   let agents = agentStore.getAll();
 
   // Search query
