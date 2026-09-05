@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, ShieldCheck, AlertTriangle, Terminal, Github, ArrowRight, Shield } from 'lucide-react';
+import { X, ShieldCheck, AlertTriangle, Terminal, Github, ArrowRight, Shield, Sparkles, CheckCircle2, Loader2 } from 'lucide-react';
 import { AgentWithScore } from '@/lib/types';
 
 interface EvaluateModalProps {
@@ -21,17 +21,62 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   const [name, setName] = useState('');
   const [publisherName, setPublisherName] = useState('');
   const [domain, setDomain] = useState('');
-  const [category, setCategory] = useState('productivity');
-  const [permissions, setPermissions] = useState('calendar:read, calendar:write');
+  const [category, setCategory] = useState('coding');
+  const [permissions, setPermissions] = useState('');
   const [isSandboxed, setIsSandboxed] = useState(true);
   const [requiresHumanApproval, setRequiresHumanApproval] = useState(true);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [isScanningRepo, setIsScanningRepo] = useState(false);
+  const [detectedFeatures, setDetectedFeatures] = useState<string[]>([]);
+  const [scanSuccessMsg, setScanSuccessMsg] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
+  const handleAutoScanRepo = async (targetUrl?: string) => {
+    const url = targetUrl || githubUrl;
+    if (!url.trim() || !url.includes('github.com')) {
+      setError('Proporciona una URL válida de GitHub (ej. https://github.com/crewAIInc/crewAI)');
+      return;
+    }
+
+    setIsScanningRepo(true);
+    setError(null);
+    setScanSuccessMsg(null);
+
+    try {
+      const res = await fetch('/api/scan-repo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ repositoryUrl: url.trim() }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setName(data.name || '');
+        setPublisherName(data.publisherName || '');
+        setDomain(data.domain || '');
+        setCategory(data.category || 'coding');
+        setPermissions(data.permissionsString || '');
+        setIsSandboxed(data.isSandboxed ?? true);
+        setRequiresHumanApproval(data.requiresHumanApproval ?? true);
+        setDetectedFeatures(data.detectedFeatures || []);
+        setGithubUrl(url.trim());
+        setScanSuccessMsg(`Repositorio analizado (${data.name}). ${data.permissions.length} permisos autocompletados desde el código fuente.`);
+      } else {
+        setError(data.error || 'No se pudo escanear el repositorio.');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error de conexión al escanear repositorio.');
+    } finally {
+      setIsScanningRepo(false);
+    }
+  };
+
   const loadPreset = (presetType: 'safe' | 'overprivileged' | 'trojan') => {
     setGithubUrl('');
+    setDetectedFeatures([]);
+    setScanSuccessMsg(null);
     if (presetType === 'safe') {
       setName('Enterprise SQL Copilot');
       setPublisherName('Anthropic Verified MCP');
@@ -159,32 +204,113 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </button>
         </div>
 
-        {/* Section 1: Real GitHub Audit */}
-        <div className="p-4 sm:p-5 border-b border-white/[0.08] bg-zinc-900/30">
-          <div className="flex items-center space-x-1.5 text-xs font-mono text-zinc-300 font-semibold mb-2">
-            <Github className="w-3.5 h-3.5 text-zinc-400" />
-            <span>Audit Any Public GitHub Repository in Real-Time:</span>
+        {/* Section 1: Real GitHub Audit & Auto-Permission Inference */}
+        <div className="p-4 sm:p-5 border-b border-white/[0.08] bg-zinc-900/40">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-1.5 text-xs font-mono text-zinc-200 font-semibold">
+              <Github className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Anexar Repositorio de GitHub (Auto-Completado de Permisos):</span>
+            </div>
+            <span className="text-[10px] font-mono text-emerald-400 hidden sm:inline">
+              Zero Input de Permisos
+            </span>
           </div>
-          <form onSubmit={handleLiveGitHubAudit} className="flex gap-2">
+
+          <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="url"
               value={githubUrl}
               onChange={e => setGithubUrl(e.target.value)}
-              placeholder="e.g. https://github.com/crewAIInc/crewAI"
-              className="flex-1 px-3 py-1.5 bg-zinc-950 border border-white/[0.1] rounded text-xs text-white focus:outline-none focus:border-zinc-500 font-mono"
+              placeholder="Pega la URL del repo (ej. https://github.com/crewAIInc/crewAI)..."
+              className="flex-1 px-3 py-2 bg-zinc-950 border border-white/[0.12] focus:border-emerald-500 rounded text-xs text-white focus:outline-none font-mono"
             />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <button
+                type="button"
+                onClick={() => handleAutoScanRepo()}
+                disabled={isScanningRepo || !githubUrl.trim()}
+                className="px-3 py-2 bg-emerald-700 hover:bg-emerald-600 active:bg-emerald-800 text-white font-mono font-medium rounded text-xs transition flex items-center space-x-1.5 disabled:opacity-50"
+              >
+                {isScanningRepo ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Escaneando...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Auto-Escanear Permisos</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLiveGitHubAudit}
+                disabled={isEvaluating || !githubUrl.trim()}
+                className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-mono font-medium rounded text-xs transition flex items-center space-x-1 disabled:opacity-50 border border-white/[0.08]"
+              >
+                <span>{isEvaluating ? 'Auditando...' : 'Auditar Directo'}</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Try Links */}
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-zinc-400 font-mono">
+            <span className="text-zinc-500">Probar:</span>
             <button
-              type="submit"
-              disabled={isEvaluating}
-              className="px-3.5 py-1.5 bg-zinc-100 hover:bg-white text-zinc-900 font-mono font-medium rounded text-xs transition flex items-center space-x-1 disabled:opacity-50 flex-shrink-0"
+              type="button"
+              onClick={() => {
+                setGithubUrl('https://github.com/crewAIInc/crewAI');
+                handleAutoScanRepo('https://github.com/crewAIInc/crewAI');
+              }}
+              className="text-emerald-400 hover:underline"
             >
-              <span>{isEvaluating ? 'Auditing...' : 'Audit Live Repo'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              crewAIInc/crewAI
             </button>
-          </form>
-          <p className="text-[11px] text-zinc-500 mt-1.5 font-sans">
-            Queries GitHub REST API live: parses commits, stars, license, dependencies, and runs the 20-signal audit.
-          </p>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() => {
+                setGithubUrl('https://github.com/anthropics/anthropic-quickstarts');
+                handleAutoScanRepo('https://github.com/anthropics/anthropic-quickstarts');
+              }}
+              className="text-emerald-400 hover:underline"
+            >
+              anthropics/quickstarts
+            </button>
+            <span>•</span>
+            <button
+              type="button"
+              onClick={() => {
+                setGithubUrl('https://github.com/DrowLink/trusty-ai');
+                handleAutoScanRepo('https://github.com/DrowLink/trusty-ai');
+              }}
+              className="text-emerald-400 hover:underline"
+            >
+              DrowLink/trusty-ai
+            </button>
+          </div>
+
+          {/* Scan Success & Auto-Detected Features Pills */}
+          {scanSuccessMsg && (
+            <div className="mt-3 p-3 rounded bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 text-xs font-mono space-y-1.5">
+              <div className="flex items-center space-x-1.5 font-semibold text-white">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                <span>{scanSuccessMsg}</span>
+              </div>
+              {detectedFeatures.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {detectedFeatures.map((feat, i) => (
+                    <span key={i} className="px-2 py-0.5 rounded bg-zinc-900 border border-emerald-700/50 text-[10px] text-emerald-300">
+                      {feat}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Section 2: Scenarios */}
