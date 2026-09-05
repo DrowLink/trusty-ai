@@ -34,7 +34,7 @@ export const DiscoveryBar: React.FC<DiscoveryBarProps> = ({ onRefresh }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto my-3 sm:my-4 px-3 sm:px-6">
+    <div className="hidden md:block max-w-7xl mx-auto my-3 sm:my-4 px-3 sm:px-6">
       <div className="security-card p-3 sm:p-3.5 rounded-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         {/* Left: Sources */}
         <div className="flex flex-wrap items-center gap-2">

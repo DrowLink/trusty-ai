@@ -190,16 +190,16 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5">
       {/* Category Segmented Control Bar */}
-      <div className="flex items-center space-x-1 border-b border-white/[0.08] pb-3 mb-4 overflow-x-auto no-scrollbar">
+      <div className="flex items-center space-x-1.5 border-b border-white/[0.08] pb-2.5 mb-3 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'all'
               ? 'bg-zinc-100 text-zinc-900 shadow'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
         >
-          <span>All Ecosystem</span>
+          <span>All</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'all' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
             {agents.length}
           </span>
@@ -207,14 +207,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
         <button
           onClick={() => setSelectedCategory('coding')}
-          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'coding'
               ? 'bg-zinc-100 text-zinc-900 shadow'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
         >
           <Code2 className="w-3 h-3" />
-          <span>Coding & DevTools</span>
+          <span>Coding</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'coding' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
             {countCoding}
           </span>
@@ -222,7 +222,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
         <button
           onClick={() => setSelectedCategory('productivity')}
-          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'productivity'
               ? 'bg-zinc-100 text-zinc-900 shadow'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
@@ -237,14 +237,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
         <button
           onClick={() => setSelectedCategory('finance')}
-          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'finance'
               ? 'bg-zinc-100 text-zinc-900 shadow'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
           }`}
         >
           <Wallet className="w-3 h-3" />
-          <span>Finance & Crypto</span>
+          <span>Finance</span>
           <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'finance' ? 'bg-zinc-300 text-zinc-900' : 'bg-zinc-900 text-zinc-500'}`}>
             {countFinance}
           </span>
@@ -252,7 +252,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
         <button
           onClick={() => setSelectedCategory('research')}
-          className={`px-3 py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 ${
+          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'research'
               ? 'bg-zinc-100 text-zinc-900 shadow'
               : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
@@ -265,14 +265,14 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
         </button>
       </div>
 
-      {/* Filter Bar (Search is now unified in the Hero Omnibox) */}
-      <div className="security-card p-3 rounded-lg mb-4">
+      {/* Filter Bar */}
+      <div className="security-card p-2.5 sm:p-3 rounded-lg mb-3 sm:mb-4">
         {searchQuery && (
           <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] text-xs font-mono text-zinc-300">
             <span className="flex items-center space-x-1.5">
-              <span className="text-zinc-500">Filtrando por:</span>
+              <span className="text-zinc-500">Filtering by:</span>
               <span className="text-emerald-400 font-semibold bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/40">
-                "{searchQuery}"
+                &ldquo;{searchQuery}&rdquo;
               </span>
             </span>
             {onClearSearch && (
@@ -280,13 +280,28 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 onClick={onClearSearch}
                 className="text-[11px] text-zinc-500 hover:text-zinc-300 transition underline"
               >
-                Limpiar filtro
+                Clear filter
               </button>
             )}
           </div>
         )}
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {/* Sort */}
+          <div>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value as any)}
+              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-200 font-mono focus:outline-none focus:border-zinc-500"
+            >
+              <option value="trust">Sort: Trusty Score</option>
+              <option value="credit">Sort: Credit Score (Beta)</option>
+              <option value="capacity">Sort: Daily Spend Capacity</option>
+              <option value="confidence">Sort: Confidence %</option>
+              <option value="popularity">Sort: Stars / Users</option>
+              <option value="recent">Sort: Most Recent</option>
+            </select>
+          </div>
 
           {/* Risk Level */}
           <div>
@@ -303,8 +318,8 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             </select>
           </div>
 
-          {/* Ecosystem */}
-          <div>
+          {/* Ecosystem (Desktop/Tablet) */}
+          <div className="hidden sm:block">
             <select
               value={selectedEcosystem}
               onChange={e => setSelectedEcosystem(e.target.value)}
@@ -318,8 +333,8 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             </select>
           </div>
 
-          {/* Permissions filter */}
-          <div>
+          {/* Permissions filter (Desktop/Tablet) */}
+          <div className="hidden sm:block">
             <select
               value={selectedPermission}
               onChange={e => setSelectedPermission(e.target.value)}
@@ -330,22 +345,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               <option value="gmail">Email / Gmail</option>
               <option value="terminal">Terminal / Exec</option>
               <option value="wallet">Crypto Wallet</option>
-            </select>
-          </div>
-
-          {/* Sort */}
-          <div>
-            <select
-              value={sortBy}
-              onChange={e => setSortBy(e.target.value as any)}
-              className="w-full px-2 py-1.5 bg-zinc-950 border border-white/[0.08] rounded text-xs text-zinc-200 font-mono focus:outline-none focus:border-zinc-500"
-            >
-              <option value="trust">Sort: Trusty Score</option>
-              <option value="credit">Sort: Credit Score (Beta)</option>
-              <option value="capacity">Sort: Daily Spend Capacity</option>
-              <option value="confidence">Sort: Confidence %</option>
-              <option value="popularity">Sort: Stars / Users</option>
-              <option value="recent">Sort: Most Recent</option>
             </select>
           </div>
         </div>

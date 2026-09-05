@@ -98,32 +98,31 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   const critRiskPct = stats.totalAgents > 0 ? Math.round(((stats.criticalRiskCount + stats.highRiskCount) / stats.totalAgents) * 100) : 0;
 
   return (
-    <section className="pt-6 sm:pt-10 pb-6 px-3 sm:px-6 max-w-7xl mx-auto border-b border-white/[0.08]">
+    <section className="pt-5 sm:pt-10 pb-5 px-3 sm:px-6 max-w-7xl mx-auto border-b border-white/[0.08]">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-        {/* Left Column (7 cols): Mission & Universal Omnibox */}
+        {/* Left Column (7 cols on desktop, 12 on mobile): Mission & Universal Omnibox */}
         <div className="lg:col-span-7">
-          <div className="flex items-center space-x-2 text-xs font-mono text-zinc-400 mb-2">
+          <div className="flex items-center space-x-2 text-[11px] sm:text-xs font-mono text-zinc-400 mb-1.5 sm:mb-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="uppercase tracking-wider font-semibold text-zinc-300">TRUSTY.ai Security Intelligence</span>
-            <span className="text-zinc-600">•</span>
-            <span className="text-zinc-500">VirusTotal for AI Agents</span>
+            <span className="uppercase tracking-wider font-semibold text-zinc-300 hidden xs:inline">TRUSTY.ai</span>
+            <span className="text-zinc-500 font-medium">VirusTotal for AI Agents</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
+          <h1 className="text-xl sm:text-3xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
             Before clicking &ldquo;START AGENT&rdquo;, ask: <span className="text-emerald-400 italic">Can I trust it?</span>
           </h1>
 
-          <p className="mt-3 text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
-            Continuous discovery across open agent ecosystems. Deterministic, explainable 0–100 TRUSTY Scores evaluating identity, permissions, security, and governance.
+          <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans max-w-xl">
+            Continuous security discovery across AI agent ecosystems. 0–100 TRUSTY Scores evaluating identity, permissions, CVEs, and spend capacity.
           </p>
 
           {/* Universal Hero Omnibox with Autocomplete & Direct Audit */}
-          <div className="relative mt-6 max-w-xl">
+          <div className="relative mt-4 sm:mt-6 max-w-xl">
             <form onSubmit={handleSubmit}>
               <div className={`relative flex items-center rounded-lg bg-zinc-950 border transition shadow-xl p-1 ${
                 isFocused ? 'border-emerald-500 ring-1 ring-emerald-500/30' : 'border-white/[0.14] hover:border-white/[0.25]'
               }`}>
-                <Search className="w-4 h-4 text-zinc-400 ml-3 flex-shrink-0" />
+                <Search className="w-4 h-4 text-zinc-400 ml-2.5 sm:ml-3 flex-shrink-0" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -134,8 +133,8 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setTimeout(() => setIsFocused(false), 200)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Search agent by name (e.g. Git, Crew) or paste GitHub repository URL..."
-                  className="w-full px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-sans"
+                  placeholder="Search agent or paste GitHub repo link..."
+                  className="w-full px-2.5 sm:px-3 py-2 bg-transparent text-xs sm:text-sm text-white placeholder-zinc-500 focus:outline-none font-sans"
                 />
 
                 {/* Clear button if text exists */}
@@ -157,7 +156,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                 <button
                   type="submit"
                   disabled={isAuditing || !searchQuery.trim()}
-                  className={`flex items-center space-x-1.5 px-4 py-2 rounded text-xs font-mono font-medium disabled:opacity-40 transition flex-shrink-0 ${
+                  className={`flex items-center space-x-1.5 px-3 sm:px-4 py-2 rounded text-xs font-mono font-medium disabled:opacity-40 transition flex-shrink-0 ${
                     isInputUrl
                       ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md'
                       : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200'
@@ -166,17 +165,17 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   {isAuditing ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Auditing...</span>
+                      <span className="hidden xs:inline">Auditing...</span>
                     </>
                   ) : isInputUrl ? (
                     <>
-                      <span>Audit Repo</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span>Audit</span>
+                      <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
                     </>
                   ) : (
                     <>
                       <span>Search</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
                     </>
                   )}
                 </button>
@@ -250,83 +249,85 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
               <div className="absolute top-full left-0 right-0 mt-1.5 p-2.5 rounded-lg bg-emerald-950/90 border border-emerald-800/80 text-emerald-300 text-xs font-mono shadow-2xl z-30 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Sparkles className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                  <span>Repository link detected. Press <strong>Enter</strong> or click &ldquo;Audit Repo&rdquo; to scan.</span>
+                  <span>Repository link detected. Press <strong>Enter</strong> or click &ldquo;Audit&rdquo; to scan.</span>
                 </div>
               </div>
             )}
 
             {/* Quick Presets / Try links */}
-            <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-zinc-500 font-mono">
-              <span>Quick test:</span>
+            <div className="flex items-center space-x-1.5 mt-2.5 text-[11px] text-zinc-500 font-mono overflow-x-auto no-scrollbar py-0.5">
+              <span className="flex-shrink-0">Try:</span>
               <button
                 type="button"
                 onClick={() => {
                   onSearchChange('https://github.com/crewAIInc/crewAI');
                   onAuditUrl('https://github.com/crewAIInc/crewAI');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
+                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
               >
-                crewAIInc/crewAI
+                crewAI
               </button>
-              <span>•</span>
               <button
                 type="button"
                 onClick={() => {
-                  onSearchChange('https://github.com/anthropics/anthropic-quickstarts');
-                  onAuditUrl('https://github.com/anthropics/anthropic-quickstarts');
+                  onSearchChange('https://github.com/browser-use/browser-use');
+                  onAuditUrl('https://github.com/browser-use/browser-use');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
+                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
               >
-                anthropics/quickstarts
+                browser-use
               </button>
-              <span>•</span>
               <button
                 type="button"
                 onClick={() => {
                   onSearchChange('Git');
                 }}
-                className="text-zinc-400 hover:text-emerald-400 underline decoration-zinc-700 underline-offset-2"
+                className="text-zinc-400 hover:text-emerald-400 px-2 py-0.5 rounded bg-zinc-900 border border-white/[0.06] flex-shrink-0"
               >
                 Filter &ldquo;Git&rdquo;
               </button>
             </div>
 
             {/* VirusTotal Quota indicator */}
-            {session && (
-              <div className="mt-3.5 flex items-center justify-between p-2.5 rounded bg-zinc-950/80 border border-white/[0.08] text-[11px] font-mono">
-                {session.isAuthenticated ? (
-                  <div className="flex items-center space-x-2 text-emerald-400">
-                    <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>Authenticated Session ({session.email}) • <strong className="text-white font-semibold">Unlimited Inspections</strong></span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between w-full">
-                    <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 rounded-full bg-amber-400" />
-                      <span className="text-zinc-400">
-                        Anonymous Quota:{' '}
-                        <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-zinc-200'}>
-                          {session.queriesRemaining}/10
-                        </strong>{' '}
-                        free scans remaining
-                      </span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={onOpenAuth}
-                      className="text-emerald-400 hover:text-emerald-300 underline decoration-emerald-800 underline-offset-2 ml-2 flex-shrink-0 font-medium"
-                    >
-                      {session.queriesRemaining <= 0 ? 'Authenticate to unlock' : 'Unlock unlimited'}
-                    </button>
-                  </div>
-                )}
+            {session && !session.isAuthenticated && (
+              <div className="mt-2.5 flex items-center justify-between px-2.5 py-1.5 rounded bg-zinc-950/60 border border-white/[0.06] text-[11px] font-mono">
+                <div className="flex items-center space-x-1.5 text-zinc-400">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
+                  <span>
+                    Quota:{' '}
+                    <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-zinc-200'}>
+                      {session.queriesRemaining}/10
+                    </strong>{' '}
+                    free
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={onOpenAuth}
+                  className="text-emerald-400 hover:text-emerald-300 font-medium"
+                >
+                  {session.queriesRemaining <= 0 ? 'Authenticate' : 'Unlock'}
+                </button>
               </div>
             )}
+
+            {/* Mobile-only compact telemetry pill bar (clean like VirusTotal) */}
+            <div className="lg:hidden mt-3 p-2.5 rounded-lg bg-zinc-950/80 border border-white/[0.08] flex items-center justify-between text-[11px] font-mono">
+              <div className="flex items-center space-x-1.5">
+                <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                <span className="text-zinc-200 font-semibold">{stats.totalAgents} Agents Monitored</span>
+              </div>
+              <div className="flex items-center space-x-2 text-[10px]">
+                <span className="text-emerald-400 font-medium">{stats.lowRiskCount} Safe</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-rose-400 font-medium">{stats.criticalRiskCount + stats.highRiskCount} Flagged</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Right Column (5 cols): Real-time Risk Distribution Radar */}
-        <div className="lg:col-span-5">
+        {/* Right Column (5 cols): Real-time Risk Distribution Radar (Desktop Only) */}
+        <div className="hidden lg:block lg:col-span-5">
           <div className="security-card p-4 sm:p-5 rounded-lg">
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-3">
               <div className="flex items-center space-x-2">
