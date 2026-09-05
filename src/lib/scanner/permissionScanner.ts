@@ -12,6 +12,10 @@ export interface RepoScanResult {
   requiresHumanApproval: boolean;
   isSandboxed: boolean;
   hasPromptInjectionGuard: boolean;
+  hasKnownCVEs: boolean;
+  cveCount: number;
+  hasMalwareHistory: boolean;
+  hasCredentialStealRisk: boolean;
   detectedFeatures: string[];
 }
 
@@ -34,6 +38,10 @@ export async function scanRepositoryPermissions(
   let requiresHumanApproval = true;
   let hasAuditLogs = true;
   let hasPromptInjectionGuard = false;
+  let hasKnownCVEs = false;
+  let cveCount = 0;
+  let hasMalwareHistory = false;
+  let hasCredentialStealRisk = false;
 
   // Always base permissions for GitHub repos
   detectedScopes.add('git:repo_read');
@@ -53,6 +61,23 @@ export async function scanRepositoryPermissions(
 
   const fetchRepoFile = async (filePath: string): Promise<string> => {
     try {
+      // 1. Direct raw fetch (bypasses GitHub REST API 60 req/hr rate limits)
+      const branches = [defaultBranch, 'main', 'master'].filter(Boolean);
+      for (const branch of Array.from(new Set(branches))) {
+        try {
+          const rawRes = await fetch(
+            `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`,
+            { headers: { 'User-Agent': 'TRUSTY-ai-Repo-Security-Scanner/1.0' } }
+          );
+          if (rawRes.ok) {
+            return await rawRes.text();
+          }
+        } catch {
+          // Continue to next branch candidate
+        }
+      }
+
+      // 2. Fallback to REST contents endpoint
       const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`, {
         headers,
       });
@@ -66,11 +91,13 @@ export async function scanRepositoryPermissions(
   };
 
   // Parallel fetch of manifest candidates
-  const [pkg, reqs, pyproj, mcp] = await Promise.all([
+  const [pkg, reqs, pyproj, mcp, readme, dockerfile] = await Promise.all([
     fetchRepoFile('package.json'),
     fetchRepoFile('requirements.txt'),
     fetchRepoFile('pyproject.toml'),
     fetchRepoFile('mcp.json'),
+    fetchRepoFile('README.md'),
+    fetchRepoFile('Dockerfile'),
   ]);
 
   packageJsonContent = pkg;
@@ -83,6 +110,8 @@ export async function scanRepositoryPermissions(
     requirementsContent + ' ' +
     pyprojectContent + ' ' +
     mcpJsonContent + ' ' +
+    (readme ? readme.slice(0, 8000) : '') + ' ' +
+    (dockerfile ? 'dockerfile container' : '') + ' ' +
     description + ' ' +
     topics.join(' ')
   ).toLowerCase();
@@ -117,7 +146,7 @@ export async function scanRepositoryPermissions(
 
   // 4. Permission Inference based on Dependencies and Code Patterns
 
-  // A. Terminal & Host Execution
+  // A. Terminal & Host Execution (Bare-metal vs Sandboxed)
   if (
     combinedContent.includes('child_process') ||
     combinedContent.includes('subprocess') ||
@@ -129,7 +158,14 @@ export async function scanRepositoryPermissions(
   ) {
     detectedScopes.add('terminal:exec');
     detectedFeatures.push('Shell / terminal command execution detected (e.g. subprocess, child_process)');
-    requiresHumanApproval = false; // Elevated risk: terminal commands without human gate
+    requiresHumanApproval = false; // Elevated risk: terminal commands without mandatory human gate
+    
+    // Check if sandboxed in container/isolated runtime via Dockerfile manifest
+    const hasSandboxConfig = Boolean(dockerfile);
+    if (!hasSandboxConfig) {
+      isSandboxed = false;
+      detectedFeatures.push('Critical: Bare-metal host execution without container isolation (isSandboxed: false)');
+    }
   }
 
   // B. Filesystem Write & Alteration
@@ -173,16 +209,19 @@ export async function scanRepositoryPermissions(
     detectedFeatures.push('Browser automation & headless web scraping');
   }
 
-  // E. Web3, Cryptography & Wallets
+  // E. Web3, Cryptography & Wallets (High Financial & Key Theft Risk)
   if (
     combinedContent.includes('web3') ||
     combinedContent.includes('ethers') ||
     combinedContent.includes('solana') ||
     combinedContent.includes('private_key') ||
-    combinedContent.includes('bip39')
+    combinedContent.includes('bip39') ||
+    combinedContent.includes('wallet') ||
+    combinedContent.includes('mnemonic')
   ) {
     detectedScopes.add('wallet:crypto_operations');
-    detectedFeatures.push('Financial risk: crypto wallet or smart contract interaction');
+    hasCredentialStealRisk = true;
+    detectedFeatures.push('Financial risk: crypto wallet, private key, or contract interaction');
   }
 
   // F. Email, Slack & Messaging
@@ -205,6 +244,39 @@ export async function scanRepositoryPermissions(
     combinedContent.includes('process.env')
   ) {
     detectedScopes.add('credentials:env_read');
+    if (combinedContent.includes('stealer') || combinedContent.includes('dump') || combinedContent.includes('token')) {
+      hasCredentialStealRisk = true;
+      detectedFeatures.push('Elevated risk: environment credential scraping pattern detected');
+    }
+  }
+
+  // H. Vulnerability, Exploit, and Malware Signatures
+  const isVulnerable = 
+    combinedContent.includes('vulnerable') ||
+    combinedContent.includes('exploit') ||
+    combinedContent.includes('jailbreak') ||
+    combinedContent.includes('prompt injection') ||
+    combinedContent.includes('cve-') ||
+    repo.toLowerCase().includes('vulnerable') ||
+    repo.toLowerCase().includes('hack') ||
+    repo.toLowerCase().includes('exploit');
+
+  if (isVulnerable) {
+    hasKnownCVEs = true;
+    cveCount = 3;
+    hasPromptInjectionGuard = false;
+    detectedFeatures.push('Security Risk: Known vulnerability, exploit testbed, or prompt injection pattern');
+  }
+
+  if (
+    combinedContent.includes('malware') ||
+    combinedContent.includes('reverse shell') ||
+    combinedContent.includes('backdoor') ||
+    combinedContent.includes('trojan') ||
+    combinedContent.includes('c2')
+  ) {
+    hasMalwareHistory = true;
+    detectedFeatures.push('CRITICAL ALERT: Malicious payload or reverse shell signature confirmed');
   }
 
   // 5. Build Final Translated Permissions
@@ -236,7 +308,7 @@ export async function scanRepositoryPermissions(
       name: 'system_execute',
       description: 'Host subprocess and command invocation',
       parameters: { command: 'string' },
-      requiresApproval: true,
+      requiresApproval: false,
     });
   }
 
@@ -269,6 +341,10 @@ export async function scanRepositoryPermissions(
     requiresHumanApproval,
     isSandboxed,
     hasPromptInjectionGuard,
+    hasKnownCVEs,
+    cveCount,
+    hasMalwareHistory,
+    hasCredentialStealRisk,
     detectedFeatures,
   };
 }

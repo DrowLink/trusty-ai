@@ -36,6 +36,15 @@ export function checkCriticalOverrides(agent: AgentRecord): CriticalOverride | n
       reason: 'Agent possesses arbitrary bare-metal host shell execution without isolation sandbox and without human approval gating.',
     };
   }
+  if (hasTerminalExec && !agent.requiresHumanApproval) {
+    return {
+      triggered: true,
+      rule: 'OVERRIDE_UNSUPERVISED_TERMINAL',
+      severity: 'HIGH_RISK',
+      cappedScore: 35,
+      reason: 'Agent possesses host shell execution capabilities without mandatory human approval gating.',
+    };
+  }
 
   // 4. Critical Scope Mismatch: Calendar/Productivity requesting financial or cloud root credentials
   const hasFinancialScope = agent.requestedPermissions.some(p => 
