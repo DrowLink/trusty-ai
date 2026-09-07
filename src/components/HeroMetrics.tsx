@@ -1,12 +1,25 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DiscoveryStats } from '@/lib/types';
-import { Shield, AlertTriangle, Database, Activity, Search, ArrowRight, CheckCircle2, ShieldAlert } from 'lucide-react';
-
+import { DiscoveryStats, AgentWithScore } from '@/lib/types';
 import { UserSession } from '@/lib/quota';
-import { AgentWithScore } from '@/lib/types';
-import { X, ExternalLink, ChevronRight, Sparkles, Loader2 } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  CreditCard, 
+  Search, 
+  ArrowRight, 
+  Sparkles, 
+  Loader2, 
+  X, 
+  ChevronRight, 
+  Lock, 
+  CheckCircle2, 
+  AlertTriangle,
+  Zap,
+  Building2,
+  TrendingUp,
+  Activity
+} from 'lucide-react';
 
 interface HeroMetricsProps {
   stats: DiscoveryStats;
@@ -18,6 +31,7 @@ interface HeroMetricsProps {
   isAuditing?: boolean;
   session?: UserSession;
   onOpenAuth?: () => void;
+  onNavigateTab?: (tab: any) => void;
 }
 
 export const HeroMetrics: React.FC<HeroMetricsProps> = ({
@@ -30,6 +44,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   isAuditing,
   session,
   onOpenAuth,
+  onNavigateTab,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
@@ -46,7 +61,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
 
   const isInputUrl = isUrl(searchQuery);
 
-  // Matching suggestions from indexed agents
+  // Matching suggestions
   const matchingAgents = searchQuery.trim() && !isInputUrl
     ? agents
         .filter(a => {
@@ -70,7 +85,6 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
       onAuditUrl(query);
       setIsFocused(false);
     } else if (matchingAgents.length > 0) {
-      // If user presses Enter with suggestions, select first or selected
       const target = selectedIndex >= 0 && selectedIndex < matchingAgents.length
         ? matchingAgents[selectedIndex]
         : matchingAgents[0];
@@ -93,324 +107,323 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
     }
   };
 
-  const lowRiskPct = stats.totalAgents > 0 ? Math.round((stats.lowRiskCount / stats.totalAgents) * 100) : 0;
-  const medRiskPct = stats.totalAgents > 0 ? Math.round((stats.mediumRiskCount / stats.totalAgents) * 100) : 0;
-  const critRiskPct = stats.totalAgents > 0 ? Math.round(((stats.criticalRiskCount + stats.highRiskCount) / stats.totalAgents) * 100) : 0;
+  const procurementBot = agents.find(a => a.name.toLowerCase().includes('procurement')) || agents[0];
 
   return (
-    <section className="pt-6 sm:pt-10 pb-6 px-3 sm:px-6 max-w-7xl mx-auto border-b border-slate-800/80">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-        {/* Left Column (7 cols on desktop, 12 on mobile): Mission & Universal Omnibox */}
-        <div className="lg:col-span-7">
-          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-slate-400 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-            <span className="text-sky-300 font-semibold">TRUSTY.BOT</span>
-            <span className="text-slate-600">•</span>
-            <span className="text-slate-300">Agent Risk &amp; Credit Infrastructure</span>
+    <section className="pt-8 sm:pt-12 pb-8 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto border-b border-white/[0.06]">
+      {/* 1. Header Statement */}
+      <div className="text-center max-w-3xl mx-auto space-y-3">
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900/90 border border-white/[0.08] text-[11px] font-sans text-slate-300">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-semibold text-white">TRUSTY.BOT</span>
+          <span className="text-slate-600">•</span>
+          <span className="text-slate-400">The Trust &amp; Credit Bureau for AI Agents</span>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight font-sans">
+          The trust &amp; credit bureau <br className="hidden sm:inline" />
+          <span className="bg-gradient-to-r from-sky-400 via-purple-300 to-emerald-400 bg-clip-text text-transparent">
+            for the agentic economy.
+          </span>
+        </h1>
+
+        <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-sans max-w-2xl mx-auto">
+          Before an agent gets your <strong className="text-emerald-400 font-semibold">data</strong>, <strong className="text-sky-400 font-semibold">permissions</strong>, or <strong className="text-purple-400 font-semibold">money</strong> — ask TRUSTY. Continuous discovery, Day-Zero underwriting, and real-time transaction clearing.
+        </p>
+      </div>
+
+      {/* 2. Universal Minimalist Omnibox */}
+      <div className="mt-8 max-w-2xl mx-auto relative">
+        <form onSubmit={handleSubmit}>
+          <div className={`relative flex items-center rounded-2xl bg-[#0c1017] border transition p-2 shadow-2xl ${
+            isFocused ? 'border-sky-500/80 ring-2 ring-sky-500/20 shadow-sky-500/10' : 'border-white/[0.1] hover:border-white/[0.2]'
+          }`}>
+            <Search className="w-5 h-5 text-slate-400 ml-3 flex-shrink-0" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => {
+                onSearchChange(e.target.value);
+                setSelectedIndex(-1);
+              }}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+              onKeyDown={handleKeyDown}
+              placeholder="Search agent name (e.g. ProcurementBot) or paste GitHub repository URL..."
+              className="w-full px-3 py-2.5 bg-transparent text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none font-sans"
+            />
+
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  onSearchChange('');
+                  setSelectedIndex(-1);
+                }}
+                className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition mr-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+
+            <button
+              type="submit"
+              disabled={isAuditing}
+              className="flex items-center space-x-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition flex-shrink-0 shadow-sm bg-white text-slate-950 hover:bg-slate-200 disabled:opacity-50"
+            >
+              {isAuditing ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span className="hidden sm:inline">Auditing...</span>
+                </>
+              ) : (
+                <>
+                  <span>{isInputUrl ? 'Audit Repo' : 'Search'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+
+        {/* Autocomplete Suggestions */}
+        {isFocused && matchingAgents.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-2 rounded-xl bg-[#0c1017] border border-white/[0.12] shadow-2xl z-30 overflow-hidden font-sans divide-y divide-white/[0.06]">
+            <div className="px-3 py-2 bg-slate-950/80 text-[10px] font-mono text-slate-400 uppercase tracking-wider flex items-center justify-between">
+              <span>Matching Indexed Agents ({matchingAgents.length})</span>
+              <span>Click to inspect</span>
+            </div>
+            {matchingAgents.map((agent, index) => {
+              const isSelected = index === selectedIndex;
+              const trustScore = agent.evaluation.trustyScore;
+              const creditScore = agent.creditProfile?.creditScore || 70;
+              return (
+                <div
+                  key={agent.id}
+                  onMouseDown={() => {
+                    onSelectAgent(agent);
+                    setIsFocused(false);
+                  }}
+                  className={`p-3 flex items-center justify-between cursor-pointer transition ${
+                    isSelected ? 'bg-slate-800' : 'hover:bg-slate-900/80'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 min-w-0">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs font-semibold text-white truncate">{agent.name}</span>
+                        <span className="text-[10px] text-slate-400 px-1.5 py-0.5 rounded bg-slate-800">
+                          {agent.category}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 truncate">by {agent.publisher.name}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3 flex-shrink-0 text-right">
+                    <div>
+                      <span className="text-xs font-mono font-bold text-emerald-400">Trust {trustScore}</span>
+                      <span className="block text-[10px] font-mono text-purple-400">
+                        Tier {agent.creditProfile?.creditTier || 'BBB'}
+                      </span>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-slate-500" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 1-Click Quick Presets */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3 text-xs text-slate-400">
+          <span className="text-slate-500 text-[11px]">Sample Audits:</span>
+          {procurementBot && (
+            <button
+              type="button"
+              onClick={() => onSelectAgent(procurementBot)}
+              className="px-2.5 py-1 rounded-full bg-purple-950/40 border border-purple-800/50 text-purple-300 hover:bg-purple-900/40 transition text-[11px]"
+            >
+              ProcurementBot-847 (Tier AA)
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => {
+              onSearchChange('https://github.com/crewAIInc/crewAI');
+              onAuditUrl('https://github.com/crewAIInc/crewAI');
+            }}
+            className="px-2.5 py-1 rounded-full bg-slate-900 border border-white/[0.08] text-slate-300 hover:border-slate-600 transition text-[11px]"
+          >
+            crewAI Repo
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              onSearchChange('https://github.com/browser-use/browser-use');
+              onAuditUrl('https://github.com/browser-use/browser-use');
+            }}
+            className="px-2.5 py-1 rounded-full bg-slate-900 border border-white/[0.08] text-slate-300 hover:border-slate-600 transition text-[11px]"
+          >
+            browser-use Repo
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Two Core Scores Showcase (Slide 2 & 10 of Pitch) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-10">
+        {/* Card A: SCORE 01 - TRUST SCORE */}
+        <div className="security-card p-5 sm:p-6 rounded-2xl relative overflow-hidden border border-emerald-900/30 group">
+          <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/60 flex items-center justify-center text-emerald-400">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block">
+                  SCORE 01 • CYBERSECURITY &amp; GOVERNANCE
+                </span>
+                <h3 className="text-base sm:text-lg font-bold text-white">
+                  Trust Score (0–100)
+                </h3>
+              </div>
+            </div>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-950/80 text-emerald-300 border border-emerald-800/80">
+              Deterministic
+            </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight font-sans">
-            The trust &amp; credit bureau <br />
-            <span className="text-sky-400">for AI agents.</span>
-          </h1>
-
-          <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans max-w-xl">
-            Before an agent gets your <strong className="text-sky-400">data</strong>, <strong className="text-purple-400">permissions</strong>, or <strong className="text-emerald-400">money</strong> — ask TRUSTY.
+          <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+            <strong className="text-slate-200">&ldquo;Can I trust this agent?&rdquo;</strong> Multi-dimensional evaluation across 20 signals: identity verification, code provenance, sandboxing, secret safety, and prompt-injection resilience.
           </p>
 
-          {/* The 5 Pillars Strip from Slide 1 & 10 */}
-          <div className="mt-4 p-2.5 rounded-xl bg-[#090d16] border border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono">
-            <div className="flex flex-col">
-              <span className="text-slate-400 uppercase font-semibold">IDENTITY</span>
-              <span className="text-slate-200 font-medium">Who is it?</span>
+          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/[0.06] text-center">
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-emerald-400 block">5 Dims</span>
+              <span className="text-[10px] text-slate-500">20 Signals</span>
             </div>
-            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
-            <div className="flex flex-col">
-              <span className="text-emerald-400 uppercase font-semibold">TRUST</span>
-              <span className="text-slate-200 font-medium">Can I trust it?</span>
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-emerald-400 block">Circuit Breaks</span>
+              <span className="text-[10px] text-slate-500">Malware / Theft</span>
             </div>
-            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
-            <div className="flex flex-col">
-              <span className="text-purple-400 uppercase font-semibold">CREDIT</span>
-              <span className="text-slate-200 font-medium">How risky?</span>
-            </div>
-            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
-            <div className="flex flex-col">
-              <span className="text-sky-400 uppercase font-semibold">CAPACITY</span>
-              <span className="text-slate-200 font-medium">How much?</span>
-            </div>
-            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
-            <div className="flex flex-col">
-              <span className="text-amber-400 uppercase font-semibold">AUTHORIZATION</span>
-              <span className="text-slate-200 font-medium">Allow now?</span>
-            </div>
-          </div>
-
-          {/* Universal Hero Omnibox with Autocomplete & Direct Audit */}
-          <div className="relative mt-4 sm:mt-5 max-w-xl">
-            <form onSubmit={handleSubmit}>
-              <div className={`relative flex items-center rounded-xl bg-slate-900/95 border transition shadow-2xl p-1.5 ${
-                isFocused ? 'border-sky-500 ring-2 ring-sky-500/20 shadow-sky-500/10' : 'border-slate-700/70 hover:border-slate-600'
-              }`}>
-                <Search className="w-4 h-4 text-slate-400 ml-2.5 sm:ml-3 flex-shrink-0" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => {
-                    onSearchChange(e.target.value);
-                    setSelectedIndex(-1);
-                  }}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Search agent name or paste GitHub repo URL..."
-                  className="w-full px-2.5 sm:px-3 py-2 bg-transparent text-xs sm:text-sm text-slate-100 placeholder-slate-400 focus:outline-none font-sans"
-                />
-
-                {/* Clear button if text exists */}
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onSearchChange('');
-                      setSelectedIndex(-1);
-                    }}
-                    className="p-1 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition mr-1"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                )}
-
-                {/* Direct Action Button */}
-                <button
-                  type="submit"
-                  disabled={isAuditing}
-                  className="flex items-center space-x-1.5 px-3.5 sm:px-4 py-2 rounded-lg text-xs font-mono font-bold transition flex-shrink-0 shadow-sm bg-sky-500 hover:bg-sky-400 active:bg-sky-600 text-sky-950 disabled:opacity-50"
-                >
-                  {isAuditing ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span className="hidden xs:inline">Auditing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{isInputUrl ? 'Audit Repo' : 'Search'}</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-
-            {/* Instant Autocomplete Suggestions Dropdown */}
-            {isFocused && matchingAgents.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 rounded-xl bg-[#0d131f] border border-slate-700 shadow-2xl z-30 overflow-hidden font-sans divide-y divide-slate-800">
-                <div className="px-3 py-1.5 bg-zinc-950/90 text-[10px] font-mono text-zinc-500 uppercase tracking-wider flex items-center justify-between">
-                  <span>Matching Indexed Agents ({matchingAgents.length})</span>
-                  <span className="text-zinc-600">Press Enter or click to inspect</span>
-                </div>
-                {matchingAgents.map((agent, index) => {
-                  const isSelected = index === selectedIndex;
-                  const score = agent.evaluation.trustyScore;
-                  const isLowRisk = score >= 80;
-                  const isMedRisk = score >= 60 && score < 80;
-
-                  return (
-                    <div
-                      key={agent.id}
-                      onMouseDown={() => {
-                        onSelectAgent(agent);
-                        setIsFocused(false);
-                      }}
-                      className={`p-3 flex items-center justify-between cursor-pointer transition ${
-                        isSelected ? 'bg-zinc-800/80' : 'hover:bg-zinc-900/90'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3 min-w-0">
-                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                          isLowRisk ? 'bg-emerald-400' : isMedRisk ? 'bg-amber-400' : 'bg-rose-400'
-                        }`} />
-                        <div className="min-w-0">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xs font-semibold text-zinc-100 truncate">
-                              {agent.name}
-                            </span>
-                            <span className="text-[10px] font-mono text-zinc-500 px-1.5 py-0.2 rounded bg-zinc-900 border border-white/[0.06]">
-                              {agent.category}
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-zinc-400 truncate">
-                            by {agent.publisher.name}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2.5 flex-shrink-0">
-                        <div className="text-right">
-                          <span className={`text-xs font-mono font-bold ${
-                            isLowRisk ? 'text-emerald-400' : isMedRisk ? 'text-amber-400' : 'text-rose-400'
-                          }`}>
-                            {score}/100
-                          </span>
-                          <span className="block text-[9px] font-mono text-zinc-500 uppercase">
-                            {agent.evaluation.riskTier.replace('_', ' ')}
-                          </span>
-                        </div>
-                        <ChevronRight className="w-3.5 h-3.5 text-zinc-500" />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* URL Detection Helper Notice */}
-            {isFocused && isInputUrl && (
-              <div className="absolute top-full left-0 right-0 mt-1.5 p-2.5 rounded-lg bg-emerald-950/90 border border-emerald-800/80 text-emerald-300 text-xs font-mono shadow-2xl z-30 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                  <span>Repository link detected. Press <strong>Enter</strong> or click &ldquo;Audit&rdquo; to scan.</span>
-                </div>
-              </div>
-            )}
-
-            {/* Quick Presets / Try links */}
-            <div className="flex items-center space-x-1.5 mt-2.5 text-[11px] text-slate-500 font-mono overflow-x-auto no-scrollbar py-0.5">
-              <span className="flex-shrink-0 text-slate-400">Try:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  onSearchChange('https://github.com/crewAIInc/crewAI');
-                  onAuditUrl('https://github.com/crewAIInc/crewAI');
-                }}
-                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
-              >
-                crewAI
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onSearchChange('https://github.com/browser-use/browser-use');
-                  onAuditUrl('https://github.com/browser-use/browser-use');
-                }}
-                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
-              >
-                browser-use
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onSearchChange('Git');
-                }}
-                className="text-slate-300 hover:text-sky-300 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:border-sky-500/30 flex-shrink-0 transition"
-              >
-                Filter &ldquo;Git&rdquo;
-              </button>
-            </div>
-
-            {/* VirusTotal Quota indicator */}
-            {session && !session.isAuthenticated && (
-              <div className="mt-2.5 flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px] font-mono">
-                <div className="flex items-center space-x-1.5 text-slate-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" />
-                  <span>
-                    Quota:{' '}
-                    <strong className={session.queriesRemaining <= 2 ? 'text-rose-400' : 'text-slate-200'}>
-                      {session.queriesRemaining}/10
-                    </strong>{' '}
-                    free
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={onOpenAuth}
-                  className="text-sky-400 hover:text-sky-300 font-medium transition"
-                >
-                  {session.queriesRemaining <= 0 ? 'Authenticate' : 'Unlock unlimited'}
-                </button>
-              </div>
-            )}
-
-            {/* Mobile-only compact telemetry pill bar (clean like VirusTotal) */}
-            <div className="lg:hidden mt-3 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 flex items-center justify-between text-[11px] font-mono">
-              <div className="flex items-center space-x-1.5">
-                <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                <span className="text-slate-200 font-semibold">{stats.totalAgents} Agents Monitored</span>
-              </div>
-              <div className="flex items-center space-x-2 text-[10px]">
-                <span className="text-emerald-400 font-medium">{stats.lowRiskCount} Safe</span>
-                <span className="text-slate-600">•</span>
-                <span className="text-rose-400 font-medium">{stats.criticalRiskCount + stats.highRiskCount} Flagged</span>
-              </div>
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-emerald-400 block">100% Verified</span>
+              <span className="text-[10px] text-slate-500">Explainable</span>
             </div>
           </div>
         </div>
 
-        {/* Right Column (5 cols): Real-time Risk Distribution Radar (Desktop Only) */}
-        <div className="hidden lg:block lg:col-span-5">
-          <div className="security-card p-4 sm:p-5 rounded-xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
-              <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-mono font-bold uppercase text-slate-200">Ecosystem Risk Radar</span>
+        {/* Card B: SCORE 02 - CREDIT SCORE & SPENDING CAPACITY */}
+        <div className="security-card p-5 sm:p-6 rounded-2xl relative overflow-hidden border border-purple-900/30 group">
+          <div className="absolute top-0 right-0 w-36 h-36 bg-purple-500/5 rounded-full blur-2xl pointer-events-none" />
+          <div className="flex items-start justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-9 h-9 rounded-xl bg-purple-950/60 border border-purple-800/60 flex items-center justify-center text-purple-400">
+                <CreditCard className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase tabular-nums">
-                {stats.totalAgents} Agents Monitored
-              </span>
-            </div>
-
-            {/* Visual Risk Distribution Bar */}
-            <div className="space-y-3">
-              {/* Segmented spectrum bar */}
               <div>
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1.5">
-                  <span>Trust Distribution</span>
-                  <span className="text-slate-400">Benchmark: {stats.avgTrustScore}/100</span>
-                </div>
-                <div className="h-2.5 w-full bg-slate-900 rounded-full overflow-hidden flex p-0.5 border border-slate-800">
-                  <div style={{ width: `${lowRiskPct}%` }} className="bg-emerald-500 rounded-l-full" title={`Low Risk: ${stats.lowRiskCount}`} />
-                  <div style={{ width: `${medRiskPct}%` }} className="bg-amber-500" title={`Medium Risk: ${stats.mediumRiskCount}`} />
-                  <div style={{ width: `${critRiskPct}%` }} className="bg-rose-500 rounded-r-full" title={`Critical: ${stats.criticalRiskCount + stats.highRiskCount}`} />
-                </div>
-              </div>
-
-              {/* Breakdown Matrix */}
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800 text-center">
-                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
-                  <div className="text-lg font-bold font-mono text-emerald-400 tabular-nums leading-none">
-                    {stats.lowRiskCount}
-                  </div>
-                  <div className="text-[10px] font-mono text-slate-300 mt-1.5 font-medium">Low Risk</div>
-                  <div className="text-[9px] text-slate-500 font-mono">80–100</div>
-                </div>
-
-                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
-                  <div className="text-lg font-bold font-mono text-amber-400 tabular-nums leading-none">
-                    {stats.mediumRiskCount}
-                  </div>
-                  <div className="text-[10px] font-mono text-slate-300 mt-1.5 font-medium">Elevated</div>
-                  <div className="text-[9px] text-slate-500 font-mono">60–79</div>
-                </div>
-
-                <div className="p-2.5 rounded-lg bg-[#090d16] border border-slate-800/80">
-                  <div className="text-lg font-bold font-mono text-rose-400 tabular-nums leading-none">
-                    {stats.criticalRiskCount + stats.highRiskCount}
-                  </div>
-                  <div className="text-[10px] font-mono text-rose-300 mt-1.5 font-medium">Quarantine</div>
-                  <div className="text-[9px] text-rose-400/70 font-mono">0–59</div>
-                </div>
-              </div>
-
-              {/* Crawler Telemetry line */}
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 pt-2 border-t border-slate-800">
-                <span className="flex items-center space-x-1.5">
-                  <Activity className="w-3.5 h-3.5 text-sky-400" />
-                  <span>3 Crawlers Connected:</span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-purple-400 font-bold block">
+                  SCORE 02 • MONEY &amp; ECONOMIC AUTHORITY
                 </span>
-                <span className="text-slate-300">GitHub · NPM · HuggingFace</span>
+                <h3 className="text-base sm:text-lg font-bold text-white">
+                  Credit Score &amp; Spending Limits
+                </h3>
               </div>
+            </div>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-950/80 text-purple-300 border border-purple-800/80">
+              Tiers AAA–D
+            </span>
+          </div>
+
+          <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+            <strong className="text-slate-200">&ldquo;How much economic authority should it receive?&rdquo;</strong> Establishes risk-adjusted daily spending envelopes, single-transaction autonomous ceilings, and mandatory human approval triggers.
+          </p>
+
+          <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/[0.06] text-center">
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-purple-400 block">Day-Zero</span>
+              <span className="text-[10px] text-slate-500">12 Public Signals</span>
+            </div>
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-purple-400 block">Behavioral</span>
+              <span className="text-[10px] text-slate-500">20 Telemetry Ledger</span>
+            </div>
+            <div className="p-2 rounded-lg bg-[#07090e] border border-white/[0.04]">
+              <span className="text-xs font-mono font-bold text-purple-400 block">AVUD Clearing</span>
+              <span className="text-[10px] text-slate-500">Brex / Visa / Stripe</span>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* 4. Featured Institutional Benchmark Showcase (Slide 5 & 6) */}
+      {procurementBot && (
+        <div className="mt-6 rounded-2xl bg-gradient-to-r from-[#0c1017] via-[#111726] to-[#0c1017] border border-white/[0.08] p-4 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-purple-400 bg-purple-950/60 border border-purple-800/60 px-2 py-0.5 rounded-full font-bold">
+                MATURE CORPORATE AGENT CASE
+              </span>
+              <span className="text-xs font-bold text-white">{procurementBot.name}</span>
+              <span className="text-xs text-slate-400 font-sans">• Acme Corp Treasury</span>
+            </div>
+            <p className="text-xs text-slate-300 max-w-xl">
+              180+ days clean operating telemetry • $4.12M AVUD processed • 14,820 transactions with 0.00% chargebacks.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 flex-shrink-0">
+            <div className="text-center px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block">Trust Score</span>
+              <span className="text-base font-bold font-mono text-emerald-400">94 / 100</span>
+            </div>
+            <div className="text-center px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block">Credit Rating</span>
+              <span className="text-base font-bold font-mono text-purple-400">Tier AA (87)</span>
+            </div>
+            <div className="text-center px-3 py-1.5 rounded-xl bg-slate-900/80 border border-white/[0.06]">
+              <span className="text-[10px] text-slate-400 uppercase font-mono block">Daily Capacity</span>
+              <span className="text-base font-bold font-mono text-cyan-400">$25,000 / day</span>
+            </div>
+
+            <button
+              onClick={() => onSelectAgent(procurementBot)}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] transition flex items-center space-x-1.5"
+            >
+              <span>Inspect Credit File</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Minimalist Ecosystem Metric Strip */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/[0.06] text-center text-xs">
+        <div>
+          <span className="text-lg sm:text-xl font-bold font-mono text-white block tabular-nums">
+            {stats.totalAgents}
+          </span>
+          <span className="text-slate-400 text-[11px]">Agents Indexed</span>
+        </div>
+        <div>
+          <span className="text-lg sm:text-xl font-bold font-mono text-emerald-400 block tabular-nums">
+            ${(stats.totalDailyCapacity || 249000).toLocaleString()}
+          </span>
+          <span className="text-slate-400 text-[11px]">Daily Spending Capacity</span>
+        </div>
+        <div>
+          <span className="text-lg sm:text-xl font-bold font-mono text-purple-400 block tabular-nums">
+            {stats.avgTrustScore} / 100
+          </span>
+          <span className="text-slate-400 text-[11px]">Avg Ecosystem Trust</span>
+        </div>
+        <div>
+          <span className="text-lg sm:text-xl font-bold font-mono text-sky-400 block">
+            5 Rails
+          </span>
+          <span className="text-slate-400 text-[11px]">Brex · Visa · Stripe · Plaid</span>
         </div>
       </div>
     </section>

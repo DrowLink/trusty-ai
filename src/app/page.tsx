@@ -23,7 +23,7 @@ import {
   computeDiscoveryStats, 
   saveMultipleLocalCustomAgents 
 } from '@/lib/storage/clientStorage';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, ShieldCheck, Heart } from 'lucide-react';
 
 export default function HomePage() {
   const [agents, setAgents] = useState<AgentWithScore[]>([]);
@@ -84,7 +84,6 @@ export default function HomePage() {
       }
     } catch (err) {
       console.error('Failed to load agents:', err);
-      // Fallback directly to local storage
       const local = getLocalCustomAgents();
       if (local.length > 0) {
         setAgents(local);
@@ -120,20 +119,14 @@ export default function HomePage() {
   };
 
   const handleEvaluationComplete = (newAgent: AgentWithScore) => {
-    // 1. Immediately persist to browser storage
     saveLocalCustomAgent(newAgent);
-
-    // 2. Update local state
     setAgents(prev => {
       const updated = [newAgent, ...prev.filter(a => a.id !== newAgent.id)];
       setStats(computeDiscoveryStats(updated));
       return updated;
     });
-
-    // 3. Open explainability drawer
     setSelectedAgent(newAgent);
 
-    // 4. Sync to server & Firestore
     const { evaluation, ...agentRecord } = newAgent;
     fetch('/api/agents/sync', {
       method: 'POST',
@@ -142,7 +135,6 @@ export default function HomePage() {
     }).catch(e => console.warn('Background sync error:', e));
   };
 
-  // Instant Hero URL Audit Handler
   const handleHeroAudit = async (urlOrName: string) => {
     if (!checkAndConsumeQuota()) {
       return;
@@ -175,23 +167,23 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-transparent">
-      {/* Top Navigation with Product Tabs */}
+    <div className="flex-1 flex flex-col min-h-screen bg-transparent font-sans">
+      {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenEvaluate={() => setIsEvaluateOpen(true)}
         totalAgents={stats.totalAgents}
         session={session}
       />
 
-      {/* Main Content Area */}
+      {/* Main Product Views */}
       <main className="flex-1">
         {/* VIEW 1: AGENT BUREAU & DIRECTORY */}
         {activeTab === 'bureau' && (
           <div className="animate-fadeIn">
-            {/* Universal Command Center Omnibox */}
             <HeroMetrics
               stats={stats}
               agents={agents}
@@ -202,9 +194,9 @@ export default function HomePage() {
               isAuditing={isAuditingLive}
               session={session}
               onOpenAuth={() => setIsAuthOpen(true)}
+              onNavigateTab={setActiveTab}
             />
 
-            {/* Trust Leaderboard */}
             <TrustLeaderboard
               agents={agents}
               onSelectAgent={agent => setSelectedAgent(agent)}
@@ -213,21 +205,11 @@ export default function HomePage() {
               onClearSearch={() => setSearchQuery('')}
             />
 
-            {/* Discovery Crawler Control */}
             <DiscoveryBar onRefresh={fetchAgents} />
           </div>
         )}
 
-        {/* VIEW 2: THE ECONOMIC CASE & ROI */}
-        {activeTab === 'economics' && (
-          <div className="animate-fadeIn">
-            <EconomicCaseView
-              onOpenDecisionPlayground={() => setActiveTab('decision_api')}
-            />
-          </div>
-        )}
-
-        {/* VIEW 3: LIVE DECISION API PLAYGROUND */}
+        {/* VIEW 2: M2M DECISION GATEWAY (SLIDE 5) */}
         {activeTab === 'decision_api' && (
           <div className="animate-fadeIn">
             <DecisionPlayground
@@ -237,14 +219,23 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* VIEW 4: UNDERWRITING METHODOLOGY (12+20) */}
+        {/* VIEW 3: THE ECONOMIC CASE & ROI (BREX CASE) */}
+        {activeTab === 'economics' && (
+          <div className="animate-fadeIn">
+            <EconomicCaseView
+              onOpenDecisionPlayground={() => setActiveTab('decision_api')}
+            />
+          </div>
+        )}
+
+        {/* VIEW 4: UNDERWRITING METHODOLOGY (12 PUBLIC + 20 BEHAVIORAL SIGNALS) */}
         {activeTab === 'underwriting' && (
           <div className="animate-fadeIn">
             <UnderwritingExplainer />
           </div>
         )}
 
-        {/* VIEW 5: BUSINESS MODEL & PRICING */}
+        {/* VIEW 5: BUSINESS MODEL & INSTITUTIONAL PRICING (SLIDE 7) */}
         {activeTab === 'pricing' && (
           <div className="animate-fadeIn">
             <BusinessAndPricingView
@@ -256,7 +247,7 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* VIEW 6: COMPETITIVE MOAT & GTM FLYWHEEL */}
+        {/* VIEW 6: COMPETITIVE MOAT & GTM FLYWHEEL (SLIDE 8 & 9) */}
         {activeTab === 'moat' && (
           <div className="animate-fadeIn">
             <CompetitiveMoatView />
@@ -264,64 +255,89 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#070a11]/90 backdrop-blur py-8 text-xs text-slate-400 font-mono">
+      {/* Institutional Minimalist Footer */}
+      <footer className="border-t border-white/[0.08] bg-[#07090e]/95 backdrop-blur py-8 text-xs text-slate-400 font-sans">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center space-x-2 text-center sm:text-left">
-            <span className="text-white font-black tracking-tight text-sm font-mono">TRUSTY.BOT</span>
+            <div className="flex items-center space-x-1.5">
+              <span className="text-white font-extrabold text-sm font-sans">TRUSTY.BOT</span>
+              <span className="text-[10px] font-mono text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/60">
+                CREDIT BUREAU
+              </span>
+            </div>
             <span className="hidden sm:inline text-slate-600">—</span>
             <span className="text-slate-400">The Trust &amp; Credit Bureau for AI Agents</span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
             <button
-              onClick={() => setActiveTab('economics')}
-              className="text-slate-400 hover:text-sky-300 transition"
+              onClick={() => setActiveTab('bureau')}
+              className={`hover:text-white transition ${activeTab === 'bureau' ? 'text-sky-400 font-medium' : ''}`}
             >
-              The Economic Case ($500M)
+              Directory
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('decision_api')}
-              className="text-slate-400 hover:text-sky-300 transition"
+              className={`hover:text-white transition ${activeTab === 'decision_api' ? 'text-sky-400 font-medium' : ''}`}
             >
-              M2M Decision API
+              Decision Gateway (M2M)
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('economics')}
+              className={`hover:text-white transition ${activeTab === 'economics' ? 'text-sky-400 font-medium' : ''}`}
+            >
+              Economic Case ($500M)
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('underwriting')}
+              className={`hover:text-white transition ${activeTab === 'underwriting' ? 'text-sky-400 font-medium' : ''}`}
+            >
+              Underwriting (12+20)
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('pricing')}
-              className="text-slate-400 hover:text-sky-300 transition"
+              className={`hover:text-white transition ${activeTab === 'pricing' ? 'text-sky-400 font-medium' : ''}`}
             >
-              Institutional Pricing
+              Pricing Tiers
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('moat')}
+              className={`hover:text-white transition ${activeTab === 'moat' ? 'text-sky-400 font-medium' : ''}`}
+            >
+              Moat
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsSpecsOpen(true)}
+              className="hover:text-white transition text-slate-400"
+            >
+              Specs (.md)
             </button>
             <span>•</span>
             <a
               href="https://github.com/DrowLink/trusty-ai"
               target="_blank"
               rel="noreferrer"
-              className="text-slate-400 hover:text-white transition flex items-center space-x-1"
+              className="hover:text-white transition flex items-center space-x-1"
             >
               <Github className="w-3.5 h-3.5" />
               <span>GitHub</span>
             </a>
-            <span>•</span>
-            <button
-              onClick={() => setIsSpecsOpen(true)}
-              className="text-slate-400 hover:text-white transition"
-            >
-              Specs (.md)
-            </button>
           </div>
         </div>
       </footer>
 
-      {/* Detail / Explainability Inspector Modal */}
+      {/* Modals and Drawers */}
       <AgentDetailModal
         agent={selectedAgent}
         onClose={() => setSelectedAgent(null)}
       />
 
-      {/* Dynamic Agent Evaluator Drawer */}
       <EvaluateModal
         isOpen={isEvaluateOpen}
         onClose={() => setIsEvaluateOpen(false)}
@@ -329,13 +345,11 @@ export default function HomePage() {
         onCheckQuota={checkAndConsumeQuota}
       />
 
-      {/* Specs Viewer */}
       <SpecsModal
         isOpen={isSpecsOpen}
         onClose={() => setIsSpecsOpen(false)}
       />
 
-      {/* VirusTotal Quota Auth Modal */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
