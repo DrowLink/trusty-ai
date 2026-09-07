@@ -179,7 +179,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
           {onOpenEvaluate && (
             <button
               onClick={onOpenEvaluate}
-              className="px-7 py-3 rounded-full text-sm font-semibold bg-slate-950 hover:bg-slate-800 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition shadow-md shadow-black/10 flex items-center space-x-2"
+              className="px-7 py-3 rounded-full text-sm font-semibold bg-[#0066FF] hover:bg-blue-600 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition shadow-md shadow-blue-500/20 flex items-center space-x-2"
             >
               <span>Audit an Agent</span>
               <ArrowRight className="w-4 h-4" />
@@ -288,7 +288,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
             <button
               type="submit"
               disabled={isAuditing}
-              className="flex items-center space-x-1.5 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold transition flex-shrink-0 bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 disabled:opacity-50"
+              className="flex items-center space-x-1.5 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold transition flex-shrink-0 bg-[#0066FF] dark:bg-white text-white dark:text-slate-950 hover:bg-blue-600 dark:hover:bg-slate-100 disabled:opacity-50 shadow-sm"
             >
               {isAuditing ? (
                 <>

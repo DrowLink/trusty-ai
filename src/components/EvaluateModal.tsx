@@ -187,7 +187,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 dark:bg-black/90 backdrop-blur-sm overflow-y-auto">
       <div className="relative w-full max-w-2xl bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.12] rounded-2xl shadow-2xl overflow-hidden my-auto">
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-white/[0.08] bg-slate-50 dark:bg-[#07090e] flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
@@ -257,15 +257,15 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
           </div>
 
           {/* Quick Try Links */}
-          <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-zinc-400 font-mono">
-            <span className="text-zinc-500">Try:</span>
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px] text-slate-600 dark:text-zinc-400 font-mono">
+            <span className="text-slate-400 dark:text-zinc-500">Try:</span>
             <button
               type="button"
               onClick={() => {
                 setGithubUrl('https://github.com/crewAIInc/crewAI');
                 handleAutoScanRepo('https://github.com/crewAIInc/crewAI');
               }}
-              className="text-emerald-400 hover:underline"
+              className="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"
             >
               crewAIInc/crewAI
             </button>
@@ -276,7 +276,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
                 setGithubUrl('https://github.com/anthropics/anthropic-quickstarts');
                 handleAutoScanRepo('https://github.com/anthropics/anthropic-quickstarts');
               }}
-              className="text-emerald-400 hover:underline"
+              className="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"
             >
               anthropics/quickstarts
             </button>
@@ -287,7 +287,7 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
                 setGithubUrl('https://github.com/DrowLink/trusty-ai');
                 handleAutoScanRepo('https://github.com/DrowLink/trusty-ai');
               }}
-              className="text-emerald-400 hover:underline"
+              className="text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"
             >
               DrowLink/trusty-ai
             </button>
@@ -295,15 +295,15 @@ export const EvaluateModal: React.FC<EvaluateModalProps> = ({
 
           {/* Scan Success & Auto-Detected Features Pills */}
           {scanSuccessMsg && (
-            <div className="mt-3 p-3 rounded bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 text-xs font-mono space-y-1.5">
-              <div className="flex items-center space-x-1.5 font-semibold text-white">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <div className="mt-3 p-3 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-xs font-mono space-y-1.5">
+              <div className="flex items-center space-x-1.5 font-semibold text-emerald-900 dark:text-white">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>{scanSuccessMsg}</span>
               </div>
               {detectedFeatures.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {detectedFeatures.map((feat, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded bg-zinc-900 border border-emerald-700/50 text-[10px] text-emerald-300">
+                    <span key={i} className="px-2 py-0.5 rounded bg-white dark:bg-zinc-900 border border-emerald-200 dark:border-emerald-700/50 text-[10px] text-emerald-700 dark:text-emerald-300 shadow-xs">
                       {feat}
                     </span>
                   ))}

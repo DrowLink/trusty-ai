@@ -94,45 +94,45 @@ export const CompetitiveMoatView: React.FC = () => {
           <span>TRUSTY.BOT • COMPETITIVE LANDSCAPE & STRATEGIC MOAT</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white font-sans">
-          TRUSTY.BOT <span className="text-slate-500 font-normal">vs</span> <span className="text-sky-400">HiveTrust</span>
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white font-sans">
+          TRUSTY.BOT <span className="text-slate-400 dark:text-slate-500 font-normal">vs</span> <span className="text-[#0066FF] dark:text-sky-400">HiveTrust</span>
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-slate-400 max-w-3xl leading-relaxed">
+        <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
           Both address agent trust. TRUSTY is designed to win the public discovery + thin-file credit + rail-agnostic capacity layer.
         </p>
       </div>
 
       {/* COMPARISON MATRIX TABLE */}
-      <div className="rounded-xl border border-slate-800 bg-[#090d16] overflow-hidden font-mono text-xs shadow-xl">
-        <div className="grid grid-cols-12 bg-slate-950 p-3.5 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#090d16] overflow-hidden font-mono text-xs shadow-sm">
+        <div className="grid grid-cols-12 bg-slate-50 dark:bg-slate-950 p-3.5 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
           <div className="col-span-6 sm:col-span-5">CAPABILITY</div>
-          <div className="col-span-3 sm:col-span-4 text-sky-400 font-black">TRUSTY.BOT</div>
-          <div className="col-span-3 text-slate-400">HIVETRUST</div>
+          <div className="col-span-3 sm:col-span-4 text-[#0066FF] dark:text-sky-400 font-black">TRUSTY.BOT</div>
+          <div className="col-span-3 text-slate-500 dark:text-slate-400">HIVETRUST</div>
         </div>
 
-        <div className="divide-y divide-slate-800/60">
+        <div className="divide-y divide-slate-200 dark:divide-slate-800/60">
           {comparisonData.map((row, idx) => (
             <div
               key={idx}
               className={`grid grid-cols-12 p-3.5 items-center transition ${
-                row.trustyWinning ? 'bg-sky-950/[0.06]' : 'hover:bg-slate-900/40'
+                row.trustyWinning ? 'bg-blue-50/40 dark:bg-sky-950/[0.06]' : 'hover:bg-slate-50 dark:hover:bg-slate-900/40'
               }`}
             >
-              <div className="col-span-6 sm:col-span-5 font-sans font-medium text-slate-200 text-xs sm:text-sm">
+              <div className="col-span-6 sm:col-span-5 font-sans font-medium text-slate-900 dark:text-slate-200 text-xs sm:text-sm">
                 {row.capability}
               </div>
               <div className="col-span-3 sm:col-span-4">
-                <span className={`px-2 py-0.5 rounded font-bold text-[10px] sm:text-xs ${
+                <span className={`px-2 py-0.5 rounded font-bold text-[10px] sm:text-xs border ${
                   row.trusty === 'CORE' || row.trusty === 'CORE ROADMAP' || row.trusty === 'CORE VISION' || row.trusty === 'CORE GTM'
-                    ? 'bg-sky-950 border border-sky-700 text-sky-300'
+                    ? 'bg-sky-50 border-sky-200 text-sky-700 dark:bg-sky-950 dark:border-sky-700 dark:text-sky-300'
                     : row.trusty === 'YES'
-                    ? 'bg-emerald-950 border border-emerald-700 text-emerald-300'
-                    : 'bg-slate-900 border border-slate-800 text-slate-400'
+                    ? 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950 dark:border-emerald-700 dark:text-emerald-300'
+                    : 'bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400'
                 }`}>
                   {row.trusty}
                 </span>
               </div>
-              <div className="col-span-3 text-slate-400 font-sans text-xs">
+              <div className="col-span-3 text-slate-600 dark:text-slate-400 font-sans text-xs">
                 {row.hivetrust}
               </div>
             </div>
@@ -140,29 +140,29 @@ export const CompetitiveMoatView: React.FC = () => {
         </div>
       </div>
 
-      {/* THE TRUSTY WEDGE BOX (Slide 8 bottom exact) */}
-      <div className="p-5 rounded-xl bg-gradient-to-r from-sky-950/50 via-[#0a1424] to-slate-900 border border-sky-800/60 shadow-lg">
-        <div className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider mb-2">
+      {/* THE TRUSTY WEDGE BOX (Slide 8 bottom exact) - Primary gradient in light mode */}
+      <div className="p-5 rounded-xl bg-gradient-to-r from-[#0066FF] to-blue-700 text-white dark:from-sky-950/50 dark:via-[#0a1424] dark:to-slate-900 border border-blue-400/40 dark:border-sky-800/60 shadow-md">
+        <div className="text-[11px] font-mono text-blue-100 dark:text-sky-400 font-bold uppercase tracking-wider mb-2">
           THE STRATEGIC WEDGE
         </div>
         <div className="text-base sm:text-lg font-bold text-white font-mono leading-relaxed">
-          <span className="text-sky-300">Discover first</span> &rarr; <span className="text-emerald-300">Score from public evidence</span> &rarr; <span className="text-purple-300">Learn from transactions</span> &rarr; <span className="text-white">Recommend capacity everywhere.</span>
+          <span className="text-sky-200 dark:text-sky-300">Discover first</span> &rarr; <span className="text-emerald-200 dark:text-emerald-300">Score from public evidence</span> &rarr; <span className="text-purple-200 dark:text-purple-300">Learn from transactions</span> &rarr; <span className="text-white">Recommend capacity everywhere.</span>
         </div>
-        <div className="text-[10px] font-mono text-slate-500 mt-2">
+        <div className="text-[10px] font-mono text-blue-100/80 dark:text-slate-500 mt-2">
           Source: hivetrustiq.com and public HiveTrust documentation, accessed Sep 2026.
         </div>
       </div>
 
       {/* GTM FLYWHEEL SECTION (Slide 9) */}
       <div className="space-y-6 pt-4">
-        <div className="border-b border-slate-800/80 pb-4">
-          <div className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-semibold">
+        <div className="border-b border-slate-200 dark:border-slate-800/80 pb-4">
+          <div className="text-[11px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-semibold">
             GO-TO-MARKET DISTRIBUTION
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1 font-sans">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mt-1 font-sans">
             Turn every scored agent into distribution
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 font-sans">
             TRUSTY grows by creating useful public infrastructure before asking anyone to integrate.
           </p>
         </div>
@@ -172,77 +172,77 @@ export const CompetitiveMoatView: React.FC = () => {
           {gtmSteps.map(step => (
             <div
               key={step.num}
-              className="p-4 rounded-xl bg-[#090d16] border border-slate-800 hover:border-slate-700 transition space-y-2 relative"
+              className="p-4 rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition space-y-2 relative shadow-sm"
             >
               <div className="flex items-center justify-between">
-                <span className="w-6 h-6 rounded-full bg-slate-900 border border-slate-700 text-sky-400 text-xs font-bold flex items-center justify-center">
+                <span className="w-6 h-6 rounded-full bg-blue-50 dark:bg-slate-900 border border-blue-200 dark:border-slate-700 text-[#0066FF] dark:text-sky-400 text-xs font-bold flex items-center justify-center">
                   {step.num}
                 </span>
                 <span className="text-[10px] text-slate-500 uppercase tracking-widest">Flywheel Step</span>
               </div>
-              <div className="text-sm font-bold text-white tracking-wide">
+              <div className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">
                 {step.title}
               </div>
-              <p className="text-xs text-slate-400 font-sans leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
                 {step.desc}
               </p>
             </div>
           ))}
         </div>
 
-        {/* North Star Trajectory Banner (Slide 9 bottom exact) */}
-        <div className="p-6 rounded-xl bg-[#070e17] border border-sky-500/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono">
+        {/* North Star Trajectory Banner (Slide 9 bottom exact) - Primary gradient in light mode */}
+        <div className="p-6 rounded-xl bg-gradient-to-r from-[#0066FF] to-indigo-600 text-white dark:bg-[#070e17] border border-blue-400/40 dark:border-sky-500/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono shadow-md">
           <div>
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold">
+            <div className="text-[10px] font-mono text-blue-100 dark:text-slate-400 uppercase tracking-widest font-bold">
               NORTH STAR OBJECTIVE
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-sky-400 mt-1">
+            <div className="text-2xl sm:text-3xl font-black text-white dark:text-sky-400 mt-1">
               1,000 Agent Risk Decisions / Day
             </div>
           </div>
-          <div className="text-xs text-slate-300 max-w-md font-sans">
+          <div className="text-xs text-blue-50 dark:text-slate-300 max-w-md font-sans">
             Then <span className="font-bold text-white font-mono">10K/day &rarr; 1M/day</span> as machine-to-machine calls replace manual human search across payment gateways.
           </div>
         </div>
       </div>
 
-      {/* THE VISION (Slide 10) */}
-      <div className="p-8 rounded-2xl bg-[#09101c] border border-slate-700 space-y-6 text-center sm:text-left relative overflow-hidden">
+      {/* THE VISION (Slide 10) - Vibrant executive gradient in light mode */}
+      <div className="p-8 rounded-2xl bg-gradient-to-br from-[#1e1b4b] via-[#312e81] to-[#0f172a] dark:bg-none dark:bg-[#09101c] border border-indigo-500/30 dark:border-slate-700 space-y-6 text-center sm:text-left relative overflow-hidden shadow-xl text-white">
         <div className="space-y-2">
-          <div className="text-[11px] font-mono text-purple-400 uppercase tracking-widest font-bold">
+          <div className="text-[11px] font-mono text-purple-200 dark:text-purple-400 uppercase tracking-widest font-bold">
             THE 2026 VISION
           </div>
           <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight font-sans">
             The trust layer for the agentic economy
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed font-sans">
+          <p className="text-xs sm:text-sm text-slate-200 dark:text-slate-300 max-w-3xl leading-relaxed font-sans">
             Every agent should have an identity, a trust history, and a risk-adjusted economic capacity.
           </p>
         </div>
 
         {/* The Big 3-Step Banner */}
-        <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-center sm:justify-start gap-4 font-mono text-sm sm:text-base font-bold">
-          <span className="text-slate-400">BEFORE AN AGENT GETS YOUR:</span>
-          <span className="text-sky-400">DATA</span>
-          <span className="text-purple-400">PERMISSIONS</span>
-          <span className="text-emerald-400">MONEY</span>
+        <div className="p-4 rounded-xl bg-white/10 dark:bg-slate-950 border border-white/20 dark:border-slate-800 flex flex-wrap items-center justify-center sm:justify-start gap-4 font-mono text-sm sm:text-base font-bold">
+          <span className="text-slate-300 dark:text-slate-400">BEFORE AN AGENT GETS YOUR:</span>
+          <span className="text-cyan-300 dark:text-sky-400">DATA</span>
+          <span className="text-purple-300 dark:text-purple-400">PERMISSIONS</span>
+          <span className="text-emerald-300 dark:text-emerald-400">MONEY</span>
           <span className="text-white">&rarr; ASK TRUSTY.</span>
         </div>
 
-        <p className="text-xs text-slate-400 font-sans max-w-3xl leading-relaxed">
+        <p className="text-xs text-slate-300 dark:text-slate-400 font-sans max-w-3xl leading-relaxed">
           The end state: TRUSTY becomes the independent score queried before agents connect, transact, spend, or receive delegated credit.
         </p>
 
-        <div className="pt-2 flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-sky-300">
+        <div className="pt-2 flex flex-wrap items-center gap-2 font-mono text-xs font-bold text-cyan-200 dark:text-sky-300">
           <span>DISCOVER</span>
-          <span className="text-slate-600">&rarr;</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
           <span>TRUST</span>
-          <span className="text-slate-600">&rarr;</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
           <span>CREDIT</span>
-          <span className="text-slate-600">&rarr;</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
           <span>CAPACITY</span>
-          <span className="text-slate-600">&rarr;</span>
-          <span className="text-emerald-400">AUTHORIZE</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
+          <span className="text-emerald-300 dark:text-emerald-400">AUTHORIZE</span>
         </div>
       </div>
     </div>

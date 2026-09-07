@@ -103,20 +103,20 @@ export const UnderwritingExplainer: React.FC = () => {
       </div>
 
       {/* THE 5-STEP GRADUATION PIPELINE (Slide 6 Bottom exact) */}
-      <div className="p-4 sm:p-5 rounded-xl bg-[#090d16] border border-slate-800">
-        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-3 text-center sm:text-left">
+      <div className="p-4 sm:p-5 rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold mb-3 text-center sm:text-left">
           THE MACHINE CREDIT EVOLUTION PIPELINE
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs sm:text-sm font-bold">
-          <span className="text-slate-300">PUBLIC DATA</span>
-          <span className="text-slate-600">&rarr;</span>
-          <span className="text-sky-400">THIN FILE (DAY 0)</span>
-          <span className="text-slate-600">&rarr;</span>
-          <span className="text-purple-400">TRANSACTION DATA</span>
-          <span className="text-slate-600">&rarr;</span>
-          <span className="text-emerald-400">CREDIT HISTORY</span>
-          <span className="text-slate-600">&rarr;</span>
-          <span className="text-white px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/60">
+          <span className="text-slate-700 dark:text-slate-300">PUBLIC DATA</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
+          <span className="text-[#0066FF] dark:text-sky-400">THIN FILE (DAY 0)</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
+          <span className="text-purple-600 dark:text-purple-400">TRANSACTION DATA</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
+          <span className="text-emerald-600 dark:text-emerald-400">CREDIT HISTORY</span>
+          <span className="text-slate-400 dark:text-slate-600">&rarr;</span>
+          <span className="text-emerald-700 dark:text-white px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-500/60">
             RECOMMENDED CAPACITY ($)
           </span>
         </div>
@@ -126,13 +126,13 @@ export const UnderwritingExplainer: React.FC = () => {
       {activeTab === 'day0' && (
         <div className="space-y-8 animate-fadeIn">
           <div>
-            <div className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider">
+            <div className="text-[11px] font-mono text-[#0066FF] dark:text-sky-400 font-bold uppercase tracking-wider">
               DAY-ZERO UNDERWRITING
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight mt-1 font-sans">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1 font-sans">
               Score an agent before it ever integrates with TRUSTY
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
               Public internet evidence creates a thin-file credit assessment without requiring private financial data.
             </p>
           </div>
@@ -142,36 +142,36 @@ export const UnderwritingExplainer: React.FC = () => {
             {dayZeroSignals.map(sig => (
               <div
                 key={sig.num}
-                className="p-4 rounded-xl bg-[#090d16] border border-slate-800/90 hover:border-slate-700 transition space-y-2 relative"
+                className="p-4 rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800/90 hover:border-slate-300 dark:hover:border-slate-700 transition space-y-2 relative shadow-sm"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-sky-400">{sig.num}</span>
+                  <span className="text-xs font-bold text-[#0066FF] dark:text-sky-400">{sig.num}</span>
                   <span className="text-[10px] text-slate-500 uppercase tracking-widest">Public Signal</span>
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white font-sans">{sig.title}</h3>
-                  <div className="text-[11px] text-slate-400">{sig.sub}</div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white font-sans">{sig.title}</h3>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">{sig.sub}</div>
                 </div>
-                <p className="text-xs text-slate-400 font-sans leading-relaxed pt-1">
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed pt-1 border-t border-slate-100 dark:border-slate-900">
                   {sig.desc}
                 </p>
               </div>
             ))}
           </div>
 
-          {/* Day 0 Output Box (Slide 4 exact) */}
-          <div className="p-6 rounded-xl bg-gradient-to-r from-slate-900 to-[#0b101c] border border-sky-900/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono">
+          {/* Day 0 Output Box (Slide 4 exact) - Primary gradient in light mode */}
+          <div className="p-6 rounded-xl bg-gradient-to-r from-[#0066FF] to-sky-600 text-white dark:from-slate-900 dark:to-[#0b101c] border border-blue-400/40 dark:border-sky-900/50 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-mono">
             <div>
-              <div className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">
+              <div className="text-[10px] text-blue-100 dark:text-slate-400 uppercase tracking-widest font-bold">
                 DAY 0 OUTPUT EXAMPLE
               </div>
-              <div className="text-2xl sm:text-3xl font-black text-sky-400 mt-1">
+              <div className="text-2xl sm:text-3xl font-black text-white dark:text-sky-400 mt-1">
                 Credit Score 71/100
               </div>
             </div>
 
-            <div className="text-xs text-slate-300 max-w-xl leading-relaxed">
-              <span className="font-bold text-white">Confidence 43%</span> | <span className="text-amber-400 font-bold">THIN FILE</span> | Conservative limits until behavioral evidence exists across live transactions.
+            <div className="text-xs text-blue-50 dark:text-slate-300 max-w-xl leading-relaxed">
+              <span className="font-bold text-white">Confidence 43%</span> | <span className="text-amber-200 dark:text-amber-400 font-bold">THIN FILE</span> | Conservative limits until behavioral evidence exists across live transactions.
             </div>
           </div>
         </div>
@@ -181,13 +181,13 @@ export const UnderwritingExplainer: React.FC = () => {
       {activeTab === 'behavioral' && (
         <div className="space-y-8 animate-fadeIn">
           <div>
-            <div className="text-[11px] font-mono text-purple-400 font-bold uppercase tracking-wider">
+            <div className="text-[11px] font-mono text-purple-600 dark:text-purple-400 font-bold uppercase tracking-wider">
               BEHAVIORAL CREDIT FILE
             </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight mt-1 font-sans">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mt-1 font-sans">
               From public reputation to observed economic behavior
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
               TRUSTY builds a machine credit history and converts it into recommended spending capacity.
             </p>
           </div>
@@ -195,27 +195,27 @@ export const UnderwritingExplainer: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* 20 Behavioral Signals (7 cols) */}
             <div className="lg:col-span-8 space-y-3 font-mono">
-              <div className="text-[11px] text-slate-400 uppercase tracking-widest font-bold mb-2">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-2">
                 20 OBSERVED TELEMETRY SIGNALS
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 {behavioralSignals.map(sig => (
                   <div
                     key={sig.num}
-                    className="p-2.5 rounded bg-[#090d16] border border-slate-800/80 flex items-center space-x-2.5 hover:border-purple-800/40 transition"
+                    className="p-2.5 rounded bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800/80 shadow-sm flex items-center space-x-2.5 hover:border-purple-400 dark:hover:border-purple-800/40 transition"
                   >
-                    <span className="text-purple-400 font-bold text-xs">{sig.num}</span>
-                    <span className="text-slate-300 truncate">{sig.name}</span>
+                    <span className="text-purple-600 dark:text-purple-400 font-bold text-xs">{sig.num}</span>
+                    <span className="text-slate-800 dark:text-slate-300 truncate">{sig.name}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Benchmark Showcase: ProcurementBot (5 cols) (Slide 6 exact) */}
+            {/* Benchmark Showcase: ProcurementBot (5 cols) (Slide 6 exact) - Primary gradient in light mode */}
             <div className="lg:col-span-4">
-              <div className="rounded-2xl bg-[#0a0c16] border border-purple-900/50 p-6 space-y-6 shadow-xl relative overflow-hidden">
+              <div className="rounded-2xl bg-gradient-to-br from-purple-700 via-indigo-800 to-slate-900 dark:bg-none dark:bg-[#0a0c16] border border-purple-400/40 dark:border-purple-900/50 p-6 space-y-6 shadow-xl relative overflow-hidden text-white">
                 <div className="space-y-1">
-                  <div className="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold">
+                  <div className="text-[10px] font-mono text-purple-200 dark:text-purple-400 uppercase tracking-widest font-bold">
                     BEHAVIORAL BENCHMARK CARD
                   </div>
                   <h3 className="text-xl font-bold text-white font-sans">PROCUREMENTBOT</h3>
@@ -224,34 +224,34 @@ export const UnderwritingExplainer: React.FC = () => {
                 {/* Dual Scores */}
                 <div className="grid grid-cols-2 gap-4 font-mono">
                   <div>
-                    <div className="text-xs text-slate-400">Trust</div>
-                    <div className="text-4xl font-black text-emerald-400 mt-1">94</div>
+                    <div className="text-xs text-purple-200 dark:text-slate-400">Trust</div>
+                    <div className="text-4xl font-black text-emerald-300 dark:text-emerald-400 mt-1">94</div>
                   </div>
                   <div>
-                    <div className="text-xs text-slate-400">Credit</div>
-                    <div className="text-4xl font-black text-purple-400 mt-1">87</div>
+                    <div className="text-xs text-purple-200 dark:text-slate-400">Credit</div>
+                    <div className="text-4xl font-black text-purple-200 dark:text-purple-400 mt-1">87</div>
                   </div>
                 </div>
 
-                <div className="h-px bg-slate-800" />
+                <div className="h-px bg-white/20 dark:bg-slate-800" />
 
                 {/* Recommended Spending Capacity */}
                 <div className="space-y-1 font-mono">
-                  <div className="text-[10px] text-slate-400 uppercase tracking-widest">
+                  <div className="text-[10px] text-purple-200 dark:text-slate-400 uppercase tracking-widest">
                     RECOMMENDED SPENDING CAPACITY
                   </div>
-                  <div className="text-3xl font-black text-emerald-400">
+                  <div className="text-3xl font-black text-emerald-300 dark:text-emerald-400">
                     $25,000
                   </div>
-                  <div className="text-xs text-slate-400 uppercase">
+                  <div className="text-xs text-purple-200 dark:text-slate-400 uppercase">
                     PER DAY
                   </div>
                 </div>
 
                 {/* Human Approval Threshold */}
-                <div className="p-3 rounded bg-purple-950/40 border border-purple-800/50 text-xs font-mono space-y-1">
-                  <div className="text-slate-400">Human approval threshold:</div>
-                  <div className="text-purple-300 font-bold">&gt;$5,000 / txn</div>
+                <div className="p-3 rounded bg-white/10 dark:bg-purple-950/40 border border-white/20 dark:border-purple-800/50 text-xs font-mono space-y-1">
+                  <div className="text-purple-100 dark:text-slate-400">Human approval threshold:</div>
+                  <div className="text-white dark:text-purple-300 font-bold">&gt;$5,000 / txn</div>
                 </div>
               </div>
             </div>

@@ -233,13 +233,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           )}
 
-          {/* Black Pill Primary CTA (Deflexai Style) */}
+          {/* Primary CTA with Brand Color */}
           {onOpenEvaluate && (
             <button
               onClick={onOpenEvaluate}
-              className="flex items-center space-x-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-bold bg-slate-950 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-100 transition shadow-sm"
+              className="flex items-center space-x-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-bold bg-[#0066FF] hover:bg-blue-600 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition shadow-sm shadow-blue-500/20"
             >
-              <Sparkles className="w-3.5 h-3.5 text-sky-400 dark:text-[#0066FF]" />
+              <Sparkles className="w-3.5 h-3.5 text-white dark:text-[#0066FF]" />
               <span>Audit Agent</span>
             </button>
           )}
