@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { AgentWithScore, DiscoveryStats } from '@/lib/types';
+import { AgentWithScore, DiscoveryStats, ActiveProductTab } from '@/lib/types';
 import { Navbar } from '@/components/Navbar';
 import { HeroMetrics } from '@/components/HeroMetrics';
 import { DiscoveryBar } from '@/components/DiscoveryBar';
@@ -10,6 +10,11 @@ import { AgentDetailModal } from '@/components/AgentDetailModal';
 import { EvaluateModal } from '@/components/EvaluateModal';
 import { SpecsModal } from '@/components/SpecsModal';
 import { AuthModal } from '@/components/AuthModal';
+import { EconomicCaseView } from '@/components/EconomicCaseView';
+import { DecisionPlayground } from '@/components/DecisionPlayground';
+import { UnderwritingExplainer } from '@/components/UnderwritingExplainer';
+import { BusinessAndPricingView } from '@/components/BusinessAndPricingView';
+import { CompetitiveMoatView } from '@/components/CompetitiveMoatView';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
 import { 
   getLocalCustomAgents, 
@@ -25,6 +30,8 @@ export default function HomePage() {
   const [stats, setStats] = useState<DiscoveryStats>({
     totalAgents: 0,
     avgTrustScore: 0,
+    avgCreditScore: 0,
+    totalDailyCapacity: 0,
     lowRiskCount: 0,
     mediumRiskCount: 0,
     highRiskCount: 0,
@@ -37,6 +44,7 @@ export default function HomePage() {
     },
   });
 
+  const [activeTab, setActiveTab] = useState<ActiveProductTab>('bureau');
   const [isLoading, setIsLoading] = useState(true);
   const [isAuditingLive, setIsAuditingLive] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState<AgentWithScore | null>(null);
@@ -58,7 +66,7 @@ export default function HomePage() {
       const res = await fetch('/api/agents');
       const data = await res.json();
       if (data.success && Array.isArray(data.agents)) {
-        // Dual-Layer Resilience: Merge with locally stored custom audits so user never loses their 11+ agents
+        // Dual-Layer Resilience: Merge with locally stored custom audits so user never loses their agents
         const { merged, newToSync } = mergeAgentsWithLocal(data.agents);
         setAgents(merged);
         setStats(computeDiscoveryStats(merged));
@@ -66,8 +74,6 @@ export default function HomePage() {
         // Save server agents into local storage cache
         saveMultipleLocalCustomAgents(merged);
 
-        // If client had audited agents that the server lost (e.g. serverless cold restart),
-        // sync them back to backend & Firestore in background
         if (newToSync.length > 0) {
           fetch('/api/agents/sync', {
             method: 'POST',
@@ -170,8 +176,10 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-transparent">
-      {/* Top Navigation */}
+      {/* Top Navigation with Product Tabs */}
       <Navbar
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => setIsAuthOpen(true)}
         totalAgents={stats.totalAgents}
@@ -180,72 +188,134 @@ export default function HomePage() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* Universal Command Center Omnibox (Search, Autocomplete & Live Repo Audit) */}
-        <HeroMetrics
-          stats={stats}
-          agents={agents}
-          onAuditUrl={handleHeroAudit}
-          onSelectAgent={agent => setSelectedAgent(agent)}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          isAuditing={isAuditingLive}
-          session={session}
-          onOpenAuth={() => setIsAuthOpen(true)}
-        />
+        {/* VIEW 1: AGENT BUREAU & DIRECTORY */}
+        {activeTab === 'bureau' && (
+          <div className="animate-fadeIn">
+            {/* Universal Command Center Omnibox */}
+            <HeroMetrics
+              stats={stats}
+              agents={agents}
+              onAuditUrl={handleHeroAudit}
+              onSelectAgent={agent => setSelectedAgent(agent)}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              isAuditing={isAuditingLive}
+              session={session}
+              onOpenAuth={() => setIsAuthOpen(true)}
+            />
 
-        {/* Trust Leaderboard with 5-dimension mini bars & category tabs */}
-        <TrustLeaderboard
-          agents={agents}
-          onSelectAgent={agent => setSelectedAgent(agent)}
-          isLoading={isLoading}
-          searchQuery={searchQuery}
-          onClearSearch={() => setSearchQuery('')}
-        />
+            {/* Trust Leaderboard */}
+            <TrustLeaderboard
+              agents={agents}
+              onSelectAgent={agent => setSelectedAgent(agent)}
+              isLoading={isLoading}
+              searchQuery={searchQuery}
+              onClearSearch={() => setSearchQuery('')}
+            />
 
-        {/* Discovery Crawler Control (Moved to the bottom) */}
-        <DiscoveryBar onRefresh={fetchAgents} />
+            {/* Discovery Crawler Control */}
+            <DiscoveryBar onRefresh={fetchAgents} />
+          </div>
+        )}
+
+        {/* VIEW 2: THE ECONOMIC CASE & ROI */}
+        {activeTab === 'economics' && (
+          <div className="animate-fadeIn">
+            <EconomicCaseView
+              onOpenDecisionPlayground={() => setActiveTab('decision_api')}
+            />
+          </div>
+        )}
+
+        {/* VIEW 3: LIVE DECISION API PLAYGROUND */}
+        {activeTab === 'decision_api' && (
+          <div className="animate-fadeIn">
+            <DecisionPlayground
+              agents={agents}
+              selectedAgentDefault={selectedAgent}
+            />
+          </div>
+        )}
+
+        {/* VIEW 4: UNDERWRITING METHODOLOGY (12+20) */}
+        {activeTab === 'underwriting' && (
+          <div className="animate-fadeIn">
+            <UnderwritingExplainer />
+          </div>
+        )}
+
+        {/* VIEW 5: BUSINESS MODEL & PRICING */}
+        {activeTab === 'pricing' && (
+          <div className="animate-fadeIn">
+            <BusinessAndPricingView
+              onSelectTier={(tier) => {
+                if (tier === 'FREE') setActiveTab('bureau');
+                else if (tier === 'DECISION' || tier === 'API') setActiveTab('decision_api');
+              }}
+            />
+          </div>
+        )}
+
+        {/* VIEW 6: COMPETITIVE MOAT & GTM FLYWHEEL */}
+        {activeTab === 'moat' && (
+          <div className="animate-fadeIn">
+            <CompetitiveMoatView />
+          </div>
+        )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 bg-[#070a11]/90 backdrop-blur py-6 text-xs text-slate-400 font-mono">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center space-x-2">
-            <span className="text-slate-200 font-bold">TRUSTY.ai</span>
-            <span>—</span>
-            <span className="text-slate-400">Independent Agent Trust Layer</span>
+      <footer className="border-t border-slate-800/80 bg-[#070a11]/90 backdrop-blur py-8 text-xs text-slate-400 font-mono">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center space-x-2 text-center sm:text-left">
+            <span className="text-white font-black tracking-tight text-sm font-mono">TRUSTY.BOT</span>
+            <span className="hidden sm:inline text-slate-600">—</span>
+            <span className="text-slate-400">The Trust &amp; Credit Bureau for AI Agents</span>
           </div>
-          <div className="flex flex-wrap items-center gap-4 text-[11px]">
-            <a
-              href="https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-              className="text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1"
+
+          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px]">
+            <button
+              onClick={() => setActiveTab('economics')}
+              className="text-slate-400 hover:text-sky-300 transition"
             >
-              <span>Vercel Live App</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
+              The Economic Case ($500M)
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('decision_api')}
+              className="text-slate-400 hover:text-sky-300 transition"
+            >
+              M2M Decision API
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setActiveTab('pricing')}
+              className="text-slate-400 hover:text-sky-300 transition"
+            >
+              Institutional Pricing
+            </button>
             <span>•</span>
             <a
               href="https://github.com/DrowLink/trusty-ai"
               target="_blank"
               rel="noreferrer"
-              className="text-zinc-400 hover:text-zinc-200 transition flex items-center space-x-1"
+              className="text-slate-400 hover:text-white transition flex items-center space-x-1"
             >
-              <Github className="w-3 h-3" />
-              <span>DrowLink/trusty-ai</span>
+              <Github className="w-3.5 h-3.5" />
+              <span>GitHub</span>
             </a>
             <span>•</span>
             <button
               onClick={() => setIsSpecsOpen(true)}
-              className="text-zinc-400 hover:text-zinc-200 transition"
+              className="text-slate-400 hover:text-white transition"
             >
-              Specifications (.md)
+              Specs (.md)
             </button>
           </div>
         </div>
       </footer>
 
-      {/* Detail / Explainability Inspector */}
+      {/* Detail / Explainability Inspector Modal */}
       <AgentDetailModal
         agent={selectedAgent}
         onClose={() => setSelectedAgent(null)}

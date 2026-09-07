@@ -107,6 +107,50 @@ class AgentTrustStore {
     };
   }
 
+  public getBySlug(slug: string): AgentWithScore | null {
+    const clean = slug.toLowerCase().trim();
+    for (const agent of Array.from(this.agents.values())) {
+      if (agent.slug.toLowerCase() === clean) {
+        const evaluation = evaluateAgentTrust(agent);
+        const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
+        return {
+          ...agent,
+          evaluation,
+          creditProfile,
+        };
+      }
+    }
+    return null;
+  }
+
+  public findByIdOrSlug(query: string): AgentWithScore | null {
+    if (!query) return null;
+    const byId = this.getById(query);
+    if (byId) return byId;
+
+    const bySlug = this.getBySlug(query);
+    if (bySlug) return bySlug;
+
+    // Substring or name match
+    const clean = query.toLowerCase();
+    for (const agent of Array.from(this.agents.values())) {
+      if (
+        agent.id.toLowerCase().includes(clean) ||
+        agent.slug.toLowerCase().includes(clean) ||
+        agent.name.toLowerCase().includes(clean)
+      ) {
+        const evaluation = evaluateAgentTrust(agent);
+        const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
+        return {
+          ...agent,
+          evaluation,
+          creditProfile,
+        };
+      }
+    }
+    return null;
+  }
+
   public upsert(agent: AgentRecord): AgentWithScore {
     this.agents.set(agent.id, agent);
     this.persistToLocalCache();

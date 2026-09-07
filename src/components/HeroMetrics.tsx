@@ -102,23 +102,52 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
         {/* Left Column (7 cols on desktop, 12 on mobile): Mission & Universal Omnibox */}
         <div className="lg:col-span-7">
-          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-400 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-slate-300 font-semibold">VirusTotal for AI Agents</span>
+          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-slate-400 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span className="text-sky-300 font-semibold">TRUSTY.BOT</span>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-400">Security & Reputation Registry</span>
+            <span className="text-slate-300">Agent Risk &amp; Credit Infrastructure</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight font-sans">
-            Before clicking &ldquo;START AGENT&rdquo;, ask: <span className="text-emerald-400 font-extrabold">Can I trust it?</span>
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight font-sans">
+            The trust &amp; credit bureau <br />
+            <span className="text-sky-400">for AI agents.</span>
           </h1>
 
           <p className="mt-2.5 sm:mt-3 text-xs sm:text-sm text-slate-300 leading-relaxed font-sans max-w-xl">
-            Continuous security discovery across AI agent ecosystems. Deterministic 0–100 TRUSTY Scores evaluating identity, permissions, CVEs, and spend capacity.
+            Before an agent gets your <strong className="text-sky-400">data</strong>, <strong className="text-purple-400">permissions</strong>, or <strong className="text-emerald-400">money</strong> — ask TRUSTY.
           </p>
 
+          {/* The 5 Pillars Strip from Slide 1 & 10 */}
+          <div className="mt-4 p-2.5 rounded-xl bg-[#090d16] border border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono">
+            <div className="flex flex-col">
+              <span className="text-slate-400 uppercase font-semibold">IDENTITY</span>
+              <span className="text-slate-200 font-medium">Who is it?</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
+            <div className="flex flex-col">
+              <span className="text-emerald-400 uppercase font-semibold">TRUST</span>
+              <span className="text-slate-200 font-medium">Can I trust it?</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
+            <div className="flex flex-col">
+              <span className="text-purple-400 uppercase font-semibold">CREDIT</span>
+              <span className="text-slate-200 font-medium">How risky?</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
+            <div className="flex flex-col">
+              <span className="text-sky-400 uppercase font-semibold">CAPACITY</span>
+              <span className="text-slate-200 font-medium">How much?</span>
+            </div>
+            <span className="text-slate-700 hidden sm:inline">&rarr;</span>
+            <div className="flex flex-col">
+              <span className="text-amber-400 uppercase font-semibold">AUTHORIZATION</span>
+              <span className="text-slate-200 font-medium">Allow now?</span>
+            </div>
+          </div>
+
           {/* Universal Hero Omnibox with Autocomplete & Direct Audit */}
-          <div className="relative mt-4 sm:mt-6 max-w-xl">
+          <div className="relative mt-4 sm:mt-5 max-w-xl">
             <form onSubmit={handleSubmit}>
               <div className={`relative flex items-center rounded-xl bg-slate-900/95 border transition shadow-2xl p-1.5 ${
                 isFocused ? 'border-sky-500 ring-2 ring-sky-500/20 shadow-sky-500/10' : 'border-slate-700/70 hover:border-slate-600'

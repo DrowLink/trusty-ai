@@ -148,7 +148,7 @@ export interface TrustEvaluationResult {
 export type CreditTier = 'AAA' | 'AA' | 'A' | 'BBB' | 'BB' | 'B' | 'SUBPRIME_D';
 
 export interface PaymentRailConnection {
-  rail: 'visa' | 'stripe' | 'plaid' | 'mastercard';
+  rail: 'visa' | 'stripe' | 'plaid' | 'mastercard' | 'brex';
   name: string;
   status: 'simulated_active' | 'certified' | 'restricted';
   networkTier: string;
@@ -160,7 +160,30 @@ export interface CreditSignal {
   weight: number;
   status: 'positive' | 'neutral' | 'negative';
   evidence: string;
-  publicSource: string; // e.g. 'Public GitHub Org', 'Public Package Registry', 'Public Domain Registration'
+  publicSource: string;
+}
+
+// Day-Zero Underwriting (12 public signals from Slide 4)
+export interface DayZeroSignal {
+  number: string; // '01' - '12'
+  name: string;
+  category: 'identity' | 'stability' | 'code' | 'security' | 'governance' | 'reputation';
+  subtitle: string;
+  score: number; // 0 - 100
+  status: 'passed' | 'warning' | 'failed' | 'neutral';
+  evidence: string;
+  weight: number;
+}
+
+// Behavioral Credit File (20 signals from Slide 6)
+export interface BehavioralSignal {
+  number: string; // '01' - '20'
+  name: string;
+  category: 'activity' | 'risk_containment' | 'anomalies' | 'track_record';
+  currentValue: string;
+  benchmark: string;
+  status: 'optimal' | 'moderate' | 'high_risk' | 'insufficient_telemetry';
+  description: string;
 }
 
 export interface AgentCreditProfile {
@@ -171,8 +194,13 @@ export interface AgentCreditProfile {
   receiveCapacityDaily: number; // e.g. 100000 ($100,000 / day)
   maxSingleAutonomousTxn: number; // e.g. 5000
   isFinanciallyActive: boolean;
+  isFileThin: boolean; // true = Day-Zero Thin File, false = Mature Behavioral File
+  confidencePercentage: number; // e.g. 43% for Day-0, 92% for mature
+  avudProcessed?: number; // Agentic Volume Under Decision processed
   connectedRails: PaymentRailConnection[];
   signals: CreditSignal[];
+  dayZeroSignals: DayZeroSignal[];
+  behavioralSignals?: BehavioralSignal[];
   underwritingSummary: string;
 }
 
@@ -181,11 +209,59 @@ export interface AgentWithScore extends AgentRecord {
   creditProfile: AgentCreditProfile;
 }
 
+// Economic Decision Engine Types (Slide 1 & Slide 5 of PDFs)
+export interface EconomicActionRequest {
+  agentId: string;
+  principal: string; // e.g. 'Acme Corp'
+  action: 'Purchase' | 'Transfer' | 'Credit_Disbursement' | 'Contract_Sign' | 'API_Key_Exchange';
+  amount: number; // in USD
+  merchant: string; // e.g. 'Dell', 'AWS', 'Unknown Merchant'
+  category: string; // e.g. 'IT equipment', 'Cloud Infrastructure', 'Travel'
+  requestedLimit?: number;
+  humanApprovalDeclared?: boolean;
+}
+
+export interface PolicyCheckResult {
+  rule: string;
+  passed: boolean;
+  severity: 'blocker' | 'warning' | 'info';
+  detail: string;
+}
+
+export interface EconomicDecisionResult {
+  decision: 'APPROVED' | 'DECLINED' | 'HUMAN_REVIEW';
+  statusBadge: string;
+  reason: string;
+  agentName: string;
+  principal: string;
+  action: string;
+  amount: number;
+  merchant: string;
+  category: string;
+  clearingRail: string;
+  avudAllocated: number;
+  riskTier: RiskTier;
+  policyChecks: PolicyCheckResult[];
+  recommendedSpendingCapacity: number;
+  humanApprovalThreshold: number;
+  timestamp: string;
+  telemetryIngested: boolean;
+}
+
+export type ActiveProductTab = 
+  | 'bureau' 
+  | 'economics' 
+  | 'decision_api' 
+  | 'underwriting' 
+  | 'pricing' 
+  | 'moat';
+
 export interface DiscoveryStats {
   totalAgents: number;
   avgTrustScore: number;
   avgCreditScore?: number;
   totalDailyCapacity?: number;
+  totalAVUD?: number; // Total Agentic Volume Under Decision
   lowRiskCount: number;
   mediumRiskCount: number;
   highRiskCount: number;
@@ -197,3 +273,4 @@ export interface DiscoveryStats {
     manual_scan: number;
   };
 }
+
