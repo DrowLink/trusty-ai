@@ -1,35 +1,48 @@
-# Design System & Authority
+# Design System & Authority — TRUSTY.bot™
 
 <!-- impeccable:design-schema 1 -->
 
 ## Mode
 
-Operate (Security intelligence dashboard, audit workbench, and leaderboard)
+Persuade & Operate (High-conviction, minimalist fintech & AI agent infrastructure)
 
-## Visual World: Institutional Security Terminal
+## Visual World: Minimalist Orbital Fintech (Deflexai / Stripe / Linear Aesthetic)
 
-An authoritative, razor-sharp dark surface designed for high-density threat inspection and risk evaluation.
+An expansive, ultra-clean aesthetic blending high-trust enterprise fintech with cutting-edge AI agent orchestration. Characterized by spacious white canvases, hairline orbital geometry, floating pill navigation, monochrome partner marks, and glowing telemetry previews.
 
-### Colors & Semantic Palette
-- **Canvas / Surface:** `#08090d` (pure dark obsidian, not saturated purple/blue).
-- **Raised Panels:** `#0e1017` with hairline border `rgba(255, 255, 255, 0.08)`.
-- **Text Primary:** `#f4f4f6` (high-contrast neutral).
-- **Text Secondary / Muted:** `#8a8f9d` (tinted cool neutral, min 4.5:1 contrast).
-- **Semantic Accents:**
-  - `Verified / Low Risk:` `#10b981` (Emerald).
-  - `Warning / Elevated Scope:` `#f59e0b` (Amber).
-  - `Critical Threat / Override:` `#f43f5e` (Rose).
-  - `Telemetry / Protocol:` `#38bdf8` (Sky).
+### 1. Palette & Surface Hierarchy
+- **Canvas / Background:** Crisp pure white (`#ffffff`) with subtle cool tint in secondary bands (`#fafbfd` / `#f8fafc`). Dark mode: Deep obsidian slate (`#07090e`).
+- **Floating Pill Nav & Panels:** Elevated translucent white (`rgba(255, 255, 255, 0.85)` / `backdrop-blur-xl`) with hairline border (`rgba(0, 0, 0, 0.08)` or `rgba(255, 255, 255, 0.1)` in dark mode) and soft diffuse shadow.
+- **Orbital Rings & Grid:** Hairline concentric rings (`border-slate-200/70` dark: `border-white/[0.06]`) centering the hero perspective.
+- **Brand Primary & Accents:**
+  - `Fintech Obsidian:` `#0a0d14` (primary text, buttons, high-conviction CTAs).
+  - `Electric Trust Blue:` `#0066ff` (interactive highlights, verified seals).
+  - `Cyan Telemetry:` `#00a6fb` (active rails, real-time packets).
+  - `Clearance Green:` `#10b981` (autonomous approve verdicts, healthy credit).
+  - `Dual-Custody Purple:` `#8b5cf6` (human escalation rails, Brex underwriting).
 
-### Typography
-- **Headings & Body:** Clean system sans-serif with tight tracking (`-0.02em`), bold structure, clear scale steps.
-- **Numbers & Data:** `font-mono tabular-nums` for all scores, counts, hashes, dates, and ratings.
-- **Zero Eyebrows:** The heading carries its own weight without repetitive label badges above it.
-- **Zero Unicode Emojis:** All iconography drawn from real SVG library (Lucide) in uniform 1.5px/2px stroke.
+### 2. Layout & Spatial Rhythm
+- **Floating Pill Navbar:** Centered, floating with top margin, fully rounded (`rounded-full`), clean wordmark + geometric mark, essential navigation tabs, and black pill CTA.
+- **Orbital Hero Section:**
+  - Centered social proof pill (`★ 4.9 TrustScore • Brex & Visa Settlement Rails`).
+  - Giant, editorial display headline (`The trust & credit bureau for the agentic economy`).
+  - Spacious supporting subtitle.
+  - Dual pill CTAs (`Get Started Free` in solid black, `Talk to Sales / Decision Rail` in subtle border).
+  - Concentric circular orbital paths with floating partner nodes (Stripe, Visa, Brex, PayPal, Coinbase, Anthropic, CrewAI).
+  - Stacked floating real-time settlement notification cards in the hero epicenter.
+- **Ecosystem Marquee:** Monochrome corporate logos (Stripe, Visa, Brex, PayPal, Coinbase, Shopify, Notion, Airbnb).
+- **Summarized Clean Sections:**
+  - 3 Pillar cards (Directory, Decision Gateway, Underwriting) with clean whitespace.
+  - Interactive Agent Directory table with crisp filters.
+  - 3-5 Tier Pricing grid with high-contrast typography.
 
-### Anti-Slop Enforcements
-1. No gradient text.
-2. No blurry decorative background orbs or random rainbow highlights.
-3. No nested cards inside cards.
-4. Elevation declared once via crisp hairline borders.
-5. Custom styled caret, selection highlight, and scrollbars.
+### 3. Typography
+- **Display Sans:** `Plus Jakarta Sans` / `Inter` with tight negative tracking (`-0.03em`) on titles, generous line heights (`1.15` to `1.25`) for maximum editorial impact.
+- **Body:** Neutral slate (`#475569` light, `#94a3b8` dark), relaxed line height (`1.6`).
+- **Data & Verdicts:** Monospace `font-mono tabular-nums` for credit tiers, authorization latency (<18ms), and hash signatures.
+
+### 4. Logo & Identity Treatment
+- Crisp vector mark + typographic wordmark:
+  - Clean, sharp geometry avoiding blurry container backgrounds.
+  - Adaptable across small navbar pills, hero emblems, and footer colophons.
+- High-fidelity SVG partner icons for Stripe, Visa, Brex, PayPal, and leading AI orchestrators.

@@ -16,6 +16,7 @@ import { UnderwritingExplainer } from '@/components/UnderwritingExplainer';
 import { BusinessAndPricingView } from '@/components/BusinessAndPricingView';
 import { CompetitiveMoatView } from '@/components/CompetitiveMoatView';
 import { CookieConsent } from '@/components/CookieConsent';
+import { TrustyIsotype } from '@/components/PartnerLogos';
 import Image from 'next/image';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
 import { 
@@ -262,13 +263,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center space-x-3 text-center sm:text-left">
             <div className="flex items-center space-x-2">
-              <Image
-                src="/trusty-logo.png"
-                alt="TRUSTY.bot Logo"
-                width={26}
-                height={26}
-                className="w-6 h-6 object-contain rounded"
-              />
+              <TrustyIsotype className="w-6 h-6 text-[#0066FF] dark:text-[#38BDF8]" />
               <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight font-sans">
                 TRUSTY<span className="text-[#0066FF] dark:text-[#38BDF8]">.bot</span>
               </span>
