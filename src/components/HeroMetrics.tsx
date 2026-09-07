@@ -129,7 +129,7 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
           </div>
 
           {/* Main Display Headline (Brex Bold neo-grotesque style) */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-[-0.035em] text-slate-950 dark:text-white leading-[1.05]">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-[62px] font-black tracking-[-0.035em] text-slate-950 dark:text-white leading-[1.05]">
             The trust &amp; credit bureau <br className="hidden sm:inline" />
             <span>for AI agents.</span>
           </h1>
@@ -138,11 +138,6 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
           <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl font-normal">
             From real-time transaction approvals to continuous risk underwriting, manage agent economic limits in one place and keep your capital secure.
           </p>
-
-          {/* Mobile Decision Pipeline Preview */}
-          <div className="block lg:hidden my-6">
-            <HeroDecisionPipeline />
-          </div>
 
           {/* Brex-Style Integrated Action Box (Single Container: Input + CTA Button) */}
           <div className="pt-2 max-w-xl">
@@ -230,6 +225,11 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
                   crewAI
                 </button>
               </div>
+            </div>
+
+            {/* Mobile Decision Pipeline Preview (positioned below CTA like Brex hardware hero) */}
+            <div className="block lg:hidden mt-8">
+              <HeroDecisionPipeline />
             </div>
           </div>
         </div>

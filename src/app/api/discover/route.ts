@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function POST() {
   try {
     const crawlResult = await runUniversalCrawler();
+    await agentStore.hydrate(true);
     const stats = agentStore.getStats();
 
     return NextResponse.json({

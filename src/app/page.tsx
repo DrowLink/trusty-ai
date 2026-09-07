@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { AgentWithScore, DiscoveryStats, ActiveProductTab } from '@/lib/types';
 import { Navbar } from '@/components/Navbar';
 import { HeroMetrics } from '@/components/HeroMetrics';
+import { BrexStyleLandingSections } from '@/components/BrexStyleLandingSections';
 import { DiscoveryBar } from '@/components/DiscoveryBar';
 import { TrustLeaderboard } from '@/components/TrustLeaderboard';
 import { AgentDetailModal } from '@/components/AgentDetailModal';
@@ -18,7 +19,8 @@ import { CompetitiveMoatView } from '@/components/CompetitiveMoatView';
 import { CookieConsent } from '@/components/CookieConsent';
 import { TrustyIsotype } from '@/components/PartnerLogos';
 import Image from 'next/image';
-import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
+import { getUserSession, decrementQueryQuota, authenticateWithEmail, signOutUserSession, UserSession } from '@/lib/quota';
+import { onAuthStateChange } from '@/lib/supabase/client';
 import { 
   getLocalCustomAgents, 
   saveLocalCustomAgent, 
@@ -54,12 +56,14 @@ export default function HomePage() {
   const [isEvaluateOpen, setIsEvaluateOpen] = useState(false);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authInitialMode, setAuthInitialMode] = useState<'signin' | 'signup'>('signin');
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [session, setSession] = useState<UserSession>({
     email: null,
     isAuthenticated: false,
-    queriesRemaining: 10,
-    maxQueries: 10,
+    queriesRemaining: 3,
+    maxQueries: 3,
     tier: 'anonymous',
   });
 
@@ -100,6 +104,20 @@ export default function HomePage() {
   useEffect(() => {
     setSession(getUserSession());
     fetchAgents();
+
+    const { unsubscribe } = onAuthStateChange((event, authSession) => {
+      if (authSession?.user?.email) {
+        const s = authenticateWithEmail(authSession.user.email);
+        setSession(s);
+      } else if (event === 'SIGNED_OUT') {
+        const s = signOutUserSession();
+        setSession(s);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const checkAndConsumeQuota = (): boolean => {
@@ -108,6 +126,8 @@ export default function HomePage() {
       return true;
     }
     if (currentSession.queriesRemaining <= 0) {
+      setAuthInitialMode('signup');
+      setIsQuotaExceeded(true);
       setIsAuthOpen(true);
       return false;
     }
@@ -115,6 +135,8 @@ export default function HomePage() {
     const updated = getUserSession();
     setSession(updated);
     if (!allowed) {
+      setAuthInitialMode('signup');
+      setIsQuotaExceeded(true);
       setIsAuthOpen(true);
       return false;
     }
@@ -176,7 +198,11 @@ export default function HomePage() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onOpenSpecs={() => setIsSpecsOpen(true)}
-        onOpenAuth={() => setIsAuthOpen(true)}
+        onOpenAuth={() => {
+          setAuthInitialMode('signin');
+          setIsQuotaExceeded(false);
+          setIsAuthOpen(true);
+        }}
         onOpenEvaluate={() => setIsEvaluateOpen(true)}
         totalAgents={stats.totalAgents}
         session={session}
@@ -196,8 +222,17 @@ export default function HomePage() {
               onSearchChange={setSearchQuery}
               isAuditing={isAuditingLive}
               session={session}
-              onOpenAuth={() => setIsAuthOpen(true)}
+              onOpenAuth={() => {
+                setAuthInitialMode('signin');
+                setIsQuotaExceeded(false);
+                setIsAuthOpen(true);
+              }}
               onNavigateTab={setActiveTab}
+            />
+
+            <BrexStyleLandingSections 
+              onSelectProduct={setActiveTab} 
+              onAuditAgent={() => setIsEvaluateOpen(true)} 
             />
 
             <TrustLeaderboard
@@ -259,7 +294,7 @@ export default function HomePage() {
       </main>
 
       {/* Institutional Minimalist Footer */}
-      <footer className="border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#07090e]/95 backdrop-blur py-8 text-xs text-slate-600 dark:text-slate-400 font-sans transition-colors duration-200">
+      <footer className="border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#0d131f]/95 backdrop-blur py-8 text-xs text-slate-600 dark:text-slate-400 font-sans transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center space-x-3 text-center sm:text-left">
             <div className="flex items-center space-x-2">
@@ -371,11 +406,22 @@ export default function HomePage() {
 
       <AuthModal
         isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
+        onClose={() => {
+          setIsAuthOpen(false);
+          setIsQuotaExceeded(false);
+        }}
+        currentUserEmail={session.email}
+        initialMode={authInitialMode}
+        quotaExceeded={isQuotaExceeded}
         onAuthenticate={(email) => {
           const newSession = authenticateWithEmail(email);
           setSession(newSession);
           setIsAuthOpen(false);
+          setIsQuotaExceeded(false);
+        }}
+        onSignOut={() => {
+          const newSession = signOutUserSession();
+          setSession(newSession);
         }}
       />
 

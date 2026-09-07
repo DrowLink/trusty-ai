@@ -1,18 +1,26 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans, Outfit } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/lib/theme';
 
-const inter = Inter({
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-display',
+  weight: ['400', '500', '600', '700', '800', '900'],
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-sans',
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#070a11' },
+    { media: '(prefers-color-scheme: light)', color: '#fafafa' },
+    { media: '(prefers-color-scheme: dark)', color: '#06080f' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -207,14 +215,14 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en" className={`${plusJakarta.variable} ${outfit.variable}`} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className={`${inter.className} min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500/20 selection:text-[#0066FF] transition-colors duration-200`}>
+      <body className={`${plusJakarta.className} min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500/20 selection:text-[#0066FF] transition-colors duration-200`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

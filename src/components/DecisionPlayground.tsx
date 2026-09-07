@@ -145,27 +145,27 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 space-y-10 font-sans">
-      {/* HEADER & FLYWHEEL CONTEXT (Slide 5 of Pitch) */}
-      <div className="border-b border-slate-200 dark:border-slate-800/80 pb-6">
-        <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-[#0066FF]/10 dark:bg-purple-950/40 border border-[#0066FF]/30 dark:border-purple-800/50 text-[11px] font-mono text-[#0066FF] dark:text-purple-300 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] dark:bg-purple-400 animate-pulse" />
-          <span>TRUSTY.BOT • THE DATA FLYWHEEL</span>
-          <span className="text-slate-400 dark:text-slate-600">|</span>
-          <span className="text-slate-700 dark:text-slate-300">LIVE M2M DECISION ENGINE</span>
+      {/* HEADER & FLYWHEEL CONTEXT */}
+      <div className="border-b border-slate-200 dark:border-white/[0.08] pb-6">
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/60 text-xs font-sans font-semibold text-[#0066FF] dark:text-sky-300 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] dark:bg-sky-400 animate-pulse" />
+          <span>REAL-TIME TRANSACTION SECURITY</span>
+          <span className="text-slate-300 dark:text-slate-700">|</span>
+          <span className="text-slate-600 dark:text-slate-300 font-normal">LIVE M2M DECISION ENGINE</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white font-sans">
-          Every real transaction makes <span className="text-[#0066FF] dark:text-purple-400">TRUSTY harder to replicate</span>
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-950 dark:text-white font-sans">
+          Securing every autonomous action with <span className="text-[#0066FF] dark:text-sky-400">real-time intelligence</span>
         </h1>
-        <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
-          Banks, payment networks, wallets, issuers, and enterprises send economic actions and outcomes to the TRUSTY.BOT API in the live settlement path.
+        <p className="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed font-sans">
+          Protecting banks, enterprise treasuries, and AI agents with sub-millisecond risk checks and continuous behavioral trust verification.
         </p>
 
-        {/* Integration Rails Strip (Slide 5 Header Pill) */}
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] font-mono">
-          <span className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] mr-1">CONNECTED RAILS:</span>
+        {/* Integration Rails Strip */}
+        <div className="mt-6 flex flex-wrap items-center gap-2">
+          <span className="text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] font-sans font-bold mr-1">CONNECTED RAILS:</span>
           {['STRIPE', 'VISA', 'MASTERCARD', 'BREX', 'COMMERCIAL BANK', 'AGENT WALLET', 'ENTERPRISE TREASURY'].map(rail => (
-            <span key={rail} className="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
+            <span key={rail} className="px-2.5 py-1 rounded-lg bg-slate-100/90 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-slate-200 text-xs font-sans font-medium">
               {rail}
             </span>
           ))}
@@ -176,25 +176,27 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Col: Request Configuration (5 cols) */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 p-6 space-y-5 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div className="text-xs font-mono font-bold uppercase tracking-widest text-slate-800 dark:text-slate-300 flex items-center space-x-2">
+          <div className="rounded-2xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-white/[0.08] p-6 space-y-5 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
+              <div className="text-xs font-sans font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center space-x-2">
                 <Cpu className="w-4 h-4 text-[#0066FF] dark:text-sky-400" />
-                <span>SIMULATE ECONOMIC ACTION</span>
+                <span>Simulate Economic Action</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">POST /api/decision</span>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                POST /api/decision
+              </span>
             </div>
 
-            <form onSubmit={handleEvaluate} className="space-y-4 text-xs font-mono">
+            <form onSubmit={handleEvaluate} className="space-y-4 text-xs font-sans">
               {/* Agent Selector */}
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-1 uppercase text-[10px]">
-                  SELECT AGENT UNDER DECISION
+                <label className="text-slate-700 dark:text-slate-300 block mb-1 text-xs font-semibold">
+                  Select Agent Under Decision
                 </label>
                 <select
                   value={selectedAgentId}
                   onChange={e => setSelectedAgentId(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded px-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-sans text-xs sm:text-sm focus:border-sky-500 focus:outline-none transition"
                 >
                   {agents.map(a => (
                     <option key={a.id} value={a.id}>
@@ -203,36 +205,36 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                   ))}
                 </select>
                 {currentAgent && (
-                  <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400">
-                    <span>Daily Limit: ${currentAgent.creditProfile.estimatedDailyCapacity.toLocaleString()}/d</span>
-                    <span>Approval Gate: &gt;${currentAgent.creditProfile.humanApprovalThreshold.toLocaleString()}</span>
+                  <div className="mt-1.5 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-sans">
+                    <span>Daily Limit: <strong>${currentAgent.creditProfile.estimatedDailyCapacity.toLocaleString()}/d</strong></span>
+                    <span>Approval Gate: <strong>&gt;${currentAgent.creditProfile.humanApprovalThreshold.toLocaleString()}</strong></span>
                   </div>
                 )}
               </div>
 
               {/* Principal */}
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-1 uppercase text-[10px]">
-                  PRINCIPAL / ENTERPRISE ENTITY
+                <label className="text-slate-700 dark:text-slate-300 block mb-1 text-xs font-semibold">
+                  Principal / Enterprise Entity
                 </label>
                 <input
                   type="text"
                   value={principal}
                   onChange={e => setPrincipal(e.target.value)}
                   placeholder="e.g. Acme Corp"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded px-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-sans text-xs sm:text-sm focus:border-sky-500 focus:outline-none transition"
                 />
               </div>
 
               {/* Action */}
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-1 uppercase text-[10px]">
-                  ECONOMIC ACTION TYPE
+                <label className="text-slate-700 dark:text-slate-300 block mb-1 text-xs font-semibold">
+                  Economic Action Type
                 </label>
                 <select
                   value={action}
                   onChange={e => setAction(e.target.value as any)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded px-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-sans text-xs sm:text-sm focus:border-sky-500 focus:outline-none transition"
                 >
                   <option value="Purchase">Purchase (Commercial Merchant)</option>
                   <option value="Transfer">Transfer (Machine-to-Machine Wire)</option>
@@ -243,8 +245,8 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
               {/* Amount */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-slate-500 dark:text-slate-400 uppercase text-[10px]">
-                    AMOUNT (USD)
+                  <label className="text-slate-700 dark:text-slate-300 text-xs font-semibold">
+                    Amount (USD)
                   </label>
                   <div className="space-x-1">
                     {[100, 840, 5200, 30000].map(val => (
@@ -252,7 +254,7 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                         key={val}
                         type="button"
                         onClick={() => setAmount(val)}
-                        className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200 dark:hover:bg-slate-700 text-[9px] text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-transparent"
+                        className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 text-[11px] font-sans font-medium text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-white/[0.08] transition"
                       >
                         ${val.toLocaleString()}
                       </button>
@@ -260,58 +262,58 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                   </div>
                 </div>
                 <div className="relative">
-                  <span className="absolute left-3 top-2 text-slate-400 font-bold">$</span>
+                  <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">$</span>
                   <input
                     type="number"
                     value={amount}
                     onChange={e => setAmount(Number(e.target.value))}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded pl-7 pr-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl pl-8 pr-3 py-2.5 text-slate-900 dark:text-white font-mono text-sm font-semibold focus:border-sky-500 focus:outline-none transition"
                   />
                 </div>
               </div>
 
               {/* Merchant */}
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-1 uppercase text-[10px]">
-                  COUNTERPARTY / MERCHANT
+                <label className="text-slate-700 dark:text-slate-300 block mb-1 text-xs font-semibold">
+                  Counterparty / Merchant
                 </label>
                 <input
                   type="text"
                   value={merchant}
                   onChange={e => setMerchant(e.target.value)}
                   placeholder="e.g. Dell, AWS, GitHub"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded px-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-sans text-xs sm:text-sm focus:border-sky-500 focus:outline-none transition"
                 />
               </div>
 
               {/* Category */}
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-1 uppercase text-[10px]">
-                  EXPENSE CATEGORY
+                <label className="text-slate-700 dark:text-slate-300 block mb-1 text-xs font-semibold">
+                  Expense Category
                 </label>
                 <input
                   type="text"
                   value={category}
                   onChange={e => setCategory(e.target.value)}
                   placeholder="e.g. IT equipment, Cloud SaaS"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded px-3 py-2 text-slate-900 dark:text-white font-mono focus:border-sky-500 focus:outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/[0.08] rounded-xl px-3 py-2.5 text-slate-900 dark:text-white font-sans text-xs sm:text-sm focus:border-sky-500 focus:outline-none transition"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-4 py-3 rounded bg-[#0066FF] hover:bg-blue-600 dark:bg-purple-600 dark:hover:bg-purple-500 disabled:opacity-50 text-white font-bold text-xs font-mono transition flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/10 dark:shadow-purple-900/20"
+                className="w-full mt-4 py-3 rounded-xl bg-[#0066FF] hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 disabled:opacity-50 text-white font-bold text-sm font-sans transition flex items-center justify-center space-x-2 shadow-sm"
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>EVALUATING MACHINE GATE...</span>
+                    <span>Evaluating Machine Gate...</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>EXECUTE TRUSTY DECISION</span>
+                    <span>Execute Trusty Decision</span>
                   </>
                 )}
               </button>
@@ -319,24 +321,24 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
           </div>
 
           {/* Quick Info box */}
-          <div className="p-4 rounded-xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 space-y-1 leading-relaxed shadow-sm">
-            <div className="text-slate-800 dark:text-slate-300 font-bold uppercase text-[10px]">Machine-Speed SLA</div>
-            <p>
-              Average risk evaluation latency: <strong className="text-emerald-600 dark:text-emerald-400">18ms</strong>. Runs synchronous policy checks against deterministic 20-signal AST telemetry and credit capacity envelopes.
+          <div className="p-4 rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-white/[0.08] text-xs font-sans text-slate-600 dark:text-slate-300 space-y-1.5 leading-relaxed shadow-sm">
+            <div className="text-slate-900 dark:text-white font-bold text-xs">Sub-18ms Decision Latency</div>
+            <p className="text-slate-500 dark:text-slate-400">
+              Synchronous risk policy evaluation against deterministic 20-signal AST telemetry and credit capacity envelopes.
             </p>
           </div>
         </div>
 
         {/* Right Col: Live Decision Output & Integration Code (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* DECISION VERDICT CARD (Slide 5 Reproduction) */}
-          <div className="rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 p-6 space-y-6 relative overflow-hidden shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-              <div className="text-xs font-mono font-bold uppercase tracking-widest text-slate-800 dark:text-slate-300 flex items-center space-x-2">
+          {/* DECISION VERDICT CARD */}
+          <div className="rounded-2xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-white/[0.08] p-6 space-y-6 relative overflow-hidden shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/[0.08] pb-3">
+              <div className="text-xs font-sans font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center space-x-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>DECISION ENGINE RESPONSE</span>
+                <span>Decision Engine Response</span>
               </div>
-              <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                 {decisionResult ? 'Live Evaluated' : 'Awaiting Simulation'}
               </span>
             </div>
@@ -360,64 +362,64 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                       <XCircle className="w-8 h-8 text-rose-600 dark:text-rose-400 flex-shrink-0" />
                     )}
                     <div>
-                      <div className="text-xl font-black font-mono tracking-tight">
+                      <div className="text-xl font-black font-sans tracking-tight">
                         {decisionResult.decision}
                       </div>
-                      <div className="text-xs font-mono opacity-90 mt-0.5">
+                      <div className="text-xs font-sans opacity-90 mt-0.5">
                         {decisionResult.clearingRail}
                       </div>
                     </div>
                   </div>
 
-                  <div className="text-right font-mono self-end sm:self-auto">
+                  <div className="text-right font-sans self-end sm:self-auto">
                     <div className="text-lg font-bold tabular-nums">
                       ${decisionResult.amount.toLocaleString()} USD
                     </div>
-                    <div className="text-[10px] opacity-75">
+                    <div className="text-xs opacity-75">
                       {decisionResult.category}
                     </div>
                   </div>
                 </div>
 
-                {/* Behavioral Outcome Note (Slide 5 verbatim) */}
-                <div className="p-4 rounded-lg bg-sky-50 dark:bg-[#060c14] border border-sky-200 dark:border-sky-900/40 space-y-1 font-mono text-xs">
-                  <div className="text-sky-800 dark:text-sky-300 font-bold flex items-center space-x-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-                    <span>Outcome becomes proprietary behavioral credit data.</span>
+                {/* Behavioral Outcome Note */}
+                <div className="p-4 rounded-xl bg-blue-50/80 dark:bg-[#060c14] border border-blue-200/80 dark:border-blue-900/40 space-y-1 font-sans text-xs">
+                  <div className="text-[#0066FF] dark:text-sky-300 font-bold flex items-center space-x-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[#0066FF] dark:text-sky-400" />
+                    <span>Outcome recorded to proprietary behavioral trust log</span>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 text-[11px] leading-relaxed">
+                  <p className="text-slate-600 dark:text-slate-300 text-xs leading-relaxed">
                     {decisionResult.reason}
                   </p>
-                  <div className="text-[10px] text-[#0066FF] dark:text-sky-400 pt-1 font-semibold">
-                    Trust + transaction context + history &rarr; better credit decisions over time
+                  <div className="text-[11px] text-[#0066FF] dark:text-sky-400 pt-1 font-semibold">
+                    Trust + transaction context + history &rarr; higher verified credit capacity over time
                   </div>
                 </div>
 
                 {/* Policy Checks Detail Table */}
                 <div className="space-y-2">
-                  <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">
-                    POLICY CIRCUIT BREAKERS EVALUATED
+                  <div className="text-xs font-sans text-slate-700 dark:text-slate-300 font-bold tracking-wide">
+                    Policy Circuit Breakers Evaluated
                   </div>
                   <div className="space-y-1.5">
                     {decisionResult.policyChecks.map((check, idx) => (
                       <div
                         key={idx}
-                        className="p-2.5 rounded bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800/80 flex items-start justify-between gap-3 text-xs font-mono"
+                        className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-white/[0.08] flex items-start justify-between gap-3 text-xs font-sans"
                       >
-                        <div className="flex items-start space-x-2">
+                        <div className="flex items-start space-x-2.5">
                           {check.passed ? (
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
                           ) : check.severity === 'warning' ? (
-                            <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                            <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
                           ) : (
-                            <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 mt-0.5 flex-shrink-0" />
+                            <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 mt-0.5 flex-shrink-0" />
                           )}
                           <div>
-                            <span className="text-slate-900 dark:text-slate-200 font-bold">{check.rule}: </span>
-                            <span className="text-slate-600 dark:text-slate-400">{check.detail}</span>
+                            <span className="text-slate-900 dark:text-white font-bold">{check.rule}: </span>
+                            <span className="text-slate-600 dark:text-slate-300">{check.detail}</span>
                           </div>
                         </div>
-                        <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded flex-shrink-0 border ${
+                        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full flex-shrink-0 border ${
                           check.passed
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-transparent'
                             : check.severity === 'warning'
@@ -433,7 +435,7 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
               </div>
             ) : errorMessage ? (
               <div className="py-8 px-4 flex flex-col items-center text-center space-y-3">
-                <div className="w-full p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-xs font-mono text-rose-800 dark:text-rose-300 text-left flex items-start space-x-2">
+                <div className="w-full p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800/60 text-xs font-sans text-rose-800 dark:text-rose-300 text-left flex items-start space-x-2">
                   <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold text-rose-700 dark:text-rose-300 mb-0.5">Decision API Error</div>
@@ -443,39 +445,41 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                 <button
                   type="button"
                   onClick={() => { setErrorMessage(null); handleEvaluate(); }}
-                  className="px-4 py-1.5 rounded-lg bg-[#0066FF] text-white text-xs font-mono font-bold hover:bg-blue-700 transition flex items-center space-x-1"
+                  className="px-4 py-2 rounded-xl bg-[#0066FF] text-white text-xs font-sans font-bold hover:bg-blue-700 transition flex items-center space-x-1 shadow-sm"
                 >
-                  <RefreshCw className="w-3 h-3" />
+                  <RefreshCw className="w-3.5 h-3.5" />
                   <span>Retry</span>
                 </button>
               </div>
             ) : (
-              <div className="py-12 text-center text-slate-500 font-mono text-xs space-y-3">
-                <CreditCard className="w-10 h-10 mx-auto text-slate-400 dark:text-slate-600 opacity-60" />
+              <div className="py-12 text-center text-slate-500 dark:text-slate-400 font-sans text-xs sm:text-sm space-y-3">
+                <CreditCard className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600 opacity-80" />
                 <p>Click &ldquo;Execute Trusty Decision&rdquo; on the left to simulate live risk authorization.</p>
               </div>
             )}
           </div>
 
           {/* CODE INTEGRATION SNIPPET (Tabs: TypeScript, cURL, Python) */}
-          <div className="rounded-xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-            <div className="flex items-center justify-between px-4 py-2.5 bg-slate-100 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex items-center space-x-2 text-xs font-mono">
-                <Code2 className="w-3.5 h-3.5 text-[#0066FF]" />
-                <span className="text-slate-700 dark:text-slate-400 font-bold uppercase">SDK Snippet:</span>
-                {(['typescript', 'curl', 'python'] as const).map(tab => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveCodeTab(tab)}
-                    className={`px-2 py-0.5 rounded text-[11px] transition ${
-                      activeCodeTab === tab
-                        ? 'bg-white text-slate-900 font-bold shadow-sm dark:bg-slate-800 dark:text-white'
-                        : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
-                    }`}
-                  >
-                    {tab.toUpperCase()}
-                  </button>
-                ))}
+          <div className="rounded-2xl bg-white dark:bg-[#090d16] border border-slate-200 dark:border-white/[0.08] overflow-hidden shadow-sm">
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 dark:bg-[#070a12] border-b border-slate-200 dark:border-white/[0.08]">
+              <div className="flex items-center space-x-2 text-xs font-sans">
+                <Code2 className="w-4 h-4 text-[#0066FF] dark:text-sky-400" />
+                <span className="text-slate-700 dark:text-slate-300 font-semibold">SDK Snippet:</span>
+                <div className="flex items-center bg-slate-200/60 dark:bg-white/[0.06] p-0.5 rounded-lg ml-1">
+                  {(['typescript', 'curl', 'python'] as const).map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveCodeTab(tab)}
+                      className={`px-2.5 py-1 rounded-md text-xs font-sans font-medium transition ${
+                        activeCodeTab === tab
+                          ? 'bg-white text-slate-950 font-bold shadow-xs dark:bg-slate-800 dark:text-white'
+                          : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                      }`}
+                    >
+                      {tab === 'typescript' ? 'TypeScript' : tab === 'curl' ? 'cURL' : 'Python'}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <button
@@ -483,14 +487,14 @@ print(f"Verdict: {decision['decision']} | Rail: {decision['clearingRail']}")`;
                   const code = activeCodeTab === 'typescript' ? tsCode : activeCodeTab === 'curl' ? curlCode : pyCode;
                   handleCopyCode(code);
                 }}
-                className="flex items-center space-x-1 text-[11px] font-mono text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition"
+                className="flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-sans font-medium text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/[0.06] transition"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'COPIED' : 'COPY'}</span>
+                <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
 
-            <pre className="p-4 text-xs font-mono text-slate-800 dark:text-slate-300 overflow-x-auto bg-slate-50 dark:bg-[#06080e] leading-relaxed">
+            <pre className="p-4 text-xs font-mono text-slate-800 dark:text-slate-300 overflow-x-auto bg-slate-50/50 dark:bg-[#06080e] leading-relaxed">
               <code>{activeCodeTab === 'typescript' ? tsCode : activeCodeTab === 'curl' ? curlCode : pyCode}</code>
             </pre>
           </div>

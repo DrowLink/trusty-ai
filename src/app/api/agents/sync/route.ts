@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { agentStore } from '@/lib/db/store';
 import { getFirebaseStatus } from '@/lib/db/firebase';
+import { getSupabaseStatus } from '@/lib/supabase/database';
 import { AgentRecord } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -8,12 +9,14 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   await agentStore.hydrate();
   const all = agentStore.getAll();
-  const status = getFirebaseStatus();
+  const firebaseStatus = getFirebaseStatus();
+  const supabaseStatus = getSupabaseStatus();
 
   return NextResponse.json({
     success: true,
     totalAgents: all.length,
-    firebase: status,
+    supabase: supabaseStatus,
+    firebase: firebaseStatus,
     stats: agentStore.getStats(),
   });
 }

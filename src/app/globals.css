@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --bg-page: #ffffff;
+  --bg-page: #fafafa;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f8fafc;
+  --bg-surface-elevated: #f4f6f8;
   --bg-subtle: #f1f5f9;
   --text-primary: #0a192f;
   --text-secondary: #475569;
@@ -19,7 +19,7 @@
 }
 
 html.dark {
-  --bg-page: #070a11;
+  --bg-page: #06080f;
   --bg-surface: #0d131f;
   --bg-surface-elevated: #111726;
   --bg-subtle: #1e293b;

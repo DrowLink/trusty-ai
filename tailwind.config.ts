@@ -25,7 +25,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        sans: ["var(--font-sans)", "Plus Jakarta Sans", "Inter", "system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-display)", "Outfit", "var(--font-sans)", "sans-serif"],
         mono: ["JetBrains Mono", "Menlo", "Courier New", "monospace"],
       },
       boxShadow: {

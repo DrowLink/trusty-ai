@@ -193,73 +193,73 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
       <div className="flex items-center space-x-1.5 border-b border-slate-200 dark:border-slate-800/80 pb-2.5 mb-3 overflow-x-auto no-scrollbar">
         <button
           onClick={() => setSelectedCategory('all')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-sans font-semibold whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'all'
               ? 'bg-[#0066FF] text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
           }`}
         >
           <span>All</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded font-sans ${selectedCategory === 'all' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
             {agents.length}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('coding')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-sans font-semibold whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'coding'
               ? 'bg-[#0066FF] text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Code2 className="w-3 h-3 text-[#0066FF] dark:text-sky-400" />
+          <Code2 className="w-3.5 h-3.5 text-[#0066FF] dark:text-sky-400" />
           <span>Coding</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'coding' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded font-sans ${selectedCategory === 'coding' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
             {countCoding}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('productivity')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-sans font-semibold whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'productivity'
               ? 'bg-[#0066FF] text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Mail className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+          <Mail className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
           <span>Productivity</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'productivity' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded font-sans ${selectedCategory === 'productivity' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
             {countProductivity}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('finance')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-sans font-semibold whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'finance'
               ? 'bg-[#0066FF] text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
           }`}
         >
-          <Wallet className="w-3 h-3 text-amber-600 dark:text-amber-400" />
+          <Wallet className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
           <span>Finance</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'finance' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded font-sans ${selectedCategory === 'finance' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
             {countFinance}
           </span>
         </button>
 
         <button
           onClick={() => setSelectedCategory('research')}
-          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-xs font-mono font-medium whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-sans font-semibold whitespace-nowrap transition flex items-center space-x-1.5 flex-shrink-0 ${
             selectedCategory === 'research'
               ? 'bg-[#0066FF] text-white shadow-sm'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900/60 border border-transparent'
           }`}
         >
           <span>Research</span>
-          <span className={`text-[10px] px-1.5 py-0.2 rounded ${selectedCategory === 'research' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
+          <span className={`text-[11px] px-1.5 py-0.2 rounded font-sans ${selectedCategory === 'research' ? 'bg-white/20 text-white' : 'bg-slate-200/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400'}`}>
             {countResearch}
           </span>
         </button>
@@ -268,7 +268,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
       {/* Filter Bar */}
       <div className="security-card p-2.5 sm:p-3 rounded-xl mb-3 sm:mb-4 shadow-sm">
         {searchQuery && (
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-700 dark:text-slate-300">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-200 dark:border-slate-800 text-xs font-sans text-slate-700 dark:text-slate-300">
             <span className="flex items-center space-x-1.5">
               <span className="text-slate-500 dark:text-slate-400">Filtering by:</span>
               <span className="text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/40">
@@ -278,7 +278,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             {onClearSearch && (
               <button
                 onClick={onClearSearch}
-                className="text-[11px] text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition underline"
+                className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition underline"
               >
                 Clear filter
               </button>
@@ -292,11 +292,11 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="w-full px-2 py-1.5 bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 font-mono focus:outline-none focus:border-[#0066FF]"
+              className="w-full px-2.5 py-2 bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-white/[0.08] rounded-xl text-xs text-slate-800 dark:text-slate-200 font-sans focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] transition"
             >
               <option value="trust">Sort: Trusty Score</option>
-              <option value="credit">Sort: Credit Score (Beta)</option>
-              <option value="capacity">Sort: Daily Spend Capacity</option>
+              <option value="credit">Sort: Credit Score</option>
+              <option value="capacity">Sort: Daily Spend Limit</option>
               <option value="confidence">Sort: Confidence %</option>
               <option value="popularity">Sort: Stars / Users</option>
               <option value="recent">Sort: Most Recent</option>
@@ -308,13 +308,13 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedRisk}
               onChange={e => setSelectedRisk(e.target.value)}
-              className="w-full px-2 py-1.5 bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0066FF] font-mono"
+              className="w-full px-2.5 py-2 bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-white/[0.08] rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] font-sans transition"
             >
               <option value="all">Risk: All Tiers</option>
-              <option value="LOW_RISK">Low Risk [80-100]</option>
-              <option value="MEDIUM_RISK">Medium [60-79]</option>
-              <option value="HIGH_RISK">High Risk [40-59]</option>
-              <option value="CRITICAL_RISK">Critical [0-39]</option>
+              <option value="LOW_RISK">Low Risk (80-100)</option>
+              <option value="MEDIUM_RISK">Medium (60-79)</option>
+              <option value="HIGH_RISK">High Risk (40-59)</option>
+              <option value="CRITICAL_RISK">Critical (0-39)</option>
             </select>
           </div>
 
@@ -323,7 +323,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedEcosystem}
               onChange={e => setSelectedEcosystem(e.target.value)}
-              className="w-full px-2 py-1.5 bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0066FF] font-mono"
+              className="w-full px-2.5 py-2 bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-white/[0.08] rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] font-sans transition"
             >
               <option value="all">Source: All</option>
               <option value="github">GitHub</option>
@@ -338,7 +338,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
             <select
               value={selectedPermission}
               onChange={e => setSelectedPermission(e.target.value)}
-              className="w-full px-2 py-1.5 bg-white dark:bg-[#090d16] border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-[#0066FF] font-mono"
+              className="w-full px-2.5 py-2 bg-white dark:bg-[#0d131f] border border-slate-200 dark:border-white/[0.08] rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0066FF]/20 focus:border-[#0066FF] font-sans transition"
             >
               <option value="all">Permissions: All</option>
               <option value="git">Git Access</option>
@@ -369,17 +369,17 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center space-x-2 min-w-0">
-                    <span className="w-5 h-5 rounded bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/[0.08] text-[10px] font-mono font-bold text-slate-600 dark:text-zinc-400 flex items-center justify-center flex-shrink-0 tabular-nums">
+                    <span className="w-5 h-5 rounded-md bg-slate-100 dark:bg-[#0d131f] border border-slate-200 dark:border-white/[0.08] text-[10px] font-sans font-bold text-slate-600 dark:text-slate-300 flex items-center justify-center flex-shrink-0 tabular-nums">
                       #{rank}
                     </span>
                     <div className="min-w-0">
-                      <div className="font-semibold text-slate-900 dark:text-zinc-100 text-xs truncate flex items-center space-x-1.5">
+                      <div className="font-semibold text-slate-900 dark:text-slate-100 text-xs truncate flex items-center space-x-1.5 font-sans">
                         <span className="truncate">{agent.name}</span>
                         {agent.evaluation.overrideApplied && (
                           <ShieldAlert className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 flex-shrink-0" />
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-500 dark:text-zinc-400 truncate font-mono mt-0.5">
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate font-sans mt-0.5">
                         {agent.publisher.name}
                         {agent.publisher.verifiedDomain && (
                           <span className="ml-1 text-emerald-600 dark:text-emerald-400 font-sans">✓ Org</span>
@@ -388,9 +388,9 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                     </div>
                   </div>
                   {/* Scores: Trusty + Credit */}
-                  <div className="flex items-center space-x-2 flex-shrink-0">
+                  <div className="flex items-center space-x-2 flex-shrink-0 font-sans">
                     <div className="flex flex-col items-end">
-                      <div className={`text-xs font-mono font-bold px-1.5 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
+                      <div className={`text-xs font-sans font-bold px-1.5 py-0.5 rounded border tabular-nums ${getScoreColor(score)}`}>
                         {score} <span className="text-[9px] opacity-70">/100</span>
                       </div>
                       <div className="mt-1">
@@ -398,10 +398,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       </div>
                     </div>
                     <div className="flex flex-col items-end border-l border-slate-200 dark:border-white/[0.08] pl-2">
-                      <div className="text-xs font-mono font-bold px-1.5 py-0.5 rounded border border-purple-300 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 tabular-nums">
+                      <div className="text-xs font-sans font-bold px-1.5 py-0.5 rounded border border-purple-300 dark:border-purple-500/30 bg-purple-50 dark:bg-purple-500/10 text-purple-700 dark:text-purple-300 tabular-nums">
                         CR {agent.creditProfile?.creditScore ?? 75}
                       </div>
-                      <div className="text-[9px] font-mono text-[#0066FF] dark:text-cyan-400 mt-1 tabular-nums font-semibold">
+                      <div className="text-[10px] font-sans text-[#0066FF] dark:text-cyan-400 mt-1 tabular-nums font-semibold">
                         ${(agent.creditProfile?.estimatedDailyCapacity ?? 5000).toLocaleString()}/d
                       </div>
                     </div>
@@ -409,17 +409,17 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 </div>
 
                 {/* Tags */}
-                <div className="mt-2 pt-2 border-t border-slate-100 dark:border-white/[0.06] flex flex-wrap items-center gap-1.5">
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-zinc-400">
+                <div className="mt-2 pt-2 border-t border-slate-100 dark:border-white/[0.06] flex flex-wrap items-center gap-1.5 font-sans">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-sans font-medium uppercase bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-300">
                     {agent.sourceEcosystem.replace('_', ' ')}
                   </span>
-                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono text-slate-700 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-white/[0.08]">
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-sans font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-white/[0.08]">
                     {agent.framework.toUpperCase()}
                   </span>
                   {agent.requestedPermissions.slice(0, 2).map((perm, pIdx) => (
                     <span
                       key={pIdx}
-                      className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-slate-50 dark:bg-zinc-950 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-white/[0.06]"
+                      className="px-1.5 py-0.5 rounded text-[10px] font-sans bg-slate-50 dark:bg-zinc-950 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/[0.06]"
                     >
                       {perm.scope}
                     </span>
@@ -427,9 +427,9 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                 </div>
 
                 {/* Footer bar */}
-                <div className="mt-2 flex items-center justify-between text-[10px] text-slate-500 dark:text-zinc-400 font-mono">
-                  <span>Confidence: <strong className="text-slate-800 dark:text-zinc-300 tabular-nums">{agent.evaluation.confidence}%</strong></span>
-                  <span className="text-slate-700 dark:text-zinc-300 flex items-center space-x-0.5">
+                <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-sans">
+                  <span>Confidence: <strong className="text-slate-800 dark:text-slate-200 tabular-nums">{agent.evaluation.confidence}%</strong></span>
+                  <span className="text-slate-700 dark:text-slate-300 flex items-center space-x-0.5 font-medium">
                     <span>Inspect</span>
                     <ChevronRight className="w-3 h-3" />
                   </span>
@@ -443,23 +443,23 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
       {/* DESKTOP VIEW: High-density Table with 5-Dimension Mini Bar */}
       <div className="hidden md:block security-card rounded-xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50/90 dark:bg-[#090d16]/95 text-slate-600 dark:text-slate-400 uppercase tracking-wider font-mono border-b border-slate-200 dark:border-slate-800 text-[10px]">
+          <table className="w-full text-left text-xs font-sans">
+            <thead className="bg-slate-50/90 dark:bg-[#090d16]/95 text-slate-600 dark:text-slate-400 uppercase tracking-wider font-sans font-semibold border-b border-slate-200 dark:border-slate-800 text-[11px]">
               <tr>
                 <th className="py-3 px-4 w-12">Rank</th>
-                <th className="py-3 px-4">Agent & Publisher</th>
+                <th className="py-3 px-4">Agent &amp; Publisher</th>
                 <th className="py-3 px-4">Ecosystem</th>
                 <th className="py-3 px-4">5-Dimension Posture</th>
                 <th className="py-3 px-4 text-center">Confidence</th>
                 <th className="py-3 px-4 text-center">TRUSTY Score</th>
-                <th className="py-3 px-4 text-center">Credit & Limit (Beta)</th>
+                <th className="py-3 px-4 text-center">Credit &amp; Limit</th>
                 <th className="py-3 px-4 text-right">Audit</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60 font-sans">
               {filteredAgents.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-slate-500 dark:text-slate-400 font-mono text-xs">
+                  <td colSpan={8} className="py-12 text-center text-slate-500 dark:text-slate-400 font-sans text-xs">
                     No agents match current filters.
                   </td>
                 </tr>
@@ -478,7 +478,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       }`}
                     >
                       {/* Rank */}
-                      <td className="py-3.5 px-4 font-mono text-slate-400 dark:text-slate-500 font-bold tabular-nums">
+                      <td className="py-3.5 px-4 font-sans text-slate-400 dark:text-slate-500 font-bold tabular-nums">
                         #{rank}
                       </td>
 
@@ -492,10 +492,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                                 <ShieldAlert className="w-4 h-4 text-rose-500 dark:text-rose-400 flex-shrink-0" />
                               )}
                             </div>
-                            <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono flex items-center space-x-1.5 mt-0.5">
+                            <div className="text-xs text-slate-500 dark:text-slate-400 font-sans flex items-center space-x-1.5 mt-0.5">
                               <span className="truncate">{agent.publisher.name}</span>
                               {agent.publisher.verifiedDomain && (
-                                <span className="text-emerald-600 dark:text-emerald-400 flex items-center space-x-0.5 text-[10px] font-sans">
+                                <span className="text-emerald-600 dark:text-emerald-400 flex items-center space-x-0.5 text-xs font-sans">
                                   <span>✓</span>
                                   <span>Verified Org</span>
                                 </span>
@@ -508,10 +508,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       {/* Ecosystem & Type */}
                       <td className="py-3.5 px-4">
                         <div className="flex flex-col space-y-1">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 w-fit">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-sans font-medium uppercase bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 w-fit">
                             {agent.sourceEcosystem.replace('_', ' ')}
                           </span>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 font-sans">
                             {agent.framework} · {agent.category}
                           </span>
                         </div>
@@ -546,13 +546,13 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                             title={`Reputation: ${dims.reputation.score}/100`}
                           />
                         </div>
-                        <div className="flex justify-between text-[9px] font-mono text-slate-400 dark:text-slate-500">
+                        <div className="flex justify-between text-[10px] font-sans text-slate-400 dark:text-slate-500">
                           <span>Id·Perm·Sec·Gov·Rep</span>
                         </div>
                       </td>
 
                       {/* Confidence */}
-                      <td className="py-3.5 px-4 text-center font-mono">
+                      <td className="py-3.5 px-4 text-center font-sans">
                         <div className="text-slate-800 dark:text-slate-200 font-semibold tabular-nums">{agent.evaluation.confidence}%</div>
                         <div className="w-12 h-1 bg-slate-200 dark:bg-slate-800 rounded-full mx-auto mt-1 overflow-hidden">
                           <div
@@ -566,7 +566,7 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex flex-col items-center">
                           <span
-                            className={`inline-block px-2.5 py-1 rounded text-xs font-mono font-bold border tabular-nums ${getScoreColor(
+                            className={`inline-block px-2.5 py-1 rounded text-xs font-sans font-bold border tabular-nums ${getScoreColor(
                               score
                             )}`}
                           >
@@ -581,11 +581,11 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                       {/* Credit Profile (Beta) */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex flex-col items-center">
-                          <div className="inline-flex items-center space-x-1 px-2 py-0.5 rounded border border-indigo-200 dark:border-indigo-800/60 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-mono text-[11px] font-bold tabular-nums">
+                          <div className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-800/60 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-sans text-xs font-bold tabular-nums">
                             <span>CR {agent.creditProfile?.creditScore ?? 75}</span>
-                            <span className="text-[9px] opacity-70">({agent.creditProfile?.creditTier ?? 'BBB'})</span>
+                            <span className="text-[10px] opacity-70">({agent.creditProfile?.creditTier ?? 'BBB'})</span>
                           </div>
-                          <div className="text-[10px] font-mono text-[#0066FF] dark:text-sky-400 mt-1 tabular-nums font-semibold">
+                          <div className="text-xs font-sans text-[#0066FF] dark:text-sky-400 mt-1 tabular-nums font-semibold">
                             ${(agent.creditProfile?.estimatedDailyCapacity ?? 5000).toLocaleString()}/day
                           </div>
                         </div>
@@ -598,10 +598,10 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
                             e.stopPropagation();
                             onSelectAgent(agent);
                           }}
-                          className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-lg text-xs font-mono font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition"
+                          className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-sans font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white bg-slate-100 dark:bg-[#0d131f] hover:bg-slate-200 dark:hover:bg-white/[0.08] border border-slate-200 dark:border-white/[0.08] transition shadow-2xs"
                         >
                           <span>Inspect</span>
-                          <ChevronRight className="w-3 h-3" />
+                          <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>
@@ -615,12 +615,12 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
 
       {/* PAGINATION BAR */}
       {totalItems > 0 && (
-        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-3.5 py-3 bg-white dark:bg-[#090d16]/80 border border-slate-200 dark:border-slate-800/80 rounded-xl text-xs font-mono shadow-sm">
+        <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 bg-white dark:bg-[#0d131f] border border-slate-200/90 dark:border-white/[0.08] rounded-2xl text-xs font-sans shadow-2xs">
           {/* Item range info */}
-          <div className="text-slate-600 dark:text-slate-400 flex items-center space-x-1.5 text-center sm:text-left">
+          <div className="text-slate-600 dark:text-slate-400 flex items-center space-x-1.5 text-center sm:text-left font-sans">
             <span>
-              Showing <strong className="text-slate-900 dark:text-slate-200 tabular-nums">{startIndex + 1}</strong>–<strong className="text-slate-900 dark:text-slate-200 tabular-nums">{endIndex}</strong> of{' '}
-              <strong className="text-slate-900 dark:text-slate-200 tabular-nums">{totalItems}</strong> agents
+              Showing <strong className="text-slate-900 dark:text-slate-100 tabular-nums">{startIndex + 1}</strong>–<strong className="text-slate-900 dark:text-slate-100 tabular-nums">{endIndex}</strong> of{' '}
+              <strong className="text-slate-900 dark:text-slate-100 tabular-nums">{totalItems}</strong> agents
             </span>
           </div>
 

@@ -2,7 +2,7 @@
 
 const QUOTA_STORAGE_KEY = 'trusty_free_queries_remaining';
 const AUTH_USER_KEY = 'trusty_authenticated_user';
-const MAX_FREE_QUERIES = 10;
+const MAX_FREE_QUERIES = 3;
 
 export interface UserSession {
   email: string | null;
@@ -37,12 +37,13 @@ export function getUserSession(): UserSession {
   }
 
   const storedQuota = localStorage.getItem(QUOTA_STORAGE_KEY);
-  const queriesRemaining = storedQuota !== null ? parseInt(storedQuota, 10) : MAX_FREE_QUERIES;
+  const parsed = storedQuota !== null ? parseInt(storedQuota, 10) : MAX_FREE_QUERIES;
+  const queriesRemaining = isNaN(parsed) ? MAX_FREE_QUERIES : Math.min(parsed, MAX_FREE_QUERIES);
 
   return {
     email: null,
     isAuthenticated: false,
-    queriesRemaining: isNaN(queriesRemaining) ? MAX_FREE_QUERIES : queriesRemaining,
+    queriesRemaining,
     maxQueries: MAX_FREE_QUERIES,
     tier: 'anonymous',
   };
@@ -87,6 +88,20 @@ export function authenticateWithEmail(email: string): UserSession {
     queriesRemaining: 999,
     maxQueries: 999,
     tier: 'community',
+  };
+}
+
+export function signOutUserSession(): UserSession {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(AUTH_USER_KEY);
+    localStorage.setItem(QUOTA_STORAGE_KEY, MAX_FREE_QUERIES.toString());
+  }
+  return {
+    email: null,
+    isAuthenticated: false,
+    queriesRemaining: MAX_FREE_QUERIES,
+    maxQueries: MAX_FREE_QUERIES,
+    tier: 'anonymous',
   };
 }
 

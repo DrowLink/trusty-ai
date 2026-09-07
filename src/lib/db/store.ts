@@ -3,6 +3,7 @@ import { SEED_AGENTS } from './seed';
 import { evaluateAgentTrust } from '../scoring/engine';
 import { evaluateAgentCredit } from '../scoring/creditEngine';
 import { fetchFirestoreAgents, saveAgentToFirestore, bulkSaveAgentsToFirestore, isFirebaseConfigured } from './firebase';
+import { fetchSupabaseAgentsWithScores, saveAgentToSupabase, bulkSaveAgentsToSupabase, ensureSupabaseSeeded, isSupabaseConfigured } from '../supabase/database';
 import fs from 'fs';
 import path from 'path';
 
@@ -57,15 +58,29 @@ class AgentTrustStore {
   }
 
   /**
-   * Asynchronously hydrates from Firestore and local cache.
-   * Called by API routes to ensure latest cloud-persisted agents are loaded.
+   * Asynchronously hydrates from Supabase (PostgreSQL) and local cache.
+   * Called by API routes to ensure latest cloud-persisted agents and reviews are loaded.
    */
-  public async hydrate(): Promise<void> {
-    if (this.isHydrated && !isFirebaseConfigured) return;
+  public async hydrate(force: boolean = false): Promise<void> {
+    if (this.isHydrated && !force && !isFirebaseConfigured && !isSupabaseConfigured) return;
 
     this.loadFromLocalCache();
 
-    if (isFirebaseConfigured) {
+    // 1. Supabase PostgreSQL priority
+    if (isSupabaseConfigured) {
+      try {
+        await ensureSupabaseSeeded();
+        const supabaseAgents = await fetchSupabaseAgentsWithScores();
+        if (supabaseAgents && supabaseAgents.length > 0) {
+          for (const agent of supabaseAgents) {
+            this.agents.set(agent.id, agent);
+          }
+          this.persistToLocalCache();
+        }
+      } catch (err) {
+        console.warn('[Store] Hydration from Supabase failed:', err);
+      }
+    } else if (isFirebaseConfigured) {
       try {
         const firestoreAgents = await fetchFirestoreAgents();
         for (const agent of firestoreAgents) {
@@ -155,21 +170,26 @@ class AgentTrustStore {
     this.agents.set(agent.id, agent);
     this.persistToLocalCache();
 
-    // Async save to Firestore if configured
-    if (isFirebaseConfigured) {
+    const evaluation = evaluateAgentTrust(agent);
+    const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
+    const fullAgent: AgentWithScore = {
+      ...agent,
+      evaluation,
+      creditProfile,
+    };
+
+    // Async save to Supabase (PostgreSQL) if configured
+    if (isSupabaseConfigured) {
+      saveAgentToSupabase(fullAgent).catch(err => {
+        console.warn(`[Store] Supabase async save error for ${agent.id}:`, err);
+      });
+    } else if (isFirebaseConfigured) {
       saveAgentToFirestore(agent).catch(err => {
         console.warn(`[Store] Firestore async save error for ${agent.id}:`, err);
       });
     }
 
-    const evaluation = evaluateAgentTrust(agent);
-    const creditProfile = evaluateAgentCredit(agent, evaluation.trustyScore);
-
-    return {
-      ...agent,
-      evaluation,
-      creditProfile,
-    };
+    return fullAgent;
   }
 
   public bulkUpsert(agents: AgentRecord[]): AgentWithScore[] {
@@ -186,7 +206,12 @@ class AgentTrustStore {
     }
     this.persistToLocalCache();
 
-    if (isFirebaseConfigured && agents.length > 0) {
+    // Bulk save to Supabase / Firestore with full reviews
+    if (isSupabaseConfigured) {
+      bulkSaveAgentsToSupabase(results).catch(err => {
+        console.warn('[Store] Supabase bulk save error:', err);
+      });
+    } else if (isFirebaseConfigured) {
       bulkSaveAgentsToFirestore(agents).catch(err => {
         console.warn('[Store] Firestore bulk save error:', err);
       });
