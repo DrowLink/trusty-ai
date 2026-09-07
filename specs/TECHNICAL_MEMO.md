@@ -1,84 +1,101 @@
 # TRUSTY.ai — Founding Technical Memo
-**Deliverable**: 2-Page Executive & Technical Brief  
+**Deliverable**: 2-Page Executive & Technical Architecture Brief  
 **Author**: Founding Senior Fullstack Engineer  
-**Date**: September 2026  
-**Target**: TRUSTY.ai Founders & Investors  
+**Date**: September 2026 (Updated to reflect Production MVP Implementation)  
+**Target**: TRUSTY.ai Founders, Technical Advisory Board & Investors  
 
 ---
 
-## 1. System Architecture & Vision
+## 1. System Architecture & Core Thesis
 
-Autonomous AI agents are accelerating toward ubiquity, acquiring privileged access to enterprise APIs, personal communication channels, credentials, and financial execution vectors. Yet, the foundational question remains unanswered at runtime: **"Can I trust this agent?"**
+The agentic revolution is shifting rapidly from informational assistance to autonomous economic execution. AI agents are being delegated corporate credit cards (Brex, Ramp), bank accounts, cloud infrastructure, and OAuth scopes to procure goods, sign agreements, and orchestrate business operations. 
 
-TRUSTY.ai delivers the first independent trust and reputation layer for the agentic web — analogous to **VirusTotal + Moody's + credit bureau for AI agents**.
+Yet, when an agent attempts to execute an action or spend capital, existing financial and security systems face two unanswered questions:
+1. **"Can I trust this agent?"** (Cybersecurity & Governance Posture)
+2. **"What is its safe financial limit?"** (Credit Bureau & Spending Envelopes)
+
+TRUSTY.ai delivers the **first independent trust and credit underwriting layer for autonomous AI agents — combining the core functions of VirusTotal + Moody's + an Autonomous Credit Bureau**.
 
 ```
-[Discovery Crawlers: GitHub | MCP | Marketplaces]
-                    ↓
-   [Normalization & Canonical Agent Schema]
-                    ↓
-[Deterministic 20-Signal Engine + Severity Overrides]
-                    ↓
- [Explainability Fabric & Cryptographic Fingerprints]
-                    ↓
-  [Trust Leaderboard & Real-Time Inspection API]
+[Ingestion & Discovery: GitHub | MCP Registries | Marketplaces | Live AST Scanner]
+                                      ↓
+           [Normalization, Dependency Extraction & Cryptographic Fingerprinting]
+                                      ↓
+      ┌───────────────────────────────────────────────────────────────┐
+      │                   Dual-Engine Intelligence Core               │
+      │  1. 20-Signal Trust Evaluator (5 Dimensions + Circuit Overrides)│
+      │  2. Agentic Credit Bureau (12 Day-0 Signals + 20 Behavioral)  │
+      └───────────────────────────────────────────────────────────────┘
+                                      ↓
+[Real-Time M2M Decision Clearing Gateway (/api/decision: Visa | Stripe | Brex | Plaid)]
+                                      ↓
+         [Leaderboard UI, Dynamic SVG Badges & Developer REST APIs]
 ```
 
-The system is architected as a high-throughput, edge-deployable fullstack application (Next.js App Router, React, TypeScript, TailwindCSS) designed for zero-friction deployment to Vercel and serverless architectures.
+The system is deployed as a high-throughput, edge-deployable fullstack application (Next.js 14 App Router, React, TypeScript, Tailwind CSS) with zero required external paid API keys.
 
 ---
 
-## 2. Discovery Methodology & Data Sources
+## 2. Ingestion, Crawling & Live AST Repository Scanning
 
-Rather than relying on static, hand-curated directories, TRUSTY.ai ingests agents dynamically from **three primary public ecosystems**:
-
-1. **GitHub Repositories & Manifests**:
-   - Continuous scanning across repository topics (`ai-agent`, `mcp-server`, `crewai`, `langchain`, `autogen`).
-   - Deep inspection of configuration manifests (`agent.json`, `tool-manifest.json`, `package.json`, `pyproject.toml`).
-   - Extraction of code commit activity, contributor velocity, security workflows, and dependency lockfiles.
-
-2. **Model Context Protocol (MCP) Registries & Hubs**:
-   - Direct integration with open MCP registry indexes and tools (Smithery, PulseMCP).
-   - Ingestion of JSON-RPC protocol declarations (`tools/list`, `resources/list`, argument schemas, and capability grants).
-
-3. **AI Agent Marketplaces & Community Frameworks**:
-   - Ingestion of public registries including Hugging Face Agent Spaces and CrewAI Tool Repositories.
-   - Analysis of stated natural language capability descriptions against actual technical integrations (Slack, Gmail, Stripe, AWS, Databases).
+Rather than relying on static directories, TRUSTY.ai ingests agents dynamically:
+1. **GitHub Repositories & Manifests**: Queries repository topics (`ai-agent`, `mcp-server`, `crewai`, `langchain`, `autogen`), extracting stars, commits, licenses, and dependency lockfiles.
+2. **Model Context Protocol (MCP) Registries**: Direct ingestion of open registries (Smithery, PulseMCP, NPM `@modelcontextprotocol`), parsing JSON-RPC tool signatures (`tools/list`, parameters, capabilities).
+3. **Agent Marketplaces**: Hugging Face Spaces and CrewAI registries, cross-referencing natural language capability claims with actual integration scopes.
+4. **Live Code AST Scanner (`POST /api/scan-repo`)**: Users can input any public GitHub URL to inspect source code AST patterns (`subprocess`, `os.system`, `eval`, `requests`, `boto3`, `stripe`), fetching raw files directly to bypass GitHub rate limits without downloading entire repositories.
 
 ---
 
-## 3. Scoring Methodology & Explainability
+## 3. Dual-Engine Intelligence Core
 
-A numerical score is useless if it is opaque. TRUSTY.ai models trust across **20 explicit signals** distributed across **5 weighted dimensions**:
+### 3.1. Deterministic Trust & Security Engine (0–100 Score)
+Evaluates **20 concrete signals** across **5 weighted dimensions**:
+- **Permissions & Data Governance (30%)**: Scope minimization, least-privilege alignment, data retention transparency.
+- **Identity & Provenance (25%)**: Publisher verification, DNS ownership, package signing, source code provenance.
+- **Security Posture (25%)**: Dependency CVEs, KMS/vault secret handling, microVM sandboxing, prompt-injection guardrails.
+- **Behavior & Governance (10%)**: Structured tamper-evident audit logs, human approval gates for destructive writes.
+- **Reputation & Incidents (10%)**: Absence of malware flags, security incident track record, enterprise adoption.
 
-1. **Permissions & Data Governance (30%)**: Evaluates permission scope, data minimization, and least-privilege alignment (e.g. flagging a calendar agent that requests Gmail inbox dump access).
-2. **Identity & Provenance (25%)**: Publisher identity verification, domain DNS linkage, package signing, and source code provenance.
-3. **Security Posture (25%)**: Dependency vulnerability history, secret handling, sandboxing evidence (gVisor, Docker, WASM), and prompt-injection resilience.
-4. **Behavior & Governance (10%)**: Structured audit logging, human-in-the-loop gates for destructive tasks, and policy adherence.
-5. **Reputation & Incidents (10%)**: Absence of scam reports, malware signatures, CVE response history, and ecosystem track record.
+**Mathematical Circuit Breakers**: Bypasses weighted averages when existential threats are detected — confirmed malware caps scores at **0**, credential theft risks cap scores at **10**, and unsandboxed terminal execution caps scores at **25** (`CRITICAL_RISK`). Missing telemetry mathematically penalizes confidence ($C < 60\%$ bounds maximum allowable score).
 
-### Mathematical Innovations:
-- **Hard Severity Overrides (Circuit Breakers)**: Indicators such as confirmed credential exfiltration or unsandboxed remote code execution immediately cap the score to **0–25 (Critical Risk)**, bypassing averages.
-- **Confidence Metric & Uncertainty Penalty**: Agents with missing or untestable evidence receive a lower confidence rating, which mathematically restricts their maximum attainable trust score.
-- **Human-First Explainability Engine**: Every score produces a synthesized rationale detailing exact verified positives (✓), risk warnings (⚠), and missing data flags (❓).
-
----
-
-## 4. Biggest Technical Limitations (Current MVP)
-
-1. **Static Analysis vs Runtime Sandboxing**: The current MVP performs static manifest analysis, code inspection, and ecosystem telemetry. While highly accurate for declared scopes, dynamic adversarial agents might obfuscate runtime payloads until triggered.
-2. **Rate Limits & Authenticated Ecosystem Access**: High-frequency querying of GitHub search APIs and marketplace endpoints requires rotational proxy pools and enterprise token pools at planetary scale.
-3. **Evolving Agent Standards**: Because formats vary (MCP JSON-RPC vs CrewAI YAML vs LangChain tools), continuous maintenance of ingestion parsers is required until universal agent manifest standards (e.g. IEEE/W3C agent standards) crystallize.
+### 3.2. Agentic Credit Bureau & Financial Underwriting (Tiers AAA to SUBPRIME_D)
+- **12 Day-Zero Public Signals**: Evaluates cold-start agents before their first live transaction using verifiable public evidence (publisher identity, domain age, GitHub velocity, release history, CVEs, malware scans, code safeguards, and governance gates).
+- **20 Behavioral Telemetry Signals**: For active agents (e.g. `ProcurementBot-847`), tracks live operating metrics: transactions attempted/completed, total AVUD (Agentic Volume Under Decision), decline rates, chargeback rates (<0.05% strict ceiling), human override rates, budget breach attempts, and counterparty outcomes.
+- **Credit Tiers & Spending Envelopes**:
+  - **AAA ($50k/day)**: Super-prime enterprise agent (Dual-custody, verified org, 180+ days clean telemetry).
+  - **AA ($25k/day)**: Prime corporate agent (ProcurementBot-847, $4.1M+ AVUD, 0% chargebacks).
+  - **A ($15k/day) / BBB ($5k/day) / BB ($1.5k/day) / B ($500/day)**: Calibrated operational tiers.
+  - **SUBPRIME_D ($0/day)**: Blocked due to severe security compromise or trust score < 30.
 
 ---
 
-## 5. What We Would Build Next (Product Roadmap)
+## 4. Machine-to-Machine Clearing Gateway (`POST /api/decision`)
 
-1. **Dynamic Sandboxed Execution Engine ("Agent Detonation Chamber")**:
-   - Spin up ephemeral microVMs (Firecracker / gVisor) to run the agent against honey-tokens and synthetic environments, monitoring real-time outbound HTTP requests, syscalls, and prompt-injection resistance.
-2. **TRUSTY Guard Interceptor SDK & MCP Proxy**:
-   - A drop-in reverse proxy for MCP clients (Claude Desktop, Cursor, LangChain) that intercepts tool calls at runtime: *“TRUSTY.ai blocked this tool call: agent attempted to access /etc/shadow or send email without user approval.”*
-3. **Continuous Cryptographic Drift Daemon**:
-   - Automated continuous webhook ingestion that re-evaluates indexed agents on every Git push or schema change, immediately notifying connected enterprises if a trusted agent turns rogue.
-4. **Enterprise Trust Policies**:
-   - Enable CISOs to set custom compliance rules: *“Only allow agents with TRUSTY Score >= 85 and verified corporate identity.”*
+Acting as a sub-30ms clearing gate for payment rails (Visa, Stripe, Brex, Plaid), the decision engine evaluates financial requests against organizational policy envelopes:
+- Enforces 5 automated policy gates: Cybersecurity Hard Gate $\rightarrow$ Amount Validation $\rightarrow$ Daily Velocity Capacity (AVUD) $\rightarrow$ Single-Transaction Autonomous Ceiling $\rightarrow$ Human Approval Enforcement.
+- Returns deterministic clearing decisions: `APPROVED`, `DECLINED`, or `HUMAN_REVIEW` with structured audit trails.
+
+---
+
+## 5. Persistence, State & Badging Architecture
+
+- **Hybrid Storage Layer (`src/lib/db/store.ts`)**: Primary persistence via Firebase Firestore with automatic in-memory fallback for zero-config deployments, paired with client-side `localStorage` caching (`clientStorage.ts`).
+- **Cryptographic Drift Detection (`/api/agents/sync`)**: Computes SHA-256 composite hashes (Manifest + Tools + Permissions + Dependencies). Hash mismatches flag code drift and trigger automated score re-evaluations.
+- **Dynamic SVG Trust Badges (`/api/badge/:slug`)**: Embeddable live badges showing real-time Trust and Credit scores for GitHub READMEs and marketplace profiles.
+- **Usage & Quota Controller (`src/lib/quota.ts`)**: Multi-tier access management (Anonymous 10 evaluations, Community, and Enterprise API keys).
+
+---
+
+## 6. Technical Limitations & Future Engineering Roadmap
+
+### Current MVP Limitations:
+1. **Static AST vs Dynamic MicroVM Sandboxing**: The current AST inspection analyzes manifests and source files. Sophisticated adversaries might dynamically fetch payloads at runtime from unlisted IP addresses.
+2. **Ecosystem Token Rate Limits**: Crawling hundreds of thousands of repositories requires enterprise token rotations and distributed proxy networks at scale.
+
+### Product & Engineering Roadmap:
+1. **Dynamic Sandboxed Execution ("Agent Detonation Chamber")**:
+   - Spin up ephemeral Firecracker microVMs to execute agent tool calls against honeypot environments, monitoring outbound socket syscalls and prompt-injection resilience.
+2. **TRUSTY Guard Interceptor SDK & MCP Reverse Proxy**:
+   - A drop-in proxy for Claude Desktop, Cursor, and LangChain that intercepts tool calls at runtime, rejecting unauthorized terminal or financial executions.
+3. **Continuous Webhook Daemons**:
+   - Real-time Git push webhooks that immediately re-evaluate indexed agents, alerting connected enterprises within seconds if an update introduces behavioral drift.

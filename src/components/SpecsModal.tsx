@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, BookOpen, Layers, Radar, Cpu, Activity, FileText } from 'lucide-react';
+import { X, BookOpen, Layers, Radar, Cpu, Activity, FileText, CreditCard } from 'lucide-react';
 
 interface SpecsModalProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface SpecsModalProps {
 }
 
 export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'memo' | 'arch' | 'discovery' | 'scoring' | 'monitoring'>('memo');
+  const [activeTab, setActiveTab] = useState<'memo' | 'scoring' | 'credit' | 'discovery' | 'monitoring' | 'arch'>('memo');
 
   if (!isOpen) return null;
 
@@ -24,7 +24,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h3 className="text-sm sm:text-base font-bold text-zinc-100 font-mono">TRUSTY.ai Engineering Specifications</h3>
-              <p className="text-[11px] text-zinc-500 font-sans">Formal architecture specs and founding technical memo</p>
+              <p className="text-[11px] text-zinc-500 font-sans">Formal architecture specs, credit bureau underwriting, and founding technical memo</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1 text-zinc-500 hover:text-zinc-200">
@@ -55,7 +55,19 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             }`}
           >
             <Radar className="w-3.5 h-3.5" />
-            <span>SPEC-003: Scoring Engine</span>
+            <span>SPEC-003: Trust Engine</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('credit')}
+            className={`py-2.5 px-3 border-b-2 font-medium flex items-center space-x-1.5 whitespace-nowrap transition ${
+              activeTab === 'credit'
+                ? 'border-emerald-400 text-emerald-400 bg-emerald-950/20'
+                : 'border-transparent text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            <span>SPEC-005: Credit Bureau & M2M API</span>
           </button>
 
           <button
@@ -67,7 +79,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             }`}
           >
             <Cpu className="w-3.5 h-3.5" />
-            <span>SPEC-002: Discovery Engine</span>
+            <span>SPEC-002: Discovery & AST Scan</span>
           </button>
 
           <button
@@ -104,36 +116,36 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
                   TRUSTY.ai — Founding Technical Memo
                 </h4>
                 <p className="text-zinc-300">
-                  Autonomous AI agents are accelerating toward ubiquity, acquiring privileged access to enterprise APIs, personal communication channels, credentials, and financial execution vectors. Before clicking <strong>“START AGENT”</strong> or granting access to Gmail, Google Drive, Slack, Bank Accounts, or Company Data, users and organizations need an independent, explainable answer to: <strong>“Can I trust this agent?”</strong>
+                  Autonomous AI agents are accelerating toward ubiquity, acquiring privileged access to enterprise APIs, personal communication channels, credentials, and financial execution vectors (Brex, Stripe, Visa). Before clicking <strong>“START AGENT”</strong> or delegating corporate credit cards, organizations need an independent, explainable answer to: <strong>“Can I trust this agent, and what is its safe financial limit?”</strong>
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
-                  <h5 className="font-semibold text-emerald-400 font-mono mb-1.5">1. Discovery Architecture</h5>
+                  <h5 className="font-semibold text-emerald-400 font-mono mb-1.5">1. Discovery & Live AST Scan</h5>
                   <p className="text-zinc-400 text-[11px] leading-relaxed">
-                    Crawls 3 diverse ecosystems: GitHub open-source repositories (search API + topic inspection), Model Context Protocol official registries (JSON-RPC tool declarations), and AI Agent Marketplaces (Hugging Face Spaces & CrewAI Hub). Rejects static manual curation.
+                    Crawls 3 diverse ecosystems (GitHub, MCP registry on NPM, and Agent Marketplaces) + live on-demand AST code scanning (<code>POST /api/scan-repo</code>) bypassing GitHub rate limits to inspect imports (<code>subprocess</code>, <code>stripe</code>, <code>boto3</code>) and manifests.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
-                  <h5 className="font-semibold text-emerald-400 font-mono mb-1.5">2. Scoring & Overrides</h5>
+                  <h5 className="font-semibold text-emerald-400 font-mono mb-1.5">2. Dual-Engine Intelligence Core</h5>
                   <p className="text-zinc-400 text-[11px] leading-relaxed">
-                    20 signals across 5 dimensions (Permissions 30%, Identity 25%, Security 25%, Governance 10%, Reputation 10%). Critical triggers (malware, unsandboxed root exec, credential theft) immediately override averages to cap scores at 0–25 (Critical Risk).
+                    Combines a 20-signal Trust & Security Engine (Permissions 30%, Identity 25%, Security 25%, Gov 10%, Rep 10% with circuit-breaker overrides) with an Agentic Credit Bureau (12 Day-0 signals + 20 behavioral signals, establishing Tiers AAA through D).
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
-                  <h5 className="font-semibold text-amber-400 font-mono mb-1.5">3. Technical Limitations</h5>
+                  <h5 className="font-semibold text-amber-400 font-mono mb-1.5">3. M2M Decision Clearing Gateway</h5>
                   <p className="text-zinc-400 text-[11px] leading-relaxed">
-                    Static manifest analysis cannot detect adversarial payloads delayed at runtime. Next phase requires dynamic microVM sandboxing (gVisor detonation chamber) to monitor runtime network telemetry and syscalls.
+                    Real-time clearing endpoint (<code>POST /api/decision</code>) evaluating transactions across 5 automated policy gates in sub-30ms, returning <code>APPROVED</code>, <code>DECLINED</code>, or <code>HUMAN_REVIEW</code> with AVUD allocation.
                   </p>
                 </div>
 
                 <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
-                  <h5 className="font-semibold text-zinc-300 font-mono mb-1.5">4. Roadmap: TRUSTY Guard</h5>
+                  <h5 className="font-semibold text-zinc-300 font-mono mb-1.5">4. Continuous Fingerprint Drift</h5>
                   <p className="text-zinc-400 text-[11px] leading-relaxed">
-                    Drop-in reverse proxy interceptor for Claude Desktop, Cursor, and LangChain that blocks dangerous tool calls in real-time, plus continuous webhook re-evaluations on Git push.
+                    Cryptographic composite hashes (SHA-256 Manifest + Tools + Permissions + Dependencies) updated continuously via <code>/api/agents/sync</code>, triggering automated re-evaluations and limit throttling when regressions occur.
                   </p>
                 </div>
               </div>
@@ -144,7 +156,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             <div className="space-y-4">
               <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
                 <h4 className="text-sm font-bold text-zinc-100 font-mono mb-1">
-                  SPEC-003: 20-Signal Evaluation Matrix
+                  SPEC-003: 20-Signal Deterministic Trust Engine
                 </h4>
                 <p className="text-zinc-400">
                   Every score is explainable and rejects simple arithmetic averaging when critical risk factors are present.
@@ -157,34 +169,132 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
                     <tr>
                       <th className="p-2.5">Dimension</th>
                       <th className="p-2.5">Weight</th>
-                      <th className="p-2.5">Signals Evaluated</th>
+                      <th className="p-2.5">Signals Evaluated & Key Rule</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.06] text-zinc-300 font-mono">
                     <tr>
                       <td className="p-2.5 text-emerald-400 font-semibold">1. Permissions & Data</td>
                       <td className="p-2.5 font-bold">30%</td>
-                      <td className="p-2.5 text-zinc-400 font-sans">Scope volume, least-privilege alignment to category, data minimization, retention transparency</td>
+                      <td className="p-2.5 text-zinc-400 font-sans">Scope volume, least-privilege alignment to category, data minimization, retention transparency. High-risk scope triggers override.</td>
                     </tr>
                     <tr>
                       <td className="p-2.5 text-zinc-300 font-semibold">2. Identity & Provenance</td>
                       <td className="p-2.5 font-bold">25%</td>
-                      <td className="p-2.5 text-zinc-400 font-sans">Publisher identity verification, domain DNS ownership, package provenance, signing/version integrity</td>
+                      <td className="p-2.5 text-zinc-400 font-sans">Publisher identity verification, domain DNS ownership, package provenance, cryptographic signing integrity.</td>
                     </tr>
                     <tr>
                       <td className="p-2.5 text-zinc-300 font-semibold">3. Security Posture</td>
                       <td className="p-2.5 font-bold">25%</td>
-                      <td className="p-2.5 text-zinc-400 font-sans">Vulnerability/CVE history, secret handling, sandboxing/isolation evidence, prompt-injection resilience</td>
+                      <td className="p-2.5 text-zinc-400 font-sans">Vulnerability/CVE history, KMS/Vault secret handling, sandboxing evidence, prompt-injection guardrails.</td>
                     </tr>
                     <tr>
                       <td className="p-2.5 text-zinc-300 font-semibold">4. Behavior & Governance</td>
                       <td className="p-2.5 font-bold">10%</td>
-                      <td className="p-2.5 text-zinc-400 font-sans">Structured tamper-evident logs, human approval for writes, policy consistency, behavioral drift rate</td>
+                      <td className="p-2.5 text-zinc-400 font-sans">Structured tamper-evident logs, human approval for writes, policy consistency, behavioral drift rate.</td>
                     </tr>
                     <tr>
                       <td className="p-2.5 text-zinc-300 font-semibold">5. Reputation & Incidents</td>
                       <td className="p-2.5 font-bold">10%</td>
-                      <td className="p-2.5 text-zinc-400 font-sans">Scam/abuse reports, security incident history, user adoption evidence, publisher ecosystem track record</td>
+                      <td className="p-2.5 text-zinc-400 font-sans">Scam/abuse reports, security incident history, user adoption evidence, publisher ecosystem track record.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="p-3 rounded bg-red-950/20 border border-red-900/30 text-[11px] text-zinc-400">
+                <strong className="text-red-400 font-mono">Hard Severity Overrides (Circuit Breakers):</strong> Confirmed malware caps score to 0; Credential theft caps to 10; Unsandboxed host shell execution without human gate caps to 25. Confidence &lt;60% mathematically caps score at 50 + (C × 0.5).
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'credit' && (
+            <div className="space-y-4">
+              <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
+                <h4 className="text-sm font-bold text-zinc-100 font-mono mb-1">
+                  SPEC-005: Agentic Credit Bureau & Autonomous Decision Engine
+                </h4>
+                <p className="text-zinc-400">
+                  Establishes institutional credit ratings (AAA to SUBPRIME_D) and daily spending limits for autonomous agents, backed by real-time clearing via <code>POST /api/decision</code>.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded bg-zinc-950 border border-white/[0.08]">
+                  <h5 className="font-semibold text-emerald-400 font-mono mb-1">12 Day-Zero Signals</h5>
+                  <p className="text-zinc-400 text-[11px]">
+                    Underwrites cold-start agents before live transactions: Publisher identity, domain age, GitHub velocity, release history, CVEs, permissions sensitivity, malware scans, incident history, human approval gates, audit logging, marketplace reputation, and adoption instances.
+                  </p>
+                </div>
+
+                <div className="p-3 rounded bg-zinc-950 border border-white/[0.08]">
+                  <h5 className="font-semibold text-emerald-400 font-mono mb-1">20 Behavioral Telemetry Signals</h5>
+                  <p className="text-zinc-400 text-[11px]">
+                    Mature operating ledger: transactions attempted/completed, total AVUD processed ($4.1M+ for ProcurementBot-847), decline rates, dispute/chargeback rate (&lt;0.05% strict ceiling), human override rate, budget breach attempts, and treasury auto-sweep settlement.
+                  </p>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-[11px] border border-white/[0.08] rounded overflow-hidden">
+                  <thead className="bg-zinc-950 text-zinc-500 font-mono uppercase">
+                    <tr>
+                      <th className="p-2">Tier</th>
+                      <th className="p-2">Score</th>
+                      <th className="p-2">Daily Limit</th>
+                      <th className="p-2">Autonomous Cap</th>
+                      <th className="p-2">Human Gate</th>
+                      <th className="p-2">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/[0.06] text-zinc-300 font-mono">
+                    <tr>
+                      <td className="p-2 text-purple-400 font-bold">AAA</td>
+                      <td className="p-2">92–100</td>
+                      <td className="p-2 font-semibold text-emerald-400">$50,000/day</td>
+                      <td className="p-2">$10,000</td>
+                      <td className="p-2">&gt; $10,000</td>
+                      <td className="p-2 text-zinc-400 font-sans">Super-Prime Institutional</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2 text-purple-400 font-bold">AA</td>
+                      <td className="p-2">84–91</td>
+                      <td className="p-2 font-semibold text-emerald-400">$25,000/day</td>
+                      <td className="p-2">$5,000</td>
+                      <td className="p-2">&gt; $5,000</td>
+                      <td className="p-2 text-zinc-400 font-sans">Prime Corporate (ProcurementBot)</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2 text-blue-400 font-bold">A</td>
+                      <td className="p-2">74–83</td>
+                      <td className="p-2 font-semibold text-emerald-400">$15,000/day</td>
+                      <td className="p-2">$3,000</td>
+                      <td className="p-2">&gt; $3,000</td>
+                      <td className="p-2 text-zinc-400 font-sans">Verified Commercial</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2 text-blue-400 font-bold">BBB</td>
+                      <td className="p-2">64–73</td>
+                      <td className="p-2 font-semibold text-emerald-400">$5,000/day</td>
+                      <td className="p-2">$1,000</td>
+                      <td className="p-2">&gt; $1,000</td>
+                      <td className="p-2 text-zinc-400 font-sans">Standard Open-Source Baseline</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2 text-amber-400 font-bold">BB / B</td>
+                      <td className="p-2">40–63</td>
+                      <td className="p-2 font-semibold text-amber-400">$500–$1,500/day</td>
+                      <td className="p-2">$100–$300</td>
+                      <td className="p-2">&gt; $100–$300</td>
+                      <td className="p-2 text-zinc-400 font-sans">Thin File / Supervised</td>
+                    </tr>
+                    <tr>
+                      <td className="p-2 text-rose-500 font-bold">SUBPRIME_D</td>
+                      <td className="p-2">&lt;40</td>
+                      <td className="p-2 font-semibold text-rose-500">$0/day</td>
+                      <td className="p-2">$0</td>
+                      <td className="p-2">All Blocked</td>
+                      <td className="p-2 text-rose-400 font-sans">Security Blocked / Revoked</td>
                     </tr>
                   </tbody>
                 </table>
@@ -196,16 +306,18 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             <div className="space-y-4">
               <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
                 <h4 className="text-sm font-bold text-zinc-100 font-mono mb-2">
-                  SPEC-002: Multi-Source Crawling Architecture
+                  SPEC-002: Multi-Source Crawling & Live AST Scanner
                 </h4>
                 <p className="text-zinc-400">
-                  Ingests agents from 3 independent ecosystems, extracts manifests, and computes canonical agent records.
+                  Ingests agents from 3 independent ecosystems + live on-demand AST code scanning of any public GitHub repository.
                 </p>
               </div>
               <ul className="list-disc pl-5 space-y-2 text-zinc-300 font-sans">
                 <li><strong className="text-zinc-200">GitHub Open Source:</strong> Queries topics <code>ai-agent</code>, <code>mcp-server</code>, extracting stars, open issues, commit frequency, and license.</li>
                 <li><strong className="text-zinc-200">MCP Registry:</strong> Ingests Anthropic Model Context Protocol servers on NPM, parsing JSON-RPC tools and capabilities.</li>
                 <li><strong className="text-zinc-200">Agent Marketplaces:</strong> Crawls Hugging Face Spaces and CrewAI agent registries, cross-referencing natural language descriptions with actual external API scopes.</li>
+                <li><strong className="text-emerald-400">Live AST Code Scanner (<code>POST /api/scan-repo</code>):</strong> Fetches raw GitHub content to bypass rate limits, parses <code>package.json</code>, <code>pyproject.toml</code>, and detects hazardous imports (<code>subprocess</code>, <code>eval</code>, <code>stripe</code>, <code>boto3</code>).</li>
+                <li><strong className="text-zinc-200">Permission Translator:</strong> Converts low-level calls into human-labeled security scopes with plain-English impact ratings and access types.</li>
               </ul>
             </div>
           )}
@@ -221,7 +333,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
                 </p>
               </div>
               <p className="text-zinc-300">
-                TRUSTY.ai generates a cryptographic composite hash (Manifest + Tool Schemas + Requested Permissions + Dependencies Lockfile). When a periodic crawl or webhook detects a mismatch, a drift event is recorded and the TRUSTY Score is automatically re-evaluated.
+                TRUSTY.ai generates a cryptographic composite hash (SHA-256 of Manifest + Tool Schemas + Requested Permissions + Dependencies Lockfile). When a periodic crawl or background sync (<code>/api/agents/sync</code>) detects a mismatch, <code>isDriftDetected</code> is flagged, the TRUSTY Score is recalculated, and financial limits are automatically throttled.
               </p>
             </div>
           )}
@@ -230,10 +342,10 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
             <div className="space-y-4">
               <div className="p-3.5 rounded bg-zinc-950 border border-white/[0.08]">
                 <h4 className="text-sm font-bold text-zinc-100 font-mono mb-2">
-                  SPEC-001: Architecture Overview
+                  SPEC-001: Production Architecture Overview
                 </h4>
                 <p className="text-zinc-400">
-                  High-throughput, edge-deployable fullstack application built on Next.js 14 App Router, TypeScript, React, and Tailwind CSS. Zero external paid dependencies required.
+                  Fullstack system built on Next.js 14 App Router, TypeScript, React, and Tailwind CSS. Features hybrid persistence (Firebase Firestore + in-memory store + client-side localStorage sync), sub-30ms financial clearing, dynamic SVG badges, and quota tracking.
                 </p>
               </div>
             </div>
@@ -242,7 +354,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
 
         {/* Footer */}
         <div className="p-3.5 sm:p-4 border-t border-white/[0.08] bg-zinc-950 flex justify-between items-center text-xs text-zinc-500 font-mono">
-          <span>All markdown spec files available in repository <code>/specs/</code> folder</span>
+          <span>All 5 markdown spec files and Technical Memo available in repository <code>/specs/</code> folder</span>
           <button onClick={onClose} className="px-3 py-1 rounded bg-zinc-900 border border-white/[0.08] text-zinc-300 hover:text-white">
             Close
           </button>
