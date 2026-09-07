@@ -191,12 +191,19 @@ export default function HomePage() {
     }
   };
 
+  const handleTabChange = (tab: ActiveProductTab | string) => {
+    setActiveTab(tab as ActiveProductTab);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  };
+
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-transparent font-sans">
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         onOpenSpecs={() => setIsSpecsOpen(true)}
         onOpenAuth={() => {
           setAuthInitialMode('signin');
@@ -227,11 +234,11 @@ export default function HomePage() {
                 setIsQuotaExceeded(false);
                 setIsAuthOpen(true);
               }}
-              onNavigateTab={setActiveTab}
+              onNavigateTab={handleTabChange}
             />
 
             <BrexStyleLandingSections 
-              onSelectProduct={setActiveTab} 
+              onSelectProduct={handleTabChange} 
               onAuditAgent={() => setIsEvaluateOpen(true)} 
             />
 
@@ -278,8 +285,8 @@ export default function HomePage() {
           <div className="animate-fadeIn">
             <BusinessAndPricingView
               onSelectTier={(tier) => {
-                if (tier === 'FREE') setActiveTab('bureau');
-                else if (tier === 'DECISION' || tier === 'API') setActiveTab('decision_api');
+                if (tier === 'FREE') handleTabChange('bureau');
+                else if (tier === 'DECISION' || tier === 'API') handleTabChange('decision_api');
               }}
             />
           </div>
@@ -314,42 +321,42 @@ export default function HomePage() {
 
           <div className="flex flex-wrap items-center justify-center gap-3.5 text-xs text-slate-600 dark:text-slate-400">
             <button
-              onClick={() => setActiveTab('bureau')}
+              onClick={() => handleTabChange('bureau')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'bureau' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Directory
             </button>
             <span>•</span>
             <button
-              onClick={() => setActiveTab('decision_api')}
+              onClick={() => handleTabChange('decision_api')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'decision_api' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Decision Gateway (M2M)
             </button>
             <span>•</span>
             <button
-              onClick={() => setActiveTab('economics')}
+              onClick={() => handleTabChange('economics')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'economics' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Economic Case
             </button>
             <span>•</span>
             <button
-              onClick={() => setActiveTab('underwriting')}
+              onClick={() => handleTabChange('underwriting')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'underwriting' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Underwriting
             </button>
             <span>•</span>
             <button
-              onClick={() => setActiveTab('pricing')}
+              onClick={() => handleTabChange('pricing')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'pricing' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Pricing
             </button>
             <span>•</span>
             <button
-              onClick={() => setActiveTab('moat')}
+              onClick={() => handleTabChange('moat')}
               className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'moat' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Moat

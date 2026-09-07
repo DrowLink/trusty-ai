@@ -101,8 +101,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
     {
       name: 'ENTERPRISE',
       tagline: 'Enterprise ARR',
-      price: '$25K–$500K+',
-      period: '/ year',
+      price: 'Contact',
+      period: '',
       description: 'Full portfolio monitoring, organization policy enforcement, custom risk rules, and dedicated rails.',
       features: [
         'Unlimited portfolio monitoring',
@@ -120,7 +120,7 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12 sm:space-y-16 font-sans">
       {/* 1. Header (Slide 7 exact) */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
         <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-white/[0.08] text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
@@ -152,8 +152,9 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
             }`}
           >
             {tier.highlighted && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#0066FF] text-white font-mono text-[9px] font-bold uppercase tracking-wider shadow-sm">
-                Fintech Decision Rail
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#0066FF] to-blue-600 text-white font-sans text-[11px] font-bold tracking-tight shadow-md shadow-blue-500/20 whitespace-nowrap flex items-center space-x-1.5">
+                <Sparkles className="w-3 h-3 text-sky-200" />
+                <span>Fintech Decision Rail</span>
               </div>
             )}
 
@@ -169,9 +170,11 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
                   <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 dark:text-white">
                     {tier.price}
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-500">
-                    {tier.period}
-                  </span>
+                  {tier.period && (
+                    <span className="text-[11px] font-mono text-slate-500 dark:text-slate-500">
+                      {tier.period}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -217,7 +220,7 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       </div>
 
       {/* 4. The Two Monetization Pillars (Lookup vs Decision from ROI Deck) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 pb-12 sm:pb-16">
         <div className="p-6 rounded-2xl bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-3 interactive-lift">
           <div className="flex items-center space-x-2 text-sky-600 dark:text-sky-400 font-mono text-xs uppercase font-bold">
             <Cpu className="w-4 h-4" />

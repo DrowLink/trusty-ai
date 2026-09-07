@@ -61,7 +61,7 @@ export const UnderwritingExplainer: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 space-y-10 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12 font-sans">
       {/* HEADER */}
       <div className="border-b border-slate-200 dark:border-slate-800/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>

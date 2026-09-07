@@ -13,7 +13,8 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronsLeft,
-  ChevronsRight
+  ChevronsRight,
+  ShieldCheck
 } from 'lucide-react';
 
 function generatePageNumbers(current: number, total: number): (number | string)[] {
@@ -188,7 +189,30 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-5">
+    <section id="directory" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-8 font-sans scroll-mt-24">
+      {/* Minimalist Section Header */}
+      <div className="mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-slate-200/80 dark:border-white/[0.06]">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div>
+            <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800/60 text-[10px] sm:text-[11px] font-mono text-[#0066FF] dark:text-sky-400 font-semibold mb-2">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>OFFICIAL DIRECTORY</span>
+            </div>
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-950 dark:text-white">
+              Agent Trust &amp; Credit Directory
+            </h2>
+            <p className="font-sans text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1.5 max-w-2xl leading-relaxed">
+              Real-time database of evaluated AI agents, deterministic 0–100 security scores, and authorized credit lines.
+            </p>
+          </div>
+
+          <div className="flex items-center space-x-2 text-[11px] sm:text-xs font-mono text-slate-500 dark:text-slate-400">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{agents.length} underwritten agents</span>
+          </div>
+        </div>
+      </div>
+
       {/* Category Segmented Control Bar */}
       <div className="flex items-center space-x-1.5 border-b border-slate-200 dark:border-slate-800/80 pb-2.5 mb-3 overflow-x-auto no-scrollbar">
         <button
@@ -711,6 +735,6 @@ export const TrustLeaderboard: React.FC<TrustLeaderboardProps> = ({
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };

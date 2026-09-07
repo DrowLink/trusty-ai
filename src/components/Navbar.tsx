@@ -91,12 +91,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     onTabChange(id);
     setIsDropdownOpen(false);
     setIsMobileMenuOpen(false);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   };
 
   return (
     <header className={`sticky top-0 z-50 w-full bg-white dark:bg-[#0d131f] border-b border-slate-200/80 dark:border-white/[0.08] transition-colors ${!isMobileMenuOpen ? 'bg-white/95 dark:bg-[#0d131f]/95 backdrop-blur-md' : ''}`}>
       {/* 1. TOP ANNOUNCEMENT BANNER */}
-      <div className="bg-[#090d16] text-slate-200 text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 text-center font-medium border-b border-white/[0.06] flex items-center justify-center gap-2">
+      <div className="bg-[#090d16] text-slate-200 text-[11px] sm:text-xs py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium border-b border-white/[0.06] flex items-center justify-center gap-2">
         <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider bg-white/[0.1] text-sky-300 px-2 py-0.5 rounded font-semibold">
           LIVE RAIL
         </span>
@@ -114,10 +117,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* 2. MAIN HEADER BAR */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-[70px] flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[72px] flex items-center justify-between gap-3 sm:gap-4">
         
         {/* Left Section: Mobile Hamburger + Logo + Desktop Nav */}
-        <div className="flex items-center space-x-2.5 sm:space-x-8">
+        <div className="flex items-center space-x-3.5 sm:space-x-8">
           
           {/* Mobile Hamburger Toggle (Left side) */}
           <button
@@ -130,14 +133,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* TRUSTY.bot Brand Lockup */}
           <div 
-            className="flex items-center space-x-2 sm:space-x-2.5 cursor-pointer select-none flex-shrink-0 group"
+            className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none flex-shrink-0 group py-1"
             onClick={() => handleSelectTab('bureau')}
           >
             <div className="relative group-hover:scale-105 transition-transform duration-200 flex-shrink-0">
               <TrustyIsotype className="w-6 h-6 sm:w-8 sm:h-8 drop-shadow-sm" />
             </div>
 
-            <div className="flex flex-col justify-center -space-y-0.5">
+            <div className="flex flex-col justify-center space-y-0.5">
               <div className="flex items-baseline leading-none">
                 <span className="text-[15px] sm:text-lg font-black tracking-tight text-slate-950 dark:text-white font-sans">
                   TRUSTY

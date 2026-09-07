@@ -49,7 +49,7 @@ export const EconomicCaseView: React.FC<EconomicCaseViewProps> = ({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 space-y-12 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12 font-sans">
       {/* SECTION 1: HEADER & CORE POSITIONING (Slide 1) */}
       <div className="border-b border-slate-200 dark:border-slate-800/80 pb-8">
         <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-[#0066FF]/10 dark:bg-sky-950/40 border border-[#0066FF]/30 dark:border-sky-800/50 text-[11px] font-mono text-[#0066FF] dark:text-sky-400 mb-3">

@@ -13,10 +13,10 @@ import {
   Zap,
   Lock,
   Layers,
-  Building2,
-  Image as ImageIcon
+  Building2
 } from 'lucide-react';
 import Image from 'next/image';
+import { ActiveProductTab } from '@/lib/types';
 
 export interface BrexSectionsCustomImages {
   card1_corporateCards?: string;
@@ -28,7 +28,7 @@ export interface BrexSectionsCustomImages {
 
 interface BrexStyleLandingSectionsProps {
   customImages?: BrexSectionsCustomImages;
-  onSelectProduct?: (tab: string) => void;
+  onSelectProduct?: (tab: ActiveProductTab) => void;
   onAuditAgent?: () => void;
 }
 
@@ -61,8 +61,8 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
           {/* -------------------------------------------------------- */}
           {/* CARD 1: Corporate cards / Autonomous agent cards (FOTO 2/3) */}
           {/* -------------------------------------------------------- */}
-          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
-            <div className="max-w-xl mb-8 sm:mb-12">
+          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-4 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
+            <div className="max-w-xl mb-6 sm:mb-12">
               <h3 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white mb-3">
                 Corporate cards for AI agents
               </h3>
@@ -72,7 +72,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
             </div>
 
             {/* Visual / Image Slot */}
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-6 sm:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
+            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-3.5 sm:p-8 lg:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
               {customImages.card1_corporateCards ? (
                 <div className="relative w-full h-64 sm:h-80">
                   <Image 
@@ -140,20 +140,14 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                   </div>
                 </div>
               )}
-
-              {/* Resolution Spec Badge for User */}
-              <div className="absolute bottom-2.5 right-3 px-2 py-1 rounded bg-slate-900/80 dark:bg-black/80 text-[10px] font-mono text-slate-300 backdrop-blur-sm border border-white/10 flex items-center space-x-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-3 h-3 text-sky-400" />
-                <span>IMG-CARD-01 · 800×600 px (4:3)</span>
-              </div>
             </div>
           </div>
 
           {/* -------------------------------------------------------- */}
           {/* CARD 2: Expense management / Real-time clearing (FOTO 3)  */}
           {/* -------------------------------------------------------- */}
-          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
-            <div className="max-w-xl mb-8 sm:mb-12">
+          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-4 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
+            <div className="max-w-xl mb-6 sm:mb-12">
               <h3 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white mb-3">
                 Expense &amp; spend management
               </h3>
@@ -163,7 +157,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
             </div>
 
             {/* Visual / Image Slot */}
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-6 sm:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
+            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-3 sm:p-8 lg:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
               {customImages.card2_expenseManagement ? (
                 <div className="relative w-full h-64 sm:h-80">
                   <Image 
@@ -174,88 +168,88 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                   />
                 </div>
               ) : (
-                /* Interactive Transaction Stream matching Foto 3 exactly */
-                <div className="w-full max-w-md space-y-3 sm:space-y-4">
+                /* Interactive Transaction Stream matching Foto 3 - Column-aligned & Fully Responsive */
+                <div className="w-full max-w-md space-y-2.5 sm:space-y-3.5">
                   {/* Transaction 1: JetBlue Airlines */}
-                  <div className="bg-white dark:bg-[#111827] rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center justify-between transition-transform duration-200 hover:scale-[1.01]">
-                    <div className="flex items-center space-x-3.5">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#00205b] text-white flex items-center justify-center font-bold text-xs sm:text-sm tracking-tighter">
-                        jet
-                      </div>
-                      <div>
-                        <div className="font-sans font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-                          JetBlue Airlines
-                        </div>
-                        <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold">
-                          TRAVEL · $840.00
-                        </div>
-                      </div>
+                  <div className="bg-white dark:bg-[#111827] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center space-x-3 sm:space-x-3.5 transition-transform duration-200 hover:scale-[1.01]">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#00205b] text-white flex items-center justify-center font-bold text-xs sm:text-sm tracking-tighter flex-shrink-0 shadow-xs">
+                      jet
                     </div>
-                    <div className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#ff5100] text-white text-xs font-semibold shadow-xs">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Approved</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-sans font-bold text-xs sm:text-base text-slate-900 dark:text-white truncate">
+                          JetBlue Airlines
+                        </span>
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-[#ff5100] text-white text-[10px] sm:text-xs font-semibold shadow-xs flex-shrink-0">
+                          <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                          <span>Approved</span>
+                        </span>
+                      </div>
+                      <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold truncate flex items-center space-x-1.5 mt-0.5">
+                        <span>TRAVEL</span>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-300 font-bold">$840.00</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* Transaction 2: Google Cloud */}
-                  <div className="bg-white dark:bg-[#111827] rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center justify-between transition-transform duration-200 hover:scale-[1.01]">
-                    <div className="flex items-center space-x-3.5">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 dark:bg-white/[0.08] p-2 flex items-center justify-center">
-                        <svg className="w-6 h-6" viewBox="0 0 24 24">
-                          <path fill="#4285F4" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="font-sans font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-                          Google Cloud Platform
-                        </div>
-                        <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold">
-                          SOFTWARE · $1,250.00
-                        </div>
-                      </div>
+                  <div className="bg-white dark:bg-[#111827] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center space-x-3 sm:space-x-3.5 transition-transform duration-200 hover:scale-[1.01]">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 dark:bg-white/[0.08] p-2 flex items-center justify-center flex-shrink-0 shadow-xs">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
+                      </svg>
                     </div>
-                    <div className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#ff5100] text-white text-xs font-semibold shadow-xs">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Approved</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-sans font-bold text-xs sm:text-base text-slate-900 dark:text-white truncate">
+                          Google Cloud
+                        </span>
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-[#ff5100] text-white text-[10px] sm:text-xs font-semibold shadow-xs flex-shrink-0">
+                          <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                          <span>Approved</span>
+                        </span>
+                      </div>
+                      <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold truncate flex items-center space-x-1.5 mt-0.5">
+                        <span>SOFTWARE</span>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-300 font-bold">$1,250.00</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Transaction 3: Anthropic API */}
-                  <div className="bg-white dark:bg-[#111827] rounded-2xl p-4 sm:p-5 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center justify-between transition-transform duration-200 hover:scale-[1.01]">
-                    <div className="flex items-center space-x-3.5">
-                      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#cc785c]/15 text-[#cc785c] flex items-center justify-center font-bold text-xs sm:text-sm">
-                        \A/
-                      </div>
-                      <div>
-                        <div className="font-sans font-bold text-sm sm:text-base text-slate-900 dark:text-white">
-                          Anthropic Claude API
-                        </div>
-                        <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold">
-                          INFERENCE · $340.00
-                        </div>
-                      </div>
+                  {/* Transaction 3: Anthropic Claude */}
+                  <div className="bg-white dark:bg-[#111827] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-slate-200/80 dark:border-white/[0.08] shadow-sm flex items-center space-x-3 sm:space-x-3.5 transition-transform duration-200 hover:scale-[1.01]">
+                    <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#cc785c]/15 text-[#cc785c] flex items-center justify-center font-bold text-xs sm:text-sm flex-shrink-0 shadow-xs">
+                      \A/
                     </div>
-                    <div className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#0066FF] text-white text-xs font-semibold shadow-xs">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Approved</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-sans font-bold text-xs sm:text-base text-slate-900 dark:text-white truncate">
+                          Anthropic Claude
+                        </span>
+                        <span className="inline-flex items-center space-x-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-[#0066FF] text-white text-[10px] sm:text-xs font-semibold shadow-xs flex-shrink-0">
+                          <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                          <span>Approved</span>
+                        </span>
+                      </div>
+                      <div className="font-sans text-[11px] sm:text-xs text-slate-500 uppercase tracking-wider font-semibold truncate flex items-center space-x-1.5 mt-0.5">
+                        <span>INFERENCE</span>
+                        <span className="text-slate-300 dark:text-slate-700">•</span>
+                        <span className="font-mono text-slate-700 dark:text-slate-300 font-bold">$340.00</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
-
-              {/* Resolution Spec Badge for User */}
-              <div className="absolute bottom-2.5 right-3 px-2 py-1 rounded bg-slate-900/80 dark:bg-black/80 text-[10px] font-mono text-slate-300 backdrop-blur-sm border border-white/10 flex items-center space-x-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-3 h-3 text-sky-400" />
-                <span>IMG-CARD-02 · 800×500 px (16:10)</span>
-              </div>
             </div>
           </div>
 
           {/* -------------------------------------------------------- */}
           {/* CARD 3: Travel / Agent policy envelopes (FOTO 4)         */}
           {/* -------------------------------------------------------- */}
-          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
-            <div className="max-w-xl mb-8 sm:mb-12">
+          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-4 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
+            <div className="max-w-xl mb-6 sm:mb-12">
               <h3 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white mb-3">
                 Agent policy envelopes &amp; travel
               </h3>
@@ -265,7 +259,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
             </div>
 
             {/* Visual / Image Slot */}
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-6 sm:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[320px] overflow-hidden">
+            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-3.5 sm:p-8 lg:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[320px] overflow-hidden">
               {customImages.card3_travelEnvelopes ? (
                 <div className="relative w-full h-64 sm:h-80">
                   <Image 
@@ -279,7 +273,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                 /* Reservation Widget matching Foto 4 */
                 <div className="w-full max-w-md bg-white dark:bg-[#111827] rounded-2xl p-6 sm:p-8 border border-slate-200/80 dark:border-white/[0.08] shadow-sm">
                   <div className="flex items-center justify-between mb-8 sm:mb-10">
-                    <div className="font-sans font-bold text-base sm:text-lg text-slate-900 dark:text-white">
+                    <div className="font-sans font-bold text-base sm:text-lg text-slate-950 dark:text-white">
                       Reservation
                     </div>
                     <div className="inline-flex items-center space-x-1 px-3 py-1 rounded-full bg-[#ff5100] text-white text-xs font-bold shadow-xs">
@@ -314,20 +308,14 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                   </div>
                 </div>
               )}
-
-              {/* Resolution Spec Badge for User */}
-              <div className="absolute bottom-2.5 right-3 px-2 py-1 rounded bg-slate-900/80 dark:bg-black/80 text-[10px] font-mono text-slate-300 backdrop-blur-sm border border-white/10 flex items-center space-x-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-3 h-3 text-sky-400" />
-                <span>IMG-CARD-03 · 800×500 px (16:10)</span>
-              </div>
             </div>
           </div>
 
           {/* -------------------------------------------------------- */}
           {/* CARD 4: Bill pay / Autonomous settlement (FOTO 4)        */}
           {/* -------------------------------------------------------- */}
-          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
-            <div className="max-w-xl mb-8 sm:mb-12">
+          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-4 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
+            <div className="max-w-xl mb-6 sm:mb-12">
               <h3 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white mb-3">
                 Autonomous bill pay &amp; invoicing
               </h3>
@@ -337,7 +325,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
             </div>
 
             {/* Visual / Image Slot */}
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-6 sm:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[320px] overflow-hidden">
+            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-3.5 sm:p-8 lg:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[320px] overflow-hidden">
               {customImages.card4_billPay ? (
                 <div className="relative w-full h-64 sm:h-80">
                   <Image 
@@ -383,20 +371,14 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                   </div>
                 </div>
               )}
-
-              {/* Resolution Spec Badge for User */}
-              <div className="absolute bottom-2.5 right-3 px-2 py-1 rounded bg-slate-900/80 dark:bg-black/80 text-[10px] font-mono text-slate-300 backdrop-blur-sm border border-white/10 flex items-center space-x-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-3 h-3 text-sky-400" />
-                <span>IMG-CARD-04 · 800×500 px (16:10)</span>
-              </div>
             </div>
           </div>
 
           {/* -------------------------------------------------------- */}
           {/* CARD 5: Banking and treasury / Continuous credit (FOTO 5)  */}
           {/* -------------------------------------------------------- */}
-          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-6 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
-            <div className="max-w-xl mb-8 sm:mb-12">
+          <div className="group rounded-3xl bg-white dark:bg-[#0c121e] border border-slate-200/90 dark:border-white/[0.08] shadow-sm hover:shadow-md transition-all duration-300 p-4 sm:p-10 lg:p-12 overflow-hidden flex flex-col justify-between">
+            <div className="max-w-xl mb-6 sm:mb-12">
               <h3 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white mb-3">
                 Continuous machine credit &amp; treasury
               </h3>
@@ -406,7 +388,7 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
             </div>
 
             {/* Visual / Image Slot */}
-            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-6 sm:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
+            <div className="relative w-full rounded-2xl bg-gradient-to-b from-slate-50 to-slate-100/70 dark:from-white/[0.03] dark:to-white/[0.01] border border-slate-200/80 dark:border-white/[0.06] p-3.5 sm:p-8 lg:p-10 flex items-center justify-center min-h-[260px] sm:min-h-[340px] overflow-hidden">
               {customImages.card5_bankingTreasury ? (
                 <div className="relative w-full h-64 sm:h-80">
                   <Image 
@@ -464,12 +446,6 @@ export const BrexStyleLandingSections: React.FC<BrexStyleLandingSectionsProps> =
                   </div>
                 </div>
               )}
-
-              {/* Resolution Spec Badge for User */}
-              <div className="absolute bottom-2.5 right-3 px-2 py-1 rounded bg-slate-900/80 dark:bg-black/80 text-[10px] font-mono text-slate-300 backdrop-blur-sm border border-white/10 flex items-center space-x-1.5 opacity-60 hover:opacity-100 transition-opacity">
-                <ImageIcon className="w-3 h-3 text-sky-400" />
-                <span>IMG-CARD-05 · 800×500 px (16:10)</span>
-              </div>
             </div>
           </div>
 
