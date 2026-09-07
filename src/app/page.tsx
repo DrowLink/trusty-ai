@@ -15,6 +15,8 @@ import { DecisionPlayground } from '@/components/DecisionPlayground';
 import { UnderwritingExplainer } from '@/components/UnderwritingExplainer';
 import { BusinessAndPricingView } from '@/components/BusinessAndPricingView';
 import { CompetitiveMoatView } from '@/components/CompetitiveMoatView';
+import { CookieConsent } from '@/components/CookieConsent';
+import Image from 'next/image';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, UserSession } from '@/lib/quota';
 import { 
   getLocalCustomAgents, 
@@ -256,65 +258,87 @@ export default function HomePage() {
       </main>
 
       {/* Institutional Minimalist Footer */}
-      <footer className="border-t border-white/[0.08] bg-[#07090e]/95 backdrop-blur py-8 text-xs text-slate-400 font-sans">
+      <footer className="border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#07090e]/95 backdrop-blur py-8 text-xs text-slate-600 dark:text-slate-400 font-sans transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex flex-col sm:flex-row items-center space-x-2 text-center sm:text-left">
-            <div className="flex items-center space-x-1.5">
-              <span className="text-white font-extrabold text-sm font-sans">TRUSTY.BOT</span>
-              <span className="text-[10px] font-mono text-purple-400 bg-purple-950/60 px-1.5 py-0.5 rounded border border-purple-800/60">
+          <div className="flex flex-col sm:flex-row items-center space-x-3 text-center sm:text-left">
+            <div className="flex items-center space-x-2">
+              <Image
+                src="/trusty-logo.png"
+                alt="TRUSTY.bot Logo"
+                width={26}
+                height={26}
+                className="w-6 h-6 object-contain rounded"
+              />
+              <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight font-sans">
+                TRUSTY<span className="text-[#0066FF] dark:text-[#38BDF8]">.bot</span>
+              </span>
+              <span className="text-[9px] font-mono font-bold text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 dark:text-sky-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800/60">
                 CREDIT BUREAU
               </span>
             </div>
-            <span className="hidden sm:inline text-slate-600">—</span>
-            <span className="text-slate-400">The Trust &amp; Credit Bureau for AI Agents</span>
+            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">—</span>
+            <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+              TRUST POWERS AGENTS
+            </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3.5 text-xs text-slate-600 dark:text-slate-400">
             <button
               onClick={() => setActiveTab('bureau')}
-              className={`hover:text-white transition ${activeTab === 'bureau' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'bureau' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Directory
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('decision_api')}
-              className={`hover:text-white transition ${activeTab === 'decision_api' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'decision_api' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Decision Gateway (M2M)
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('economics')}
-              className={`hover:text-white transition ${activeTab === 'economics' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'economics' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
-              Economic Case ($500M)
+              Economic Case
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('underwriting')}
-              className={`hover:text-white transition ${activeTab === 'underwriting' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'underwriting' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
-              Underwriting (12+20)
+              Underwriting
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('pricing')}
-              className={`hover:text-white transition ${activeTab === 'pricing' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'pricing' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
-              Pricing Tiers
+              Pricing
             </button>
             <span>•</span>
             <button
               onClick={() => setActiveTab('moat')}
-              className={`hover:text-white transition ${activeTab === 'moat' ? 'text-sky-400 font-medium' : ''}`}
+              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'moat' ? 'text-[#0066FF] dark:text-sky-400 font-semibold' : ''}`}
             >
               Moat
             </button>
             <span>•</span>
             <button
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.dispatchEvent(new CustomEvent('open-cookie-preferences'));
+                }
+              }}
+              className="hover:text-slate-900 dark:hover:text-white transition underline underline-offset-2"
+            >
+              Cookies
+            </button>
+            <span>•</span>
+            <button
               onClick={() => setIsSpecsOpen(true)}
-              className="hover:text-white transition text-slate-400"
+              className="hover:text-slate-900 dark:hover:text-white transition"
             >
               Specs (.md)
             </button>
@@ -323,7 +347,7 @@ export default function HomePage() {
               href="https://github.com/DrowLink/trusty-ai"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-white transition flex items-center space-x-1"
+              className="hover:text-slate-900 dark:hover:text-white transition flex items-center space-x-1"
             >
               <Github className="w-3.5 h-3.5" />
               <span>GitHub</span>
@@ -359,6 +383,9 @@ export default function HomePage() {
           setIsAuthOpen(false);
         }}
       />
+
+      {/* GDPR / CCPA Cookie Consent Banner & Preferences */}
+      <CookieConsent />
     </div>
   );
 }

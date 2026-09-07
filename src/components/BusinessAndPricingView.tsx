@@ -39,8 +39,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Explore Public Directory',
       highlighted: false,
-      badgeColor: 'text-slate-400 bg-slate-900 border-white/[0.08]',
-      btnStyle: 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.08]',
+      badgeColor: 'text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-white/[0.08]',
+      btnStyle: 'bg-slate-100 hover:bg-slate-200 text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]',
     },
     {
       name: 'VERIFIED',
@@ -58,8 +58,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Verify My Agent',
       highlighted: false,
-      badgeColor: 'text-sky-400 bg-sky-950/60 border-sky-800/60',
-      btnStyle: 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.08]',
+      badgeColor: 'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/60 border-sky-200 dark:border-sky-800/60',
+      btnStyle: 'bg-slate-100 hover:bg-slate-200 text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]',
     },
     {
       name: 'API',
@@ -76,8 +76,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Get API Access',
       highlighted: false,
-      badgeColor: 'text-amber-400 bg-amber-950/60 border-amber-800/60',
-      btnStyle: 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.08]',
+      badgeColor: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 border-amber-200 dark:border-amber-800/60',
+      btnStyle: 'bg-slate-100 hover:bg-slate-200 text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]',
     },
     {
       name: 'DECISION',
@@ -95,7 +95,7 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Connect Decision Rail',
       highlighted: true,
-      badgeColor: 'text-purple-300 bg-purple-950/90 border-purple-700/80',
+      badgeColor: 'text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/90 border-purple-200 dark:border-purple-700/80',
       btnStyle: 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-900/30',
     },
     {
@@ -114,8 +114,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Contact Institutional Sales',
       highlighted: false,
-      badgeColor: 'text-emerald-400 bg-emerald-950/60 border-emerald-800/60',
-      btnStyle: 'bg-white/[0.06] hover:bg-white/[0.12] text-slate-200 border border-white/[0.08]',
+      badgeColor: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200 dark:border-emerald-800/60',
+      btnStyle: 'bg-slate-100 hover:bg-slate-200 text-slate-900 dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:text-slate-200 border border-slate-200 dark:border-white/[0.08]',
     },
   ];
 
@@ -123,19 +123,19 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 font-sans">
       {/* 1. Header (Slide 7 exact) */}
       <div className="text-center max-w-3xl mx-auto space-y-3">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900/90 border border-white/[0.08] text-[11px] font-mono text-emerald-400">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-white/[0.08] text-[11px] font-mono text-emerald-600 dark:text-emerald-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
           <span>TRUSTY.BOT • SLIDE 07 / 10 • BUSINESS MODEL</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-white font-sans">
+        <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white font-sans">
           Keep discovery free. <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-emerald-400 via-sky-300 to-purple-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-500 via-sky-500 to-purple-600 dark:from-emerald-400 dark:via-sky-300 dark:to-purple-400 bg-clip-text text-transparent">
             Monetize decisions.
           </span>
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-sans max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-sans max-w-2xl mx-auto">
           The public layer drives distribution; machine-to-machine risk decisions and enterprise monitoring drive commercial revenue.
         </p>
       </div>
@@ -145,10 +145,10 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
         {tiers.map(tier => (
           <div
             key={tier.name}
-            className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition relative ${
+            className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition relative interactive-lift ${
               tier.highlighted
-                ? 'bg-gradient-to-b from-[#120d22] to-[#0c1017] border-2 border-purple-500/80 shadow-2xl shadow-purple-950/30'
-                : 'bg-[#0c1017] border border-white/[0.08] hover:border-white/[0.18]'
+                ? 'bg-gradient-to-b from-purple-50/60 to-white dark:from-[#120d22] dark:to-[#0c1017] border-2 border-purple-500 shadow-xl shadow-purple-500/10 dark:shadow-purple-950/30'
+                : 'bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.08] shadow-sm hover:border-slate-300 dark:hover:border-white/[0.18]'
             }`}
           >
             {tier.highlighted && (
@@ -162,30 +162,30 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
                 <span className={`px-2 py-0.5 rounded-full border text-[10px] font-mono font-bold uppercase ${tier.badgeColor}`}>
                   {tier.name}
                 </span>
-                <div className="text-[11px] font-sans text-slate-400 mt-2">
+                <div className="text-[11px] font-sans text-slate-500 dark:text-slate-400 mt-2 font-medium">
                   {tier.tagline}
                 </div>
                 <div className="mt-2 flex items-baseline space-x-1">
-                  <span className="text-2xl sm:text-3xl font-black font-sans text-white">
+                  <span className="text-2xl sm:text-3xl font-black font-sans text-slate-900 dark:text-white">
                     {tier.price}
                   </span>
-                  <span className="text-[11px] font-mono text-slate-500">
+                  <span className="text-[11px] font-mono text-slate-500 dark:text-slate-500">
                     {tier.period}
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-400 leading-relaxed font-sans min-h-[48px]">
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans min-h-[48px]">
                 {tier.description}
               </p>
 
-              <div className="h-px bg-white/[0.06]" />
+              <div className="h-px bg-slate-200 dark:bg-white/[0.06]" />
 
               <div className="space-y-2 font-sans text-xs">
                 {tier.features.map((feat, idx) => (
                   <div key={idx} className="flex items-start space-x-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-slate-300 leading-snug">{feat}</span>
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 mt-0.5 flex-shrink-0" />
+                    <span className="text-slate-700 dark:text-slate-300 leading-snug">{feat}</span>
                   </div>
                 ))}
               </div>
@@ -203,39 +203,39 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       </div>
 
       {/* 3. The Institutional Integrity Pledge (Slide 7 bottom exact) */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-[#071318] via-[#0c161d] to-[#071318] border border-emerald-500/30 space-y-3 shadow-xl">
-        <div className="flex items-center space-x-2 text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
+      <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-emerald-50/70 via-teal-50/40 to-emerald-50/70 dark:from-[#071318] dark:via-[#0c161d] dark:to-[#071318] border border-emerald-300 dark:border-emerald-500/30 space-y-3 shadow-md">
+        <div className="flex items-center space-x-2 text-emerald-700 dark:text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <span>INSTITUTIONAL INDEPENDENCE &amp; ETHICAL PLEDGE (SLIDE 07)</span>
         </div>
-        <div className="text-lg sm:text-2xl font-bold text-white font-sans">
+        <div className="text-lg sm:text-2xl font-bold text-slate-900 dark:text-white font-sans">
           &ldquo;Developers can pay TRUSTY to verify evidence — never to buy a better score.&rdquo;
         </div>
-        <p className="text-xs sm:text-sm text-slate-400 max-w-3xl leading-relaxed font-sans">
+        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed font-sans">
           TRUSTY operates under strict rating agency independence. Payment only covers the labor of cryptographic identity checks, DNS verification, and on-demand repository audits. All algorithmic Trust Scores and Credit Tiers remain 100% deterministic and tamper-evident.
         </p>
       </div>
 
       {/* 4. The Two Monetization Pillars (Lookup vs Decision from ROI Deck) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-        <div className="p-6 rounded-2xl bg-[#0c1017] border border-white/[0.08] space-y-3">
-          <div className="flex items-center space-x-2 text-sky-400 font-mono text-xs uppercase font-bold">
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.08] shadow-sm space-y-3 interactive-lift">
+          <div className="flex items-center space-x-2 text-sky-600 dark:text-sky-400 font-mono text-xs uppercase font-bold">
             <Cpu className="w-4 h-4" />
             <span>Pillar 1: Data Lookup ($0.01 / query)</span>
           </div>
-          <h4 className="text-base font-bold text-white font-sans">Passive Information Retrieval</h4>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h4 className="text-base font-bold text-slate-900 dark:text-white font-sans">Passive Information Retrieval</h4>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             Marketplaces, developer tools, and workflow agents query TRUSTY during onboarding: &ldquo;What is this agent&rsquo;s score?&rdquo; Low-latency responses in under 20 milliseconds.
           </p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-[#0c1017] border border-purple-900/40 space-y-3">
-          <div className="flex items-center space-x-2 text-purple-400 font-mono text-xs uppercase font-bold">
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#0c1017] border border-purple-200 dark:border-purple-900/40 shadow-sm space-y-3 interactive-lift">
+          <div className="flex items-center space-x-2 text-purple-600 dark:text-purple-400 font-mono text-xs uppercase font-bold">
             <TrendingUp className="w-4 h-4" />
             <span>Pillar 2: Economic Risk Decision (5 bps / $0.25)</span>
           </div>
-          <h4 className="text-base font-bold text-white font-sans">Active Financial Settlement Gate</h4>
-          <p className="text-xs text-slate-400 leading-relaxed">
+          <h4 className="text-base font-bold text-slate-900 dark:text-white font-sans">Active Financial Settlement Gate</h4>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
             Card issuers, banks, and enterprise wallets query TRUSTY before money moves: &ldquo;Should this $840 purchase move?&rdquo; Real economic consequence with APPROVE / DECLINE / HUMAN_REVIEW verdicts.
           </p>
         </div>
