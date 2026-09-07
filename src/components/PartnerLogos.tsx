@@ -113,33 +113,13 @@ export const AWSIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   </svg>
 );
 
-// High-precision Native SVG Isotipo for TRUSTY.bot™
+// Official Transparent Isotipo for TRUSTY.bot™
 export const TrustyIsotype = ({ className = "w-6 h-6" }: { className?: string }) => (
-  <svg className={className} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="trusty_grad_clean" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stopColor="#0066FF" />
-        <stop offset="60%" stopColor="#00A6FB" />
-        <stop offset="100%" stopColor="#7C3AED" />
-      </linearGradient>
-    </defs>
-    {/* Clean geometric trust shield emblem */}
-    <rect width="32" height="32" rx="9" fill="url(#trusty_grad_clean)" />
-    {/* Inner crisp shield with credit rail tick */}
-    <path
-      d="M16 6.5L8.5 9.8V16.2C8.5 21.2 11.7 25.8 16 27C20.3 25.8 23.5 21.2 23.5 16.2V9.8L16 6.5Z"
-      fill="#FFFFFF"
-      fillOpacity="0.15"
-      stroke="#FFFFFF"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M13.2 16.3L15.2 18.3L19.2 13.8"
-      stroke="#FFFFFF"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
+  <img
+    src="/isotype.svg"
+    alt="TRUSTY.bot Isotipo"
+    className={`${className} object-contain`}
+    loading="eager"
+  />
 );
+

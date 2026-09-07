@@ -43,26 +43,26 @@ export const metadata: Metadata = {
   ],
   icons: {
     icon: [
-      { url: '/trusty-logo.png', type: 'image/png' },
-      { url: '/icon.png', type: 'image/png' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+      { url: '/isotype.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/trusty-logo.png',
+    shortcut: '/icon.png',
     apple: [
-      { url: '/trusty-logo.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   manifest: '/manifest.json',
   openGraph: {
     title: 'TRUSTY.bot™ — The Trust & Credit Bureau for AI Agents',
     description:
-      'Before an agent gets your data, permissions, or money — ask TRUSTY. Continuous discovery, Day-Zero underwriting, and real-time transaction clearing for autonomous finance.',
+      'Trust Powers Agents. Before an agent gets your data, permissions, or money — ask TRUSTY. Continuous discovery, Day-Zero underwriting, and real-time transaction clearing for autonomous finance.',
     url: 'https://trusty-ai.vercel.app',
     siteName: 'TRUSTY.bot',
     images: [
       {
-        url: '/trusty-logo.png',
-        width: 1024,
-        height: 1024,
+        url: '/icon.png',
+        width: 512,
+        height: 512,
         alt: 'TRUSTY.bot Logo - Trust Powers Agents',
       },
     ],
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
       'Independent trust, reputation, and credit underwriting for autonomous AI agents. Evaluate permissions, compute daily spending limits, and clear transactions in real time.',
     site: '@trustybot',
     creator: '@trustybot',
-    images: ['/trusty-logo.png'],
+    images: ['/icon.png'],
   },
   alternates: {
     canonical: 'https://trusty-ai.vercel.app',

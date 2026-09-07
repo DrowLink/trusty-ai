@@ -85,20 +85,32 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-3 sm:top-4 z-40 w-full px-3 sm:px-6">
       <div className="max-w-5xl mx-auto rounded-full border border-slate-200/90 dark:border-white/[0.1] bg-white/85 dark:bg-[#0a0d14]/85 backdrop-blur-xl shadow-lg shadow-black/[0.04] px-3.5 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 transition-all">
-        {/* Brand with Clean Vector Isotype & Typography */}
+        {/* Brand with Official Transparent Isotype & Typography Lockup */}
         <div 
-          className="flex items-center space-x-2.5 cursor-pointer select-none flex-shrink-0 group"
+          className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none flex-shrink-0 group"
           onClick={() => handleSelectTab('bureau')}
         >
-          {/* Native SVG Isotype */}
-          <div className="relative group-hover:scale-105 transition-transform duration-200">
-            <TrustyIsotype className="w-8 h-8 drop-shadow-sm" />
+          {/* Official Transparent Isotype */}
+          <div className="relative group-hover:scale-105 transition-transform duration-200 flex-shrink-0">
+            <TrustyIsotype className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
           </div>
 
-          <div className="flex items-center space-x-1.5">
-            <span className="text-base sm:text-lg font-black tracking-tight text-slate-950 dark:text-white font-sans">
-              TRUSTY<span className="text-[#0066FF] dark:text-[#38BDF8]">.bot</span>
-              <span className="text-[9px] align-super text-slate-400 font-normal ml-0.5">™</span>
+          <div className="flex flex-col justify-center">
+            {/* Top row: TRUSTY.bot™ */}
+            <div className="flex items-baseline leading-none">
+              <span className="text-base sm:text-lg font-black tracking-tight text-[#081226] dark:text-white font-sans">
+                TRUSTY
+              </span>
+              <span className="text-base sm:text-lg font-black tracking-tight text-[#0066FF] dark:text-[#38BDF8]">
+                .bot
+              </span>
+              <span className="text-[8px] sm:text-[9px] font-bold text-[#081226] dark:text-slate-300 ml-0.5 -translate-y-1 sm:-translate-y-1.5 inline-block">
+                ™
+              </span>
+            </div>
+            {/* Bottom row: TRUST POWERS AGENTS */}
+            <span className="text-[6.5px] sm:text-[7.5px] font-bold tracking-[0.24em] text-[#525f7a] dark:text-slate-400 uppercase font-sans mt-0.5 whitespace-nowrap">
+              TRUST POWERS AGENTS
             </span>
           </div>
         </div>
