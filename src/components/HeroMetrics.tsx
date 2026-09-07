@@ -9,23 +9,8 @@ import {
   ArrowRight, 
   Loader2, 
   X, 
-  CreditCard, 
-  Shield,
-  Star,
-  Check
+  Play
 } from 'lucide-react';
-import { 
-  StripeIcon, 
-  VisaIcon, 
-  BrexIcon, 
-  PayPalIcon, 
-  CoinbaseIcon, 
-  AnthropicIcon, 
-  CrewAIIcon, 
-  ShopifyIcon, 
-  AWSIcon,
-} from './PartnerLogos';
-
 import { HeroDecisionPipeline } from './HeroDecisionPipeline';
 
 interface HeroMetricsProps {
@@ -87,7 +72,10 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const query = searchQuery.trim();
-    if (!query) return;
+    if (!query) {
+      if (onOpenEvaluate) onOpenEvaluate();
+      return;
+    }
 
     if (isInputUrl) {
       onAuditUrl(query);
@@ -97,6 +85,9 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
         ? matchingAgents[selectedIndex]
         : matchingAgents[0];
       onSelectAgent(target);
+      setIsFocused(false);
+    } else {
+      onAuditUrl(query);
       setIsFocused(false);
     }
   };
@@ -116,176 +107,156 @@ export const HeroMetrics: React.FC<HeroMetricsProps> = ({
   };
 
   return (
-    <section className="relative pt-6 sm:pt-14 pb-16 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden transition-colors font-sans">
-      {/* 1. AMBIENT BACKGROUND GLOW & CONCENTRIC ORBITAL RINGS */}
-      <div className="absolute top-[280px] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[1100px] pointer-events-none select-none z-0 flex items-center justify-center opacity-70">
-        <div className="absolute w-[400px] h-[400px] rounded-full border border-slate-200/60 dark:border-white/[0.05]" />
-        <div className="absolute w-[700px] h-[700px] rounded-full border border-slate-200/40 dark:border-white/[0.04]" />
-        <div className="absolute w-[1000px] h-[1000px] rounded-full border border-slate-200/30 dark:border-white/[0.03]" />
-        <div className="absolute w-[450px] h-[450px] rounded-full bg-gradient-to-tr from-blue-400/10 via-sky-300/10 to-purple-400/10 dark:from-sky-500/10 dark:to-purple-600/10 blur-3xl pointer-events-none" />
-      </div>
-
-      {/* 2. MAIN SPACIOUS HERO GRID (POPL-STYLE ASYMMETRICAL 2-COLUMN DESKTOP + FLUID MOBILE) */}
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+    <section className="relative pt-8 sm:pt-16 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-sans">
+      
+      {/* MAIN 2-COLUMN HERO GRID (BREX ASYMMETRICAL EDITORIAL FINTECH LAYOUT) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
         
-        {/* Left Column (Editorial Headline, Pitch & CTAs) */}
-        <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-          {/* Social Proof Pill */}
-          <div className="inline-flex items-center space-x-2.5 px-3.5 py-1.5 rounded-full bg-slate-100/90 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.1] text-xs font-sans text-slate-700 dark:text-slate-300 shadow-sm backdrop-blur-md">
+        {/* Left Column: Authority Pitch, Value Prop & Brex-Style Integrated Action Input */}
+        <div className="lg:col-span-7 space-y-6 text-left">
+          
+          {/* Social Proof Tag */}
+          <div className="inline-flex items-center space-x-2.5 px-3 py-1 rounded-md bg-slate-100 dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.1] text-xs font-sans text-slate-700 dark:text-slate-300">
             <div className="flex items-center space-x-1">
-              <span className="font-bold text-slate-900 dark:text-white">★ 4.9</span>
+              <span className="font-bold text-slate-950 dark:text-white">★ 4.9</span>
               <span className="text-slate-500 text-[11px]">TrustScore</span>
             </div>
             <span className="text-slate-300 dark:text-slate-600">•</span>
-            <div className="flex items-center space-x-1.5 font-medium text-slate-600 dark:text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="flex items-center space-x-1.5 font-medium text-slate-700 dark:text-slate-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               <span>Stripe, Brex &amp; Visa Integrated</span>
             </div>
           </div>
 
-          {/* Main Hero Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-slate-950 dark:text-white leading-[1.06] font-sans">
+          {/* Main Display Headline (Brex Bold neo-grotesque style) */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[62px] font-black tracking-[-0.035em] text-slate-950 dark:text-white leading-[1.05]">
             The trust &amp; credit bureau <br className="hidden sm:inline" />
-            <span className="text-slate-900 dark:text-slate-100">for AI agents.</span>
+            <span>for AI agents.</span>
           </h1>
 
-          {/* Subtitle / Value Proposition */}
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-sans max-w-2xl mx-auto lg:mx-0 font-normal">
+          {/* Subtitle with generous line height and relaxed slate tone */}
+          <p className="text-base sm:text-lg lg:text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl font-normal">
             From real-time transaction approvals to continuous risk underwriting, manage agent economic limits in one place and keep your capital secure.
           </p>
 
-          {/* Mobile Decision Pipeline (Stacked right after headline on mobile screens) */}
+          {/* Mobile Decision Pipeline Preview */}
           <div className="block lg:hidden my-6">
             <HeroDecisionPipeline />
           </div>
 
-          {/* Action CTAs */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1">
-            {onOpenEvaluate && (
-              <button
-                onClick={onOpenEvaluate}
-                className="px-6 sm:px-7 py-3 rounded-full text-sm font-semibold bg-[#0066FF] hover:bg-blue-600 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition shadow-md shadow-blue-500/20 flex items-center space-x-2"
-              >
-                <span>Audit an Agent</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            )}
-
-            {onNavigateTab && (
-              <button
-                onClick={() => onNavigateTab('decision_api')}
-                className="px-6 sm:px-7 py-3 rounded-full text-sm font-medium border border-slate-200 dark:border-white/[0.15] bg-white/80 dark:bg-white/[0.04] text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.08] transition backdrop-blur-sm"
-              >
-                Connect Decision Rail
-              </button>
-            )}
-          </div>
-
-          {/* Integrated Universal Search / Audit Bar */}
-          <div className="pt-2 max-w-xl mx-auto lg:mx-0">
+          {/* Brex-Style Integrated Action Box (Single Container: Input + CTA Button) */}
+          <div className="pt-2 max-w-xl">
             <form onSubmit={handleSubmit}>
-              <div className={`relative flex items-center rounded-full bg-white dark:bg-[#0c1017] border transition p-1.5 sm:p-2 shadow-lg shadow-black/[0.03] dark:shadow-black/40 ${
+              <div className={`flex flex-col sm:flex-row items-stretch sm:items-center bg-white dark:bg-[#0c1017] border rounded-xl p-1.5 transition-all shadow-sm ${
                 isFocused 
-                  ? 'border-slate-400 dark:border-white/[0.3] ring-4 ring-slate-100 dark:ring-white/[0.05]' 
-                  : 'border-slate-200 dark:border-white/[0.1] hover:border-slate-300'
+                  ? 'border-[#0066FF] ring-2 ring-[#0066FF]/15 dark:border-sky-400' 
+                  : 'border-slate-300 dark:border-white/[0.15] hover:border-slate-400 dark:hover:border-white/[0.25]'
               }`}>
-                <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 ml-3 flex-shrink-0" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={e => {
-                    onSearchChange(e.target.value);
-                    setSelectedIndex(-1);
-                  }}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Search agent name (e.g. ProcurementBot) or paste GitHub repository URL..."
-                  className="w-full px-3 py-1.5 bg-transparent text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none font-sans"
-                />
-                {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onSearchChange('');
+                <div className="flex items-center flex-1 px-3 py-2">
+                  <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 mr-2.5 flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={e => {
+                      onSearchChange(e.target.value);
                       setSelectedIndex(-1);
                     }}
-                    className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-white mr-1"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                )}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Enter agent name or GitHub repository URL..."
+                    className="w-full bg-transparent text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => onSearchChange('')}
+                      className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white mr-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+
                 <button
                   type="submit"
                   disabled={isAuditing}
-                  className="flex items-center space-x-1.5 px-4 sm:px-5 py-2 rounded-full text-xs font-semibold transition flex-shrink-0 bg-[#0066FF] dark:bg-white text-white dark:text-slate-950 hover:bg-blue-600 dark:hover:bg-slate-100 disabled:opacity-50 shadow-sm"
+                  className="mt-2 sm:mt-0 flex items-center justify-center space-x-1.5 px-6 py-2.5 rounded-lg text-xs sm:text-sm font-semibold bg-[#0066FF] hover:bg-blue-600 text-white transition flex-shrink-0 disabled:opacity-50 shadow-sm"
                 >
                   {isAuditing ? (
                     <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span className="hidden sm:inline">Auditing...</span>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Auditing...</span>
                     </>
                   ) : (
                     <>
-                      <span>{isInputUrl ? 'Audit Repo' : 'Search'}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <span>{isInputUrl ? 'Audit Repo' : 'Get started'}</span>
+                      <ArrowRight className="w-4 h-4 ml-0.5" />
                     </>
                   )}
                 </button>
               </div>
             </form>
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-2.5 text-xs font-sans text-slate-500">
-              <span className="text-[11px] text-slate-400">Quick samples:</span>
+            {/* Brex Secondary Action Link + Clean Sample Buttons */}
+            <div className="flex flex-wrap items-center gap-4 text-xs font-sans text-slate-500 mt-3.5">
               <button
                 type="button"
-                onClick={() => onSearchChange('ProcurementBot')}
-                className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-[11px] transition font-mono"
+                onClick={() => onNavigateTab && onNavigateTab('decision_api')}
+                className="inline-flex items-center space-x-2 text-slate-900 dark:text-white font-medium hover:text-[#0066FF] dark:hover:text-sky-400 transition group cursor-pointer"
               >
-                ProcurementBot-847
+                <span className="w-5 h-5 rounded-full border border-slate-300 dark:border-white/[0.2] flex items-center justify-center group-hover:border-[#0066FF]">
+                  <Play className="w-2.5 h-2.5 text-slate-800 dark:text-slate-200 fill-slate-800 dark:fill-slate-200 ml-0.5 group-hover:text-[#0066FF] group-hover:fill-[#0066FF]" />
+                </span>
+                <span>See TRUSTY in action</span>
               </button>
-              <button
-                type="button"
-                onClick={() => onAuditUrl('https://github.com/crewAIInc/crewAI')}
-                className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-[11px] transition font-mono"
-              >
-                crewAI Repo
-              </button>
-              <button
-                type="button"
-                onClick={() => onAuditUrl('https://github.com/anthropics/anthropic-quickstarts')}
-                className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-white/[0.05] hover:bg-slate-200 text-slate-700 dark:text-slate-300 text-[11px] transition font-mono"
-              >
-                anthropic-quickstarts
-              </button>
+
+              <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+
+              <div className="flex items-center space-x-2 text-[11px]">
+                <span className="text-slate-400">Samples:</span>
+                <button
+                  type="button"
+                  onClick={() => onSearchChange('ProcurementBot')}
+                  className="text-slate-600 dark:text-slate-400 hover:text-[#0066FF] dark:hover:text-sky-400 transition font-mono underline decoration-slate-300 underline-offset-2"
+                >
+                  ProcurementBot-847
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onAuditUrl('https://github.com/crewAIInc/crewAI')}
+                  className="text-slate-600 dark:text-slate-400 hover:text-[#0066FF] dark:hover:text-sky-400 transition font-mono underline decoration-slate-300 underline-offset-2"
+                >
+                  crewAI
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column (HeroDecisionPipeline Animation - Desktop View) */}
+        {/* Right Column: Sleek Product Terminal Simulator (Brex Card & Showcase Perspective) */}
         <div className="hidden lg:block lg:col-span-5 relative">
           <HeroDecisionPipeline />
         </div>
 
       </div>
 
-      {/* 3. TRUSTED BY MARQUEE */}
-      <div className="relative z-10 mt-16 pt-8 border-t border-slate-100 dark:border-white/[0.06] text-center">
-        <p className="text-xs font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500 font-semibold mb-6">
+      {/* 3. "TRUSTED BY" SECTION (BREX HEADLINE STYLE: "Trusted by 35,000+ top companies") */}
+      <div className="mt-20 pt-12 border-t border-slate-200/70 dark:border-white/[0.08] text-center">
+        <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-8">
           Trusted by fintechs &amp; agent developers clearing autonomous transactions
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 opacity-60 dark:opacity-40 grayscale hover:grayscale-0 transition-all duration-300 text-slate-700 dark:text-slate-300">
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">Stripe</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">VISA</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">Brex</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">Coinbase</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">PayPal</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">Shopify</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">Anthropic</span></div>
-          <div className="flex items-center space-x-1.5 font-bold text-sm tracking-tight"><span className="text-lg">CrewAI</span></div>
+        </h2>
+        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 lg:gap-14 opacity-75 dark:opacity-60 grayscale hover:grayscale-0 transition-all duration-300 text-slate-700 dark:text-slate-300">
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">Stripe</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">VISA</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">Brex</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">Coinbase</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">PayPal</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">Shopify</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">Anthropic</span></div>
+          <div className="flex items-center space-x-1.5 font-bold text-sm sm:text-base tracking-tight"><span className="text-lg sm:text-xl">CrewAI</span></div>
         </div>
       </div>
     </section>
   );
 };
-

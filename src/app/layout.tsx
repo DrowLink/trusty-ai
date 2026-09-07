@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/lib/theme';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sans',
+});
 
 export const viewport: Viewport = {
   themeColor: [
@@ -200,14 +207,14 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="min-h-screen flex flex-col font-sans antialiased transition-colors duration-200">
+      <body className={`${inter.className} min-h-screen flex flex-col font-sans antialiased selection:bg-blue-500/20 selection:text-[#0066FF] transition-colors duration-200`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

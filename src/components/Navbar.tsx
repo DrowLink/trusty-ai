@@ -16,12 +16,12 @@ import {
   Moon,
   ChevronDown,
   Menu,
-  X
+  X,
+  ArrowRight
 } from 'lucide-react';
 import { UserSession } from '@/lib/quota';
 import { ActiveProductTab } from '@/lib/types';
 import { useTheme } from '@/lib/theme';
-
 import { TrustyIsotype } from './PartnerLogos';
 
 interface NavbarProps {
@@ -59,22 +59,33 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Primary Essential Tabs
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
+  // Primary Platform Tabs
   const primaryTabs: { id: ActiveProductTab; label: string; icon: any; badge?: string }[] = [
     { id: 'bureau', label: 'Agent Bureau', icon: ShieldCheck },
     { id: 'decision_api', label: 'Decision Rail', icon: Cpu, badge: 'M2M' },
+    { id: 'underwriting', label: 'Underwriting', icon: Activity, badge: '12+20' },
     { id: 'pricing', label: 'Pricing', icon: Layers },
   ];
 
-  // Secondary Submenu Tabs
+  // Secondary Institutional Solutions
   const secondaryTabs: { id: ActiveProductTab; label: string; desc: string; icon: any; badge?: string }[] = [
     { id: 'economics', label: 'Economic Case', desc: 'Brex ROI & spending caps', icon: TrendingUp, badge: '$500M' },
-    { id: 'underwriting', label: 'Underwriting', desc: '12 Day-0 + 20 Telemetry signals', icon: Activity, badge: '12+20' },
     { id: 'moat', label: 'Moat & Defensibility', desc: 'Rating agency independence wedge', icon: Award },
   ];
 
   const isSecondaryActive = secondaryTabs.some(t => t.id === activeTab);
-  const activeSecondaryItem = secondaryTabs.find(t => t.id === activeTab);
 
   const handleSelectTab = (id: ActiveProductTab) => {
     onTabChange(id);
@@ -83,143 +94,174 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-3 sm:top-4 z-40 w-full px-3 sm:px-6">
-      <div className="max-w-5xl mx-auto rounded-full border border-slate-200/90 dark:border-white/[0.1] bg-white/85 dark:bg-[#0a0d14]/85 backdrop-blur-xl shadow-lg shadow-black/[0.04] px-3.5 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 transition-all">
-        {/* Brand with Official Transparent Isotype & Typography Lockup */}
-        <div 
-          className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer select-none flex-shrink-0 group"
-          onClick={() => handleSelectTab('bureau')}
+    <header className={`sticky top-0 z-50 w-full bg-white dark:bg-[#070a11] border-b border-slate-200/80 dark:border-white/[0.08] transition-colors ${!isMobileMenuOpen ? 'bg-white/95 dark:bg-[#070a11]/95 backdrop-blur-md' : ''}`}>
+      {/* 1. TOP ANNOUNCEMENT BANNER (BREX STYLE) */}
+      <div className="bg-[#090d16] text-slate-200 text-[11px] sm:text-xs py-2 px-4 text-center font-medium border-b border-white/[0.06] flex items-center justify-center gap-2">
+        <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider bg-white/[0.1] text-sky-300 px-2 py-0.5 rounded font-semibold">
+          LIVE RAIL
+        </span>
+        <button 
+          onClick={() => handleSelectTab('decision_api')}
+          className="hover:text-white transition-colors flex items-center gap-1.5 group cursor-pointer"
         >
-          {/* Official Transparent Isotype */}
-          <div className="relative group-hover:scale-105 transition-transform duration-200 flex-shrink-0">
-            <TrustyIsotype className="w-8 h-8 sm:w-9 sm:h-9 drop-shadow-sm" />
-          </div>
+          <span className="text-slate-300 group-hover:text-white">
+            Live M2M Decision Gateway 2.0: Sub-14ms clearing for autonomous agent cards &amp; MCP tools.
+          </span>
+          <span className="text-[#38bdf8] font-semibold flex items-center gap-0.5 group-hover:underline">
+            Explore live rail <ArrowRight className="w-3 h-3 inline-block" />
+          </span>
+        </button>
+      </div>
 
-          <div className="flex flex-col justify-center">
-            {/* Top row: TRUSTY.bot™ */}
-            <div className="flex items-baseline leading-none">
-              <span className="text-base sm:text-lg font-black tracking-tight text-[#081226] dark:text-white font-sans">
-                TRUSTY
-              </span>
-              <span className="text-base sm:text-lg font-black tracking-tight text-[#0066FF] dark:text-[#38BDF8]">
-                .bot
-              </span>
-              <span className="text-[8px] sm:text-[9px] font-bold text-[#081226] dark:text-slate-300 ml-0.5 -translate-y-1 sm:-translate-y-1.5 inline-block">
-                ™
+      {/* 2. MAIN HEADER BAR */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-[70px] flex items-center justify-between gap-4">
+        
+        {/* Left Section: Mobile Hamburger + Logo + Desktop Nav */}
+        <div className="flex items-center space-x-3 sm:space-x-8">
+          
+          {/* Mobile Hamburger Toggle (Left side, matching Brex mobile) */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            className="md:hidden p-1.5 -ml-1.5 rounded-lg text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+
+          {/* TRUSTY.bot Brand Lockup */}
+          <div 
+            className="flex items-center space-x-2.5 cursor-pointer select-none flex-shrink-0 group"
+            onClick={() => handleSelectTab('bureau')}
+          >
+            <div className="relative group-hover:scale-105 transition-transform duration-200 flex-shrink-0">
+              <TrustyIsotype className="w-7 h-7 sm:w-8 sm:h-8 drop-shadow-sm" />
+            </div>
+
+            <div className="flex flex-col justify-center -space-y-0.5">
+              <div className="flex items-baseline leading-none">
+                <span className="text-base sm:text-lg font-black tracking-tight text-slate-950 dark:text-white font-sans">
+                  TRUSTY
+                </span>
+                <span className="text-base sm:text-lg font-black tracking-tight text-[#0066FF] dark:text-[#38BDF8]">
+                  .bot
+                </span>
+                <span className="text-[8px] sm:text-[9px] font-bold text-slate-700 dark:text-slate-300 ml-0.5 -translate-y-0.5 sm:-translate-y-1 inline-block">
+                  ™
+                </span>
+              </div>
+              <span className="text-[6.5px] sm:text-[7px] font-bold tracking-[0.24em] text-slate-500 dark:text-slate-400 uppercase font-sans leading-none whitespace-nowrap">
+                TRUST POWERS AGENTS
               </span>
             </div>
-            {/* Bottom row: TRUST POWERS AGENTS */}
-            <span className="text-[6.5px] sm:text-[7.5px] font-bold tracking-[0.24em] text-[#525f7a] dark:text-slate-400 uppercase font-sans mt-0.5 whitespace-nowrap">
-              TRUST POWERS AGENTS
-            </span>
           </div>
-        </div>
 
-        {/* Center: Minimalist Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-1">
-          {primaryTabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
+          {/* Desktop Navigation Links (Brex Style) */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+            {primaryTabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => handleSelectTab(tab.id)}
+                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-[13px] lg:text-sm font-medium transition-colors whitespace-nowrap ${
+                    isActive
+                      ? 'text-[#0066FF] dark:text-sky-400 font-semibold bg-blue-50/60 dark:bg-white/[0.06]'
+                      : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <span>{tab.label}</span>
+                  {tab.badge && (
+                    <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${
+                      isActive 
+                        ? 'bg-blue-100 dark:bg-sky-950 text-[#0066FF] dark:text-sky-300 font-semibold' 
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                    }`}>
+                      {tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+
+            {/* Solutions Dropdown Menu */}
+            <div className="relative" ref={dropdownRef}>
               <button
-                key={tab.id}
-                onClick={() => handleSelectTab(tab.id)}
-                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition whitespace-nowrap ${
-                  isActive
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-950 dark:text-white font-semibold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-[13px] lg:text-sm font-medium transition-colors whitespace-nowrap ${
+                  isSecondaryActive
+                    ? 'text-[#0066FF] dark:text-sky-400 font-semibold bg-blue-50/60 dark:bg-white/[0.06]'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
                 }`}
               >
-                <span>{tab.label}</span>
-                {tab.badge && (
-                  <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full ${
-                    isActive 
-                      ? 'bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-300' 
-                      : 'bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                  }`}>
-                    {tab.badge}
-                  </span>
-                )}
+                <span>Solutions</span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180 text-[#0066FF]' : 'opacity-60'}`} />
               </button>
-            );
-          })}
 
-          {/* Submenu Dropdown: Solutions / More */}
-          <div className="relative" ref={dropdownRef}>
-            <button
-              type="button"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-xs font-medium transition whitespace-nowrap ${
-                isSecondaryActive
-                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-950 dark:text-white font-semibold'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04]'
-              }`}
-            >
-              <span>Solutions</span>
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180 text-[#0066FF] dark:text-sky-400' : 'opacity-60'}`} />
-            </button>
-
-            {/* Dropdown Menu Box */}
-            {isDropdownOpen && (
-              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-72 rounded-2xl bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.12] shadow-2xl p-2 z-50 animate-fade-in font-sans space-y-1">
-                <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">
-                  Institutional Solutions
-                </div>
-                {secondaryTabs.map((tab) => {
-                  const Icon = tab.icon;
-                  const isActive = activeTab === tab.id;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => handleSelectTab(tab.id)}
-                      className={`w-full flex items-start space-x-2.5 p-2 rounded-xl text-left transition ${
-                        isActive
-                          ? 'bg-slate-100 dark:bg-slate-800/90 text-[#0066FF] dark:text-sky-300'
-                          : 'hover:bg-slate-50 dark:hover:bg-white/[0.04] text-slate-700 dark:text-slate-300'
-                      }`}
-                    >
-                      <div className={`p-1.5 rounded-lg mt-0.5 ${isActive ? 'bg-[#0066FF]/10 text-[#0066FF] dark:text-sky-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold">{tab.label}</span>
-                          {tab.badge && (
-                            <span className="text-[9px] font-mono px-1 rounded bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                              {tab.badge}
-                            </span>
-                          )}
+              {/* Dropdown Menu Box */}
+              {isDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-72 rounded-xl bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.12] shadow-xl p-2 z-50 font-sans space-y-1 animate-fadeIn">
+                  <div className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">
+                    Institutional Solutions
+                  </div>
+                  {secondaryTabs.map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeTab === tab.id;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => handleSelectTab(tab.id)}
+                        className={`w-full flex items-start space-x-2.5 p-2 rounded-lg text-left transition ${
+                          isActive
+                            ? 'bg-blue-50 dark:bg-slate-800/90 text-[#0066FF] dark:text-sky-300'
+                            : 'hover:bg-slate-50 dark:hover:bg-white/[0.04] text-slate-700 dark:text-slate-300'
+                        }`}
+                      >
+                        <div className={`p-1.5 rounded-md mt-0.5 ${isActive ? 'bg-[#0066FF]/10 text-[#0066FF] dark:text-sky-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}`}>
+                          <Icon className="w-4 h-4" />
                         </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{tab.desc}</p>
-                      </div>
-                    </button>
-                  );
-                })}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold">{tab.label}</span>
+                            {tab.badge && (
+                              <span className="text-[9px] font-mono px-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-medium">
+                                {tab.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">{tab.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
 
-                <div className="h-px bg-slate-100 dark:bg-white/[0.08] my-1" />
+                  <div className="h-px bg-slate-100 dark:bg-white/[0.08] my-1" />
 
-                <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    onOpenSpecs();
-                  }}
-                  className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] transition"
-                >
-                  <FileText className="w-3.5 h-3.5 opacity-70" />
-                  <span>Architecture Specs (.md)</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </nav>
+                  <button
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      onOpenSpecs();
+                    }}
+                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/[0.04] transition"
+                  >
+                    <FileText className="w-3.5 h-3.5 opacity-70" />
+                    <span>Technical Architecture Specs (.md)</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </nav>
+        </div>
 
-        {/* Right Actions: Theme Toggle + Quota + Pill CTA */}
-        <div className="flex items-center space-x-2 flex-shrink-0">
+        {/* Right Section: Sign in, Quota, Dark mode toggle, Primary CTA */}
+        <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          
           {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            className="p-2 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
           >
             {theme === 'dark' ? (
               <Sun className="w-4 h-4 text-amber-400" />
@@ -230,7 +272,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Quota Indicator */}
           {session.isAuthenticated ? (
-            <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-[11px] font-mono text-emerald-700 dark:text-emerald-300">
+            <div className="hidden lg:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-[11px] font-mono text-emerald-700 dark:text-emerald-300">
               <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span className="font-bold">UNLIMITED</span>
             </div>
@@ -238,42 +280,41 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onOpenAuth}
               title="Daily Anonymous Quota. Click to authenticate."
-              className="hidden sm:flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              className="hidden lg:flex items-center space-x-1 px-2.5 py-1 rounded-md text-[11px] font-mono text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition border border-slate-200 dark:border-white/[0.08]"
             >
               <Lock className="w-3 h-3 text-amber-500 flex-shrink-0" />
-              <span className="tabular-nums font-medium">{session.queriesRemaining}/10</span>
+              <span className="tabular-nums font-medium">{session.queriesRemaining}/10 free</span>
             </button>
           )}
 
-          {/* Primary CTA with Brand Color */}
+          {/* Sign In Link (Brex Style Desktop) */}
+          <button
+            onClick={onOpenAuth}
+            className="hidden sm:inline-block text-[13px] font-medium text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white px-2.5 py-1.5 transition"
+          >
+            {session.isAuthenticated ? 'Account' : 'Sign in'}
+          </button>
+
+          {/* Primary CTA Button (Brex Style Rectangular with subtle rounded corners) */}
           {onOpenEvaluate && (
             <button
               onClick={onOpenEvaluate}
-              className="flex items-center space-x-1.5 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-xs font-bold bg-[#0066FF] hover:bg-blue-600 text-white dark:bg-white dark:text-slate-950 dark:hover:bg-slate-100 transition shadow-sm shadow-blue-500/20"
+              className="flex items-center space-x-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold bg-[#0066FF] hover:bg-blue-600 text-white transition shadow-sm"
             >
-              <Sparkles className="w-3.5 h-3.5 text-white dark:text-[#0066FF]" />
+              <Sparkles className="w-3.5 h-3.5 text-white" />
               <span>Audit Agent</span>
             </button>
           )}
-
-          {/* Mobile Hamburger Toggle Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-            className="md:hidden p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-          >
-            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation Menu */}
+      {/* 3. MOBILE RESPONSIVE DRAWER (BREX STYLE MOBILE OVERLAY) */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-white/[0.08] bg-white/98 dark:bg-[#07090e]/98 backdrop-blur-xl px-4 py-4 space-y-4 font-sans animate-fade-in shadow-2xl">
-          {/* Core Navigation */}
+        <div className="md:hidden w-full bg-white dark:bg-[#070a11] border-t border-slate-200 dark:border-white/[0.08] px-5 py-6 space-y-6 shadow-2xl h-[calc(100vh-110px)] overflow-y-auto">
+          {/* Primary Navigation */}
           <div className="space-y-1">
-            <div className="px-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">
-              Core Platform
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold mb-2">
+              Platform &amp; Rails
             </div>
             {primaryTabs.map((tab) => {
               const Icon = tab.icon;
@@ -282,18 +323,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => handleSelectTab(tab.id)}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold transition ${
+                  className={`w-full flex items-center justify-between py-3 px-3 rounded-lg text-sm font-medium transition ${
                     isActive
-                      ? 'bg-slate-100 dark:bg-slate-800 text-[#0066FF] dark:text-sky-300 border border-slate-200 dark:border-white/[0.08]'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
+                      ? 'bg-blue-50 dark:bg-white/[0.08] text-[#0066FF] dark:text-sky-300 font-semibold'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5">
+                  <div className="flex items-center space-x-3">
                     <Icon className="w-4 h-4 text-[#0066FF] dark:text-sky-400" />
                     <span>{tab.label}</span>
                   </div>
                   {tab.badge && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200/70 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
                       {tab.badge}
                     </span>
                   )}
@@ -303,9 +344,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Institutional Suite */}
-          <div className="space-y-1 pt-1">
-            <div className="px-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold">
-              Institutional &amp; Research
+          <div className="space-y-1 pt-2 border-t border-slate-100 dark:border-white/[0.08]">
+            <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-500 font-bold mb-2">
+              Solutions &amp; Research
             </div>
             {secondaryTabs.map((tab) => {
               const Icon = tab.icon;
@@ -314,18 +355,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => handleSelectTab(tab.id)}
-                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-semibold transition ${
+                  className={`w-full flex items-center justify-between py-3 px-3 rounded-lg text-sm font-medium transition ${
                     isActive
-                      ? 'bg-slate-100 dark:bg-slate-800 text-[#0066FF] dark:text-sky-300 border border-slate-200 dark:border-white/[0.08]'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
+                      ? 'bg-blue-50 dark:bg-white/[0.08] text-[#0066FF] dark:text-sky-300 font-semibold'
+                      : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
                   }`}
                 >
-                  <div className="flex items-center space-x-2.5">
+                  <div className="flex items-center space-x-3">
                     <Icon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     <span>{tab.label}</span>
                   </div>
                   {tab.badge && (
-                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300">
                       {tab.badge}
                     </span>
                   )}
@@ -334,31 +375,41 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </div>
 
-          {/* Mobile Actions */}
-          <div className="pt-2 border-t border-slate-100 dark:border-white/[0.06] flex flex-col gap-2">
+          {/* Technical Specs & Auth in Mobile */}
+          <div className="pt-4 border-t border-slate-100 dark:border-white/[0.08] space-y-3">
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                onOpenSpecs();
+              }}
+              className="w-full flex items-center space-x-2 py-2.5 px-3 rounded-lg text-xs font-mono text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition"
+            >
+              <FileText className="w-4 h-4 text-slate-400" />
+              <span>Technical Architecture Specs (.md)</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                onOpenAuth();
+              }}
+              className="w-full py-2.5 px-3 rounded-lg text-sm font-semibold border border-slate-200 dark:border-white/[0.12] text-slate-900 dark:text-white text-center hover:bg-slate-50 dark:hover:bg-white/[0.04] transition"
+            >
+              {session.isAuthenticated ? 'Manage Account (Unlimited)' : 'Sign in / Get API Key'}
+            </button>
+
             {onOpenEvaluate && (
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   onOpenEvaluate();
                 }}
-                className="w-full flex items-center justify-center space-x-2 py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-[#0066FF] hover:bg-[#0052cc] transition shadow-sm"
+                className="w-full py-3 px-4 rounded-lg text-sm font-semibold text-white bg-[#0066FF] hover:bg-blue-600 transition shadow-sm text-center flex items-center justify-center space-x-2"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Audit Repository / Manifest</span>
+                <span>Audit Repository / Agent</span>
               </button>
             )}
-
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onOpenSpecs();
-              }}
-              className="w-full flex items-center justify-center space-x-2 py-2 px-4 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Technical Specs &amp; Founding Memo</span>
-            </button>
           </div>
         </div>
       )}
