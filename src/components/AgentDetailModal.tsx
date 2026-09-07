@@ -100,7 +100,7 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white font-mono truncate">{agent.name}</h2>
               {getRiskBadge(evaluation.riskTier)}
-              <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/80 dark:border-purple-800 text-[10px] font-mono dark:text-purple-200 font-bold">
+              <span className="px-2 py-0.5 rounded bg-blue-50 text-[#0066FF] border border-blue-200 dark:bg-blue-950/80 dark:border-blue-800 text-[10px] font-mono dark:text-sky-300 font-bold">
                 Tier {creditProfile.creditTier}
               </span>
               {creditProfile.isFileThin ? (
@@ -186,11 +186,11 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
                   <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                     SCORE 02: MONEY / CREDIT
                   </div>
-                  <div className="text-4xl sm:text-5xl font-black font-mono my-1 text-purple-600 dark:text-purple-400 tabular-nums">
+                  <div className="text-4xl sm:text-5xl font-black font-mono my-1 text-[#0066FF] dark:text-sky-400 tabular-nums">
                     {creditProfile.creditScore}
                     <span className="text-sm font-normal text-slate-400 dark:text-slate-500"> / 100</span>
                   </div>
-                  <div className="mt-1 text-xs font-mono text-purple-700 dark:text-purple-300 font-bold">
+                  <div className="mt-1 text-xs font-mono text-[#0066FF] dark:text-sky-300 font-bold">
                     Tier {creditProfile.creditTier} Limit: ${creditProfile.estimatedDailyCapacity.toLocaleString()}/d
                   </div>
                   <div className="mt-2 text-[10px] text-slate-400 dark:text-slate-500 font-mono">
@@ -397,16 +397,16 @@ export const AgentDetailModal: React.FC<AgentDetailModalProps> = ({ agent, onClo
           {/* TAB 3: BEHAVIORAL CREDIT FILE (20 SIGNALS) */}
           {activeTab === 'behavioral' && (
             <div className="space-y-4 animate-fadeIn">
-              <div className="p-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white dark:bg-purple-950/30 dark:border dark:border-purple-900/50 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[#0066FF] to-sky-500 text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <div className="text-[10px] font-mono uppercase tracking-widest text-purple-100 dark:text-purple-400 font-bold">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-blue-100 dark:text-sky-300 font-bold">
                     OBSERVED ECONOMIC TELEMETRY
                   </div>
                   <div className="text-base font-bold text-white mt-0.5">
                     20 Behavioral Credit File Variables
                   </div>
                 </div>
-                <div className="text-xs font-mono text-purple-100 dark:text-purple-300 font-bold">
+                <div className="text-xs font-mono text-blue-100 dark:text-sky-200 font-bold">
                   Recommended Velocity: ${creditProfile.estimatedDailyCapacity.toLocaleString()} USD / Day
                 </div>
               </div>

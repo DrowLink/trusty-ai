@@ -202,7 +202,7 @@ export const SpecsModal: React.FC<SpecsModalProps> = ({ isOpen, onClose }) => {
                 </table>
               </div>
 
-              <div className="p-3 rounded-xl bg-rose-50 dark:bg-red-950/20 border border-rose-200 dark:border-red-900/30 text-[11px] text-rose-800 dark:text-zinc-400">
+              <div className="p-3 rounded-xl bg-rose-50 dark:bg-red-950/20 border border-rose-200 dark:border-red-900/30 text-[11px] text-rose-800 dark:text-red-300">
                 <strong className="text-rose-700 dark:text-red-400 font-mono">Hard Severity Overrides (Circuit Breakers):</strong> Confirmed malware caps score to 0; Credential theft caps to 10; Unsandboxed host shell execution without human gate caps to 25. Confidence &lt;60% mathematically caps score at 50 + (C × 0.5).
               </div>
             </div>

@@ -51,18 +51,18 @@ export const EconomicCaseView: React.FC<EconomicCaseViewProps> = ({
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 space-y-12 font-sans">
       {/* SECTION 1: HEADER & CORE POSITIONING (Slide 1) */}
-      <div className="border-b border-slate-800/80 pb-8">
-        <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-sky-950/40 border border-sky-800/50 text-[11px] font-mono text-sky-400 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+      <div className="border-b border-slate-200 dark:border-slate-800/80 pb-8">
+        <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-[#0066FF]/10 dark:bg-sky-950/40 border border-[#0066FF]/30 dark:border-sky-800/50 text-[11px] font-mono text-[#0066FF] dark:text-sky-400 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#0066FF] dark:bg-sky-400 animate-pulse" />
           <span>TRUSTY.BOT • AGENT RISK & CREDIT INFRASTRUCTURE</span>
-          <span className="text-slate-600">|</span>
-          <span className="text-slate-300">THE ECONOMIC CASE</span>
+          <span className="text-slate-400 dark:text-slate-600">|</span>
+          <span className="text-slate-700 dark:text-slate-300">THE ECONOMIC CASE</span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-sans">
-          From data lookup to <span className="text-sky-400">financial risk decision</span>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 dark:text-white font-sans">
+          From data lookup to <span className="text-[#0066FF] dark:text-sky-400">financial risk decision</span>
         </h1>
-        <p className="mt-3 text-sm sm:text-base text-slate-400 max-w-3xl leading-relaxed">
+        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
           The economic value changes when TRUSTY sits directly in the decision path before autonomous money moves.
         </p>
 
@@ -136,7 +136,7 @@ export const EconomicCaseView: React.FC<EconomicCaseViewProps> = ({
               </div>
               <button
                 onClick={onOpenDecisionPlayground}
-                className="px-3 py-1.5 rounded bg-white hover:bg-blue-50 text-[#0066FF] dark:bg-sky-500 dark:hover:bg-sky-400 dark:text-slate-950 font-bold text-xs font-mono transition flex items-center space-x-1 shadow-sm"
+                className="px-3 py-1.5 rounded bg-white hover:bg-blue-50 text-[#0066FF] dark:bg-sky-500 dark:hover:bg-sky-400 dark:text-white font-bold text-xs font-mono transition flex items-center space-x-1 shadow-sm"
               >
                 <span>Test Decision API</span>
                 <ArrowRight className="w-3 h-3" />
@@ -150,13 +150,13 @@ export const EconomicCaseView: React.FC<EconomicCaseViewProps> = ({
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-800/80 pb-4">
           <div>
-            <div className="text-[11px] font-mono uppercase tracking-widest text-sky-400 font-semibold">
+            <div className="text-[11px] font-mono uppercase tracking-widest text-[#0066FF] dark:text-sky-400 font-semibold">
               ILLUSTRATIVE BREX CASE
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1 font-sans">
+            <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white tracking-tight mt-1 font-sans">
               $500M of agentic spend under decision
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 mt-1 font-mono">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1 font-mono">
               1,000,000 attempted agent transactions &times; $500 average transaction size.
             </p>
           </div>
@@ -368,7 +368,7 @@ export const EconomicCaseView: React.FC<EconomicCaseViewProps> = ({
                 </div>
               </div>
             </div>
-            <div className="text-xl sm:text-2xl font-black font-mono text-purple-600 dark:text-purple-400 tabular-nums self-end sm:self-auto">
+            <div className="text-xl sm:text-2xl font-black font-mono text-[#0066FF] dark:text-sky-400 tabular-nums self-end sm:self-auto">
               ${(results.engine3ApproveMoreGoodSpend / 1000000).toFixed(1)}M
             </div>
           </div>

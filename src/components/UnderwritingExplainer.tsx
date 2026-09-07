@@ -63,28 +63,28 @@ export const UnderwritingExplainer: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 space-y-10 font-sans">
       {/* HEADER */}
-      <div className="border-b border-slate-800/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="border-b border-slate-200 dark:border-slate-800/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-[11px] font-mono text-slate-400 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 mb-3">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
             <span>TRUSTY.BOT • DUAL-LAYER UNDERWRITING METHODOLOGY</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white font-sans">
-            Underwriting Engine: <span className="text-sky-400">12 Public + 20 Behavioral Signals</span>
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white font-sans">
+            Underwriting Engine: <span className="text-[#0066FF] dark:text-sky-400">12 Public + 20 Behavioral Signals</span>
           </h1>
-          <p className="mt-2 text-xs sm:text-sm text-slate-400 max-w-3xl leading-relaxed">
+          <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
             How TRUSTY assesses an agent without requiring private financial credentials on Day 0, then graduates it into higher spending limits via observed payment telemetry.
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex items-center p-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono">
+        <div className="flex items-center p-1 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-mono">
           <button
             onClick={() => setActiveTab('day0')}
             className={`px-3 py-1.5 rounded transition ${
               activeTab === 'day0'
-                ? 'bg-sky-500 text-slate-950 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#0066FF] text-white font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Day-Zero Underwriting (12 Signals)
@@ -93,8 +93,8 @@ export const UnderwritingExplainer: React.FC = () => {
             onClick={() => setActiveTab('behavioral')}
             className={`px-3 py-1.5 rounded transition ${
               activeTab === 'behavioral'
-                ? 'bg-purple-500 text-slate-950 font-bold'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#0066FF] text-white font-bold'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             Behavioral Credit File (20 Signals)
@@ -224,12 +224,12 @@ export const UnderwritingExplainer: React.FC = () => {
                 {/* Dual Scores */}
                 <div className="grid grid-cols-2 gap-4 font-mono">
                   <div>
-                    <div className="text-xs text-purple-200 dark:text-slate-400">Trust</div>
+                    <div className="text-xs text-sky-200 dark:text-slate-400">Trust</div>
                     <div className="text-4xl font-black text-emerald-300 dark:text-emerald-400 mt-1">94</div>
                   </div>
                   <div>
-                    <div className="text-xs text-purple-200 dark:text-slate-400">Credit</div>
-                    <div className="text-4xl font-black text-purple-200 dark:text-purple-400 mt-1">87</div>
+                    <div className="text-xs text-sky-200 dark:text-slate-400">Credit</div>
+                    <div className="text-4xl font-black text-sky-200 dark:text-sky-400 mt-1">87</div>
                   </div>
                 </div>
 
@@ -237,7 +237,7 @@ export const UnderwritingExplainer: React.FC = () => {
 
                 {/* Recommended Spending Capacity */}
                 <div className="space-y-1 font-mono">
-                  <div className="text-[10px] text-purple-200 dark:text-slate-400 uppercase tracking-widest">
+                  <div className="text-[10px] text-sky-200 dark:text-slate-400 uppercase tracking-widest">
                     RECOMMENDED SPENDING CAPACITY
                   </div>
                   <div className="text-3xl font-black text-emerald-300 dark:text-emerald-400">

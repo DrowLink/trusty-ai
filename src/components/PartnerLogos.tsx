@@ -118,7 +118,10 @@ export const TrustyIsotype = ({ className = "w-6 h-6" }: { className?: string })
   <img
     src="/isotype.svg"
     alt="TRUSTY.bot Isotipo"
-    className={`${className} object-contain`}
+    width={32}
+    height={32}
+    className={`${className} object-contain block`}
+    style={{ maxWidth: '100%', maxHeight: '100%' }}
     loading="eager"
   />
 );

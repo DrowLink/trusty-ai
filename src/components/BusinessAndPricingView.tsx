@@ -95,8 +95,8 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
       ],
       cta: 'Connect Decision Rail',
       highlighted: true,
-      badgeColor: 'text-purple-600 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/90 border-purple-200 dark:border-purple-700/80',
-      btnStyle: 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-900/30',
+      badgeColor: 'text-[#0066FF] dark:text-sky-300 bg-blue-50 dark:bg-blue-950/90 border-blue-200 dark:border-blue-700/80',
+      btnStyle: 'bg-[#0066FF] hover:bg-blue-700 text-white shadow-lg shadow-blue-900/30',
     },
     {
       name: 'ENTERPRISE',
@@ -130,7 +130,7 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
 
         <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white font-sans">
           Keep discovery free. <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-emerald-500 via-sky-500 to-purple-600 dark:from-emerald-400 dark:via-sky-300 dark:to-purple-400 bg-clip-text text-transparent">
+          <span className="text-[#0066FF] dark:text-sky-300">
             Monetize decisions.
           </span>
         </h1>
@@ -147,12 +147,12 @@ export const BusinessAndPricingView: React.FC<BusinessAndPricingViewProps> = ({
             key={tier.name}
             className={`rounded-2xl p-5 sm:p-6 flex flex-col justify-between transition relative interactive-lift ${
               tier.highlighted
-                ? 'bg-gradient-to-b from-purple-50/60 to-white dark:from-[#120d22] dark:to-[#0c1017] border-2 border-purple-500 shadow-xl shadow-purple-500/10 dark:shadow-purple-950/30'
+                ? 'bg-gradient-to-b from-blue-50/60 to-white dark:from-[#071628] dark:to-[#0c1017] border-2 border-[#0066FF] shadow-xl shadow-blue-500/10 dark:shadow-blue-950/30'
                 : 'bg-white dark:bg-[#0c1017] border border-slate-200 dark:border-white/[0.08] shadow-sm hover:border-slate-300 dark:hover:border-white/[0.18]'
             }`}
           >
             {tier.highlighted && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-purple-600 text-white font-mono text-[9px] font-bold uppercase tracking-wider shadow-sm">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#0066FF] text-white font-mono text-[9px] font-bold uppercase tracking-wider shadow-sm">
                 Fintech Decision Rail
               </div>
             )}

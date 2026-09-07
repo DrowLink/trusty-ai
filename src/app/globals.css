@@ -210,3 +210,52 @@ html.dark .brand-glow {
 .interactive-lift:hover {
   transform: translateY(-1.5px);
 }
+
+/* Hero Decision Pipeline Animations */
+@keyframes railPulse {
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes scanBeam {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(320px);
+    opacity: 0;
+  }
+}
+
+@keyframes tokenBob {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-6px) scale(1.02);
+  }
+}
+
+.animate-rail-pulse {
+  animation: railPulse 2.5s linear infinite;
+}
+
+.animate-scan-beam {
+  animation: scanBeam 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-token-bob {
+  animation: tokenBob 4s ease-in-out infinite;
+}
+

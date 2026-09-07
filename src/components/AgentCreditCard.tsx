@@ -80,10 +80,10 @@ export const AgentCreditCard: React.FC<AgentCreditCardProps> = ({
             <div className="text-xs font-mono font-semibold tracking-wider uppercase text-blue-200 dark:text-zinc-400">
               CREDIT
             </div>
-            <div className="text-4xl sm:text-5xl font-black font-mono text-purple-200 dark:text-purple-400 mt-1 tabular-nums">
+            <div className="text-4xl sm:text-5xl font-black font-mono text-sky-200 dark:text-sky-300 mt-1 tabular-nums">
               {creditProfile.creditScore}
             </div>
-            <div className="text-[10px] font-mono text-purple-200/90 dark:text-purple-400/80 mt-0.5 flex items-center space-x-1">
+            <div className="text-[10px] font-mono text-sky-200/90 dark:text-sky-300/80 mt-0.5 flex items-center space-x-1">
               <span>Tier {creditProfile.creditTier} (Public Underwriting)</span>
             </div>
           </div>
