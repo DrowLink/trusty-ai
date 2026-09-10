@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
 > 🚀 **LIVE DEPLOYMENT (VERCEL)**:  
-> **[https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/](https://trusty-jfagbrh7p-drowlinks-projects.vercel.app/)**  
+> **[https://trusty-ai.vercel.app](https://trusty-ai.vercel.app/)**  
 > *Ready to test in production with real-time multi-source crawling, 20-signal scoring, and on-demand repository audits.*
 
 ---
