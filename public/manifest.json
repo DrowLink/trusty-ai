@@ -1,8 +1,8 @@
 {
-  "name": "TRUSTY.bot - The Trust & Credit Bureau for AI Agents",
+  "name": "TRUSTY.bot - Intent authorization",
   "short_name": "TRUSTY.bot",
-  "description": "The independent trust & credit bureau for autonomous AI agents.",
-  "start_url": "/",
+  "description": "Verify that AI agent purchases match human intent.",
+  "start_url": "/app",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0066ff",

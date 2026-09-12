@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { AgentWithScore, DiscoveryStats, ActiveProductTab } from '@/lib/types';
 import { Navbar } from '@/components/Navbar';
-import { HeroMetrics } from '@/components/HeroMetrics';
 import Link from 'next/link';
 import { DiscoveryBar } from '@/components/DiscoveryBar';
 import { TrustLeaderboard } from '@/components/TrustLeaderboard';
@@ -205,7 +204,7 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-transparent font-sans">
-      <div className="bg-slate-100 dark:bg-slate-900 px-5 py-3 flex justify-between text-sm gap-4"><Link href="/" className="font-semibold underline underline-offset-4">TRUSTY home</Link><span>Agent tools & legacy simulation ? No live payment execution</span></div>
+      <div className="bg-slate-100 dark:bg-slate-900 px-5 py-3 flex justify-between text-sm gap-4"><Link href="/" className="font-semibold underline underline-offset-4">TRUSTY home</Link><span>Agent tools & legacy simulation - No live payment execution</span></div>
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -226,22 +225,16 @@ export default function HomePage() {
         {/* VIEW 1: AGENT BUREAU & DIRECTORY */}
         {activeTab === 'bureau' && (
           <div className="animate-fadeIn">
-            <HeroMetrics
-              stats={stats}
-              agents={agents}
-              onAuditUrl={handleHeroAudit}
-              onSelectAgent={agent => setSelectedAgent(agent)}
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              isAuditing={isAuditingLive}
-              session={session}
-              onOpenAuth={() => {
-                setAuthInitialMode('signin');
-                setIsQuotaExceeded(false);
-                setIsAuthOpen(true);
-              }}
-              onNavigateTab={handleTabChange}
-            />
+            <section className="max-w-7xl mx-auto px-5 py-10">
+              <h1 className="text-3xl font-semibold tracking-tight">Agent research &amp; evidence</h1>
+              <p className="mt-3 text-slate-600 dark:text-slate-400">Discover agents, inspect repository permissions and review supporting evidence.</p>
+              <form className="mt-6 flex flex-col sm:flex-row gap-3 max-w-3xl" onSubmit={event => { event.preventDefault(); if (searchQuery.trim()) handleHeroAudit(searchQuery.trim()); }}>
+                <label className="flex-1"><span className="sr-only">Search agents or paste a GitHub URL</span><input className="w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-base" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} placeholder="Search agents or paste a GitHub URL" /></label>
+                <button type="submit" disabled={isAuditingLive || !searchQuery.trim()} className="rounded-lg bg-blue-600 text-white px-5 py-3 font-semibold disabled:opacity-50">{isAuditingLive ? 'Evaluating...' : 'Evaluate agent'}</button>
+                <button type="button" onClick={() => setIsEvaluateOpen(true)} className="rounded-lg border border-slate-300 dark:border-slate-700 px-5 py-3">Custom audit</button>
+              </form>
+              <Link href="/demo" className="inline-block mt-5 text-blue-600 dark:text-sky-400 underline underline-offset-4">Explore the new intent authorization demo</Link>
+            </section>
 
             <TrustLeaderboard
               agents={agents}

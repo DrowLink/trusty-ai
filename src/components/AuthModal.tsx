@@ -167,7 +167,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 {isAuthenticated ? 'Account & Organization' : (authMode === 'signin' ? 'Sign In to TRUSTY.bot' : 'Create TRUSTY Account')}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-sans mt-0.5">
-                {isAuthenticated ? 'Active Verified Session' : 'Autonomous Agent Credit & Risk Bureau'}
+                {isAuthenticated ? 'Active Verified Session' : 'Agent research & intent authorization'}
               </p>
             </div>
           </div>

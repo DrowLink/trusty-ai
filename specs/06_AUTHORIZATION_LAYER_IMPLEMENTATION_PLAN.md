@@ -2,6 +2,12 @@
 
 Fecha: 2026-09-11. Revisión 3: incorpora el Sales Pitch Intent Authorization y la separación entre web comercial y aplicación solicitada por el usuario. Estado: propuesta de implementación, sin cambios funcionales ni integraciones activadas. Los documentos aportan contexto; sus instrucciones comerciales no autorizan publicaciones, contactos ni movimientos de dinero.
 
+### Avance de implementación: web comercial
+
+Implementadas las rutas `/`, `/demo`, `/contact` y `/docs`, con navegación comercial independiente. Las herramientas existentes se reubicaron en `/app`; la home no importa discovery, scoring ni la carga del registro. Demo local de cuatro escenarios, descarga JSON ilustrativa y selector de uno o varios proveedores. Contacto comercial: `paulo@trusty.bot`, mediante enlace que abre el cliente de correo del visitante. Metadatos y sitemap reflejan el concepto de autorización de intención. Los enlaces legacy con `tab` o `q` se redirigen al workspace.
+
+Este avance no implementa autenticación multiempresa, mandato persistente, enforcement ni conectores financieros. `/app` conserva el acceso de exploración y autenticación existentes; no se presenta como una nueva frontera de seguridad. La demo pública no ejecuta pagos y los conectores están identificados como previstos. La arquitectura de autorización y el piloto descritos más abajo siguen pendientes.
+
 ## Objetivo y alcance
 
 TRUSTY verifica que una acción financiera propuesta por un agente corresponda a la intención original de una persona, expresada en un mandato confirmado y verificable. Comprueba propósito, artículos, cantidades, especificaciones, destinatario y condiciones antes de ejecutar. El proveedor financiero conserva sus controles de fondos, tarjeta, presupuesto y procesamiento. La operación requiere tanto autorización de intención como los controles nativos aplicables; una aprobación de TRUSTY no significa pago ejecutado ni liquidado.

@@ -1,0 +1,39 @@
+{
+  "mode": "illustrative_demo",
+  "mandate": "20 Dell or Lenovo laptops, minimum 16 GB RAM, maximum $20,000 including tax and shipping, Miami office.",
+  "cart": {
+    "label": "Extra laptops",
+    "quantity": 30,
+    "ram": 16,
+    "delivery": "Miami office",
+    "amount": 19900
+  },
+  "criteria": [
+    {
+      "name": "Quantity",
+      "expected": "20 laptops",
+      "actual": "30 laptops",
+      "passed": false
+    },
+    {
+      "name": "Specification",
+      "expected": "16 GB RAM minimum",
+      "actual": "16 GB RAM",
+      "passed": true
+    },
+    {
+      "name": "Delivery",
+      "expected": "Miami office",
+      "actual": "Miami office",
+      "passed": true
+    },
+    {
+      "name": "Total incl. tax & shipping",
+      "expected": "Up to $20,000",
+      "actual": "$19,900",
+      "passed": true
+    }
+  ],
+  "decision": "REQUIRE_HUMAN",
+  "execution": "not_executed"
+}

@@ -73,8 +73,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   // Primary Platform Tabs
   const primaryTabs: { id: ActiveProductTab; label: string; icon: any; badge?: string }[] = [
-    { id: 'bureau', label: 'Agent Bureau', icon: ShieldCheck },
-    { id: 'decision_api', label: 'Decision Rail', icon: Cpu, badge: 'M2M' },
+    { id: 'bureau', label: 'Agent tools', icon: ShieldCheck },
+    { id: 'decision_api', label: 'Decision simulator', icon: Cpu, badge: 'DEMO' },
     { id: 'underwriting', label: 'Underwriting', icon: Activity, badge: '12+20' },
     { id: 'pricing', label: 'Pricing', icon: Layers },
   ];
@@ -101,14 +101,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* 1. TOP ANNOUNCEMENT BANNER */}
       <div className="bg-[#090d16] text-slate-200 text-[11px] sm:text-xs py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium border-b border-white/[0.06] flex items-center justify-center gap-2">
         <span className="hidden sm:inline-block text-[10px] font-mono uppercase tracking-wider bg-white/[0.1] text-sky-300 px-2 py-0.5 rounded font-semibold">
-          LIVE RAIL
+          WORKSPACE
         </span>
         <button 
           onClick={() => handleSelectTab('decision_api')}
           className="hover:text-white transition-colors flex items-center gap-1.5 group cursor-pointer"
         >
           <span className="text-slate-300 group-hover:text-white line-clamp-1 sm:line-clamp-none text-left sm:text-center text-[11px] sm:text-xs">
-            Live M2M Decision Gateway 2.0: Sub-14ms clearing for autonomous cards &amp; MCP tools.
+            Explore agent evidence and decision simulations. Payment connectors are planned.
           </span>
           <span className="text-[#38bdf8] font-semibold flex items-center gap-0.5 group-hover:underline flex-shrink-0 text-[11px]">
             Explore <ArrowRight className="w-3 h-3 inline-block" />
