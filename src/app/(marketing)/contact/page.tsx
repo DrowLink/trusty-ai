@@ -1,0 +1,7 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+export const metadata: Metadata = { title: 'Design partner pilot', alternates: { canonical: '/contact' } };
+export default function ContactPage() {
+  const email = 'mailto:paulo@trusty.bot?subject=TRUSTY%20demo%20request&body=Hi%20Paulo%2C%0A%0AI%27d%20like%20to%20explore%20intent%20authorization%20for%20our%20workflow.%0A%0ACompany%3A%0AFinancial%20platform%28s%29%3A%0APurchasing%20workflow%3A%0A';
+  return <main id="content" className="contact-page"><div><h1>Bring us a workflow.<br />Let’s verify the intent.</h1><p>Explore a 30-day pilot with a single purchasing agent and the financial platform your team already uses.</p><h2>What we’ll work through</h2><ul><li>The human instruction and approval owner</li><li>The proposed cart, invoice and purchase evidence</li><li>Your existing provider and execution controls</li><li>Observed outcomes and a shared success measure</li></ul></div><aside><h2>Your first workflow</h2><p>The pilot starts with 100–1,000 sample actions, original mandates and anonymized outcomes, where available.</p><a className="marketing-button" href={email}>Request a demo by email</a><p className="contact-status">Opens your email app. You can also write directly to <a href="mailto:paulo@trusty.bot">paulo@trusty.bot</a>.</p><Link className="text-link" href="/demo">Explore the interactive demo</Link></aside></main>;
+}

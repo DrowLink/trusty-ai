@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { AgentWithScore, DiscoveryStats, ActiveProductTab } from '@/lib/types';
 import { Navbar } from '@/components/Navbar';
 import { HeroMetrics } from '@/components/HeroMetrics';
-import { BrexStyleLandingSections } from '@/components/BrexStyleLandingSections';
+import Link from 'next/link';
 import { DiscoveryBar } from '@/components/DiscoveryBar';
 import { TrustLeaderboard } from '@/components/TrustLeaderboard';
 import { AgentDetailModal } from '@/components/AgentDetailModal';
@@ -102,6 +102,11 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab && ['bureau', 'decision_api', 'economics', 'underwriting', 'pricing', 'moat'].includes(tab)) setActiveTab(tab as ActiveProductTab);
+    if (params.get('q')) setSearchQuery(params.get('q')!);
+    if (params.get('signin') === '1') setIsAuthOpen(true);
     setSession(getUserSession());
     fetchAgents();
 
@@ -200,6 +205,7 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-transparent font-sans">
+      <div className="bg-slate-100 dark:bg-slate-900 px-5 py-3 flex justify-between text-sm gap-4"><Link href="/" className="font-semibold underline underline-offset-4">TRUSTY home</Link><span>Agent tools & legacy simulation ? No live payment execution</span></div>
       {/* Top Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -235,11 +241,6 @@ export default function HomePage() {
                 setIsAuthOpen(true);
               }}
               onNavigateTab={handleTabChange}
-            />
-
-            <BrexStyleLandingSections 
-              onSelectProduct={handleTabChange} 
-              onAuditAgent={() => setIsEvaluateOpen(true)} 
             />
 
             <TrustLeaderboard
@@ -310,7 +311,7 @@ export default function HomePage() {
                 TRUSTY<span className="text-[#0066FF] dark:text-[#38BDF8]">.bot</span>
               </span>
               <span className="text-[9px] font-mono font-bold text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 dark:text-sky-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800/60">
-                CREDIT BUREAU
+                AGENT TOOLS
               </span>
             </div>
             <span className="hidden sm:inline text-slate-300 dark:text-slate-700">—</span>

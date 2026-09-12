@@ -70,7 +70,7 @@ export async function signInWithOAuth(provider: 'google' | 'github') {
   if (!supabase) {
     throw new Error('Supabase no está configurado. Agrega NEXT_PUBLIC_SUPABASE_URL en .env.local');
   }
-  const redirectUrl = typeof window !== 'undefined' ? window.location.origin : undefined;
+  const redirectUrl = typeof window !== 'undefined' ? `${window.location.origin}/app` : undefined;
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
