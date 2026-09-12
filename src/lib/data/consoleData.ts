@@ -1,6 +1,12 @@
 import { HumanMandate, ApprovalQueueItem, VerifiedDecisionRecord } from '../types';
 
-export const INITIAL_MANDATES: HumanMandate[] = [
+// Default empty slate for a real SaaS onboarding experience
+export const INITIAL_MANDATES: HumanMandate[] = [];
+export const INITIAL_APPROVAL_QUEUE: ApprovalQueueItem[] = [];
+export const INITIAL_DECISIONS_AUDIT: VerifiedDecisionRecord[] = [];
+
+// Sample Pitch Scenarios (Available on-demand for live demonstrations)
+export const SAMPLE_MANDATES: HumanMandate[] = [
   {
     id: 'man_8f92a10c',
     title: 'Q3 Engineering Onboarding Laptops',
@@ -106,7 +112,7 @@ export const INITIAL_MANDATES: HumanMandate[] = [
   },
 ];
 
-export const INITIAL_APPROVAL_QUEUE: ApprovalQueueItem[] = [
+export const SAMPLE_APPROVAL_QUEUE: ApprovalQueueItem[] = [
   {
     id: 'appr_7c41b89e',
     timestamp: '2026-09-11T21:42:10Z',
@@ -219,7 +225,7 @@ export const INITIAL_APPROVAL_QUEUE: ApprovalQueueItem[] = [
   },
 ];
 
-export const INITIAL_DECISIONS_AUDIT: VerifiedDecisionRecord[] = [
+export const SAMPLE_DECISIONS_AUDIT: VerifiedDecisionRecord[] = [
   {
     id: 'dec_09b23f81',
     timestamp: '2026-09-11T20:10:45Z',
@@ -250,65 +256,6 @@ export const INITIAL_DECISIONS_AUDIT: VerifiedDecisionRecord[] = [
       cartHash: 'sha256:e3b0...b855',
       clearingTimestamp: '2026-09-11T20:10:46Z',
       singleUseTokenConsumed: true,
-    },
-  },
-  {
-    id: 'dec_14a99d20',
-    timestamp: '2026-09-11T16:04:12Z',
-    agentId: 'travel-bot-01',
-    agentName: 'ExecutiveTravelBot',
-    mandateId: 'man_99a0f12c',
-    mandateTitle: 'Offsite Leadership Lodging & Travel',
-    decision: 'APPROVED',
-    amount: 3200,
-    currency: 'USD',
-    rail: 'Slash',
-    vendor: 'Marriott International',
-    cartHash: 'sha256:a18f4302948eb91024cf771a3490b8f21948ac0192834b71239f82103498ab01',
-    intentMatchRatio: 1.0,
-    executionStatus: 'CONFIRMED_ON_RAIL',
-    criteria: [
-      { name: 'Travelers', expected: 'Approved executive list', actual: 'Verified 4 attendees', passed: true },
-      { name: 'Room Tier', expected: 'Standard Executive', actual: 'Standard Executive', passed: true },
-      { name: 'Refundable', expected: 'Must be refundable', actual: 'Fully Refundable', passed: true },
-    ],
-    proofJson: {
-      version: '1.0',
-      proofId: 'proof_19047b',
-      decision: 'APPROVED',
-      rail: 'Slash',
-      mandateHash: 'sha256:33c0...7710',
-      cartHash: 'sha256:a18f...ab01',
-      clearingTimestamp: '2026-09-11T16:04:13Z',
-      singleUseTokenConsumed: true,
-    },
-  },
-  {
-    id: 'dec_88192cf0',
-    timestamp: '2026-09-10T11:22:01Z',
-    agentId: 'procurementbot-847',
-    agentName: 'ProcurementBot-847',
-    mandateId: 'man_8f92a10c',
-    mandateTitle: 'Q3 Engineering Onboarding Laptops',
-    decision: 'DECLINED',
-    amount: 24500,
-    currency: 'USD',
-    rail: 'Brex',
-    vendor: 'Unauthorized Tech Reseller',
-    cartHash: 'sha256:77391a84f00123984eaf1669e0018f2d5743b190f84a867e6c0c2937812903fe',
-    intentMatchRatio: 0.25,
-    executionStatus: 'BLOCKED_PRE_PAYMENT',
-    criteria: [
-      { name: 'Spending Cap', expected: 'Max $20,000.00', actual: '$24,500.00 (Exceeded)', passed: false, severity: 'blocker' },
-      { name: 'Vendor Authorization', expected: 'Dell, Lenovo, CDW', actual: 'Unauthorized Tech Reseller', passed: false, severity: 'blocker' },
-    ],
-    proofJson: {
-      version: '1.0',
-      proofId: 'proof_99214c',
-      decision: 'DECLINED',
-      rail: 'Brex',
-      blockReason: 'BUDGET_OVERFLOW_AND_UNAUTHORIZED_VENDOR',
-      interceptLatencyMs: 42,
     },
   },
 ];

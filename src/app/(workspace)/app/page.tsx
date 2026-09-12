@@ -28,11 +28,6 @@ import { MandatesView } from '@/components/console/MandatesView';
 import { HumanReviewQueue } from '@/components/console/HumanReviewQueue';
 import { DecisionsAuditView } from '@/components/console/DecisionsAuditView';
 import { CreateMandateModal } from '@/components/console/CreateMandateModal';
-import { 
-  INITIAL_MANDATES, 
-  INITIAL_APPROVAL_QUEUE, 
-  INITIAL_DECISIONS_AUDIT 
-} from '@/lib/data/consoleData';
 import { getUserSession, decrementQueryQuota, authenticateWithEmail, signOutUserSession, UserSession } from '@/lib/quota';
 import { onAuthStateChange } from '@/lib/supabase/client';
 import { 
@@ -43,24 +38,20 @@ import {
   saveMultipleLocalCustomAgents 
 } from '@/lib/storage/clientStorage';
 import { 
-  Github, 
-  ExternalLink, 
+  Search, 
+  Sparkles, 
   ShieldCheck, 
   Lock, 
   AlertTriangle, 
   CheckCircle2, 
-  Cpu, 
-  Sparkles,
-  ArrowRight,
-  Layers,
-  Search
+  ExternalLink 
 } from 'lucide-react';
 
 export default function WorkspacePage() {
   const [agents, setAgents] = useState<AgentWithScore[]>([]);
-  const [mandates, setMandates] = useState<HumanMandate[]>(INITIAL_MANDATES);
-  const [approvalQueue, setApprovalQueue] = useState<ApprovalQueueItem[]>(INITIAL_APPROVAL_QUEUE);
-  const [decisionsAudit, setDecisionsAudit] = useState<VerifiedDecisionRecord[]>(INITIAL_DECISIONS_AUDIT);
+  const [mandates, setMandates] = useState<HumanMandate[]>([]);
+  const [approvalQueue, setApprovalQueue] = useState<ApprovalQueueItem[]>([]);
+  const [decisionsAudit, setDecisionsAudit] = useState<VerifiedDecisionRecord[]>([]);
 
   const [stats, setStats] = useState<DiscoveryStats>({
     totalAgents: 0,
@@ -97,6 +88,23 @@ export default function WorkspacePage() {
     maxQueries: 3,
     tier: 'anonymous',
   });
+
+  // Fetch all persisted Intent Authorization records from API v1
+  const fetchIntentData = async () => {
+    try {
+      const [mRes, aRes, dRes] = await Promise.all([
+        fetch('/api/v1/mandates').then(r => r.json()).catch(() => ({ mandates: [] })),
+        fetch('/api/v1/approvals').then(r => r.json()).catch(() => ({ items: [] })),
+        fetch('/api/v1/decisions').then(r => r.json()).catch(() => ({ decisions: [] })),
+      ]);
+
+      if (mRes?.success && Array.isArray(mRes.mandates)) setMandates(mRes.mandates);
+      if (aRes?.success && Array.isArray(aRes.items)) setApprovalQueue(aRes.items);
+      if (dRes?.success && Array.isArray(dRes.decisions)) setDecisionsAudit(dRes.decisions);
+    } catch (e) {
+      console.warn('Failed to fetch intent records:', e);
+    }
+  };
 
   const fetchAgents = async () => {
     try {
@@ -142,6 +150,7 @@ export default function WorkspacePage() {
     if (params.get('q')) setSearchQuery(params.get('q')!);
     if (params.get('signin') === '1') setIsAuthOpen(true);
     setSession(getUserSession());
+    fetchIntentData();
     fetchAgents();
 
     const { unsubscribe } = onAuthStateChange((event, authSession) => {
@@ -161,9 +170,7 @@ export default function WorkspacePage() {
 
   const checkAndConsumeQuota = (): boolean => {
     const currentSession = getUserSession();
-    if (currentSession.isAuthenticated) {
-      return true;
-    }
+    if (currentSession.isAuthenticated) return true;
     if (currentSession.queriesRemaining <= 0) {
       setAuthInitialMode('signup');
       setIsQuotaExceeded(true);
@@ -235,11 +242,23 @@ export default function WorkspacePage() {
     }
   };
 
-  const handleCreateMandate = (newMandate: HumanMandate) => {
+  const handleCreateMandate = async (newMandate: HumanMandate) => {
+    // Optimistic local update
     setMandates(prev => [newMandate, ...prev]);
+
+    // Persist to backend / Supabase
+    try {
+      await fetch('/api/v1/mandates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMandate),
+      });
+    } catch (e) {
+      console.warn('Failed to persist mandate to API:', e);
+    }
   };
 
-  const handleResolveReviewItem = (
+  const handleResolveReviewItem = async (
     itemId: string, 
     decision: 'APPROVED_EXCEPTION' | 'DECLINED' | 'ADJUSTMENT_REQUESTED', 
     note: string
@@ -247,7 +266,7 @@ export default function WorkspacePage() {
     const item = approvalQueue.find(i => i.id === itemId);
     if (!item) return;
 
-    // Update item status in queue
+    // Optimistic local update
     setApprovalQueue(prev => prev.map(i => {
       if (i.id === itemId) {
         return {
@@ -261,41 +280,52 @@ export default function WorkspacePage() {
       return i;
     }));
 
-    // Record verified decision in audit log
-    const newDecisionRecord: VerifiedDecisionRecord = {
-      id: `dec_${Math.random().toString(36).substring(2, 10)}`,
-      timestamp: new Date().toISOString(),
-      agentId: item.agentId,
-      agentName: item.agentName,
-      mandateId: item.mandateId,
-      mandateTitle: item.mandateTitle,
-      decision: decision === 'APPROVED_EXCEPTION' ? 'HUMAN_REVIEW_RESOLVED' : 'DECLINED',
-      amount: item.requestedAmount,
-      currency: 'USD',
-      rail: item.clearingRail,
-      vendor: item.vendor,
-      cartHash: item.cartSnapshot.cartHash,
-      intentMatchRatio: decision === 'APPROVED_EXCEPTION' ? 0.75 : 0.25,
-      executionStatus: decision === 'APPROVED_EXCEPTION' ? 'EXCEPTION_EXECUTED' : 'BLOCKED_PRE_PAYMENT',
-      criteria: item.criteriaChecks,
-      proofJson: {
-        proofId: `proof_${Math.random().toString(36).substring(2, 8)}`,
-        interceptId: item.id,
-        resolution: decision,
-        reviewerNote: note,
-        clearingRail: item.clearingRail,
-        timestamp: new Date().toISOString(),
-      },
-    };
+    // Persist to backend
+    try {
+      const res = await fetch('/api/v1/approvals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId,
+          decision,
+          note,
+          reviewerEmail: session.email,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.decisionRecord) {
+        setDecisionsAudit(prev => [data.decisionRecord, ...prev]);
+      }
+    } catch (e) {
+      console.warn('Failed to resolve approval item on backend:', e);
+    }
+  };
 
-    setDecisionsAudit(prev => [newDecisionRecord, ...prev]);
+  const handleLoadSampleData = async () => {
+    try {
+      await fetch('/api/v1/sample-seed', { method: 'POST' });
+      await fetchIntentData();
+    } catch (e) {
+      console.warn('Failed to load sample scenario:', e);
+    }
+  };
+
+  const handleClearData = async () => {
+    if (!confirm('Reset console to a clean, empty SaaS state?')) return;
+    try {
+      await fetch('/api/v1/sample-seed', { method: 'DELETE' });
+      setMandates([]);
+      setApprovalQueue([]);
+      setDecisionsAudit([]);
+    } catch (e) {
+      console.warn('Failed to clear state:', e);
+    }
   };
 
   const pendingApprovalsCount = approvalQueue.filter(i => i.status === 'PENDING_REVIEW').length;
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-slate-50/50 dark:bg-[#080d17] font-sans">
-      {/* Top Navbar */}
+    <div className="flex-1 flex flex-col min-h-screen bg-[#f8f9f5] dark:bg-[#0e1715] text-[#172b29] dark:text-[#f8f9f5] font-sans">
       <Navbar
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -312,29 +342,31 @@ export default function WorkspacePage() {
         session={session}
       />
 
-      {/* Main Workspace Body */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full space-y-6">
-        {/* VIEW 1: MANDATES MANAGEMENT */}
+        {/* VIEW 1: MANDATES */}
         {activeTab === 'mandates' && (
           <div className="animate-fadeIn">
             <MandatesView
               mandates={mandates}
               onCreateMandateClick={() => setIsCreateMandateOpen(true)}
+              onLoadSampleData={handleLoadSampleData}
+              onClearData={mandates.length > 0 ? handleClearData : undefined}
             />
           </div>
         )}
 
-        {/* VIEW 2: HUMAN REVIEW QUEUE (REQUIRE_HUMAN) */}
+        {/* VIEW 2: HUMAN REVIEW QUEUE */}
         {activeTab === 'approvals' && (
           <div className="animate-fadeIn">
             <HumanReviewQueue
               items={approvalQueue}
               onResolveItem={handleResolveReviewItem}
+              onSimulateInterception={handleLoadSampleData}
             />
           </div>
         )}
 
-        {/* VIEW 3: VERIFIED DECISIONS AUDIT TRAIL */}
+        {/* VIEW 3: AUDIT TRAIL */}
         {activeTab === 'decisions' && (
           <div className="animate-fadeIn">
             <DecisionsAuditView
@@ -343,7 +375,7 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* VIEW 4: INTENT & POLICY SIMULATOR (M2M) */}
+        {/* VIEW 4: SIMULATOR */}
         {(activeTab === 'simulator' || activeTab === 'decision_api') && (
           <div className="animate-fadeIn">
             <DecisionPlayground
@@ -353,19 +385,19 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* VIEW 5: AGENT TOOLS & REPOSITORY SCANNER (Secondary) */}
+        {/* VIEW 5: AGENT TOOLS & SCANNER */}
         {(activeTab === 'agents' || activeTab === 'bureau') && (
           <div className="animate-fadeIn space-y-6">
-            <section className="p-6 rounded-2xl bg-white dark:bg-[#111827] border border-slate-200 dark:border-white/[0.08] shadow-sm">
+            <section className="p-6 rounded-2xl bg-white dark:bg-[#14221e] border border-[#dce3db] dark:border-[#21352e] shadow-sm">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#50625d] dark:text-[#9cb0a8] bg-[#e9eddf] dark:bg-[#1c302a] px-2 py-0.5 rounded">
                     Secondary Evidence Instrument
                   </span>
-                  <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white mt-1.5">
+                  <h1 className="text-2xl font-bold tracking-tight text-[#172b29] dark:text-[#f8f9f5] mt-1.5">
                     Agent Intelligence &amp; Repository Scanner
                   </h1>
-                  <p className="mt-1 text-xs text-slate-600 dark:text-slate-400 max-w-2xl">
+                  <p className="mt-1 text-xs text-[#50625d] dark:text-[#9cb0a8] max-w-2xl">
                     Inspect public GitHub repositories, discover declared MCP tools, evaluate prompt injection risk, and analyze access permissions before delegating authority.
                   </p>
                 </div>
@@ -373,9 +405,9 @@ export default function WorkspacePage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsEvaluateOpen(true)}
-                    className="px-4 py-2 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition shadow-sm flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-lg text-xs font-bold text-white bg-[#172b29] hover:bg-[#203b32] transition shadow-sm flex items-center gap-1.5"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-[#c5e86c]" />
                     <span>Run Custom Audit</span>
                   </button>
                 </div>
@@ -387,9 +419,9 @@ export default function WorkspacePage() {
                 onSubmit={e => { e.preventDefault(); if (searchQuery.trim()) handleHeroAudit(searchQuery.trim()); }}
               >
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
+                  <Search className="absolute left-3 top-3 w-4 h-4 text-[#50625d]" />
                   <input 
-                    className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none" 
+                    className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-[#dce3db] dark:border-[#21352e] bg-[#f8f9f5] dark:bg-[#0f1816] text-[#172b29] dark:text-[#f8f9f5] text-xs focus:ring-2 focus:ring-[#203b32] focus:outline-none" 
                     value={searchQuery} 
                     onChange={e => setSearchQuery(e.target.value)} 
                     placeholder="Search discovered agents or paste a GitHub repo URL (e.g. owner/repo)" 
@@ -398,14 +430,13 @@ export default function WorkspacePage() {
                 <button 
                   type="submit" 
                   disabled={isAuditingLive || !searchQuery.trim()} 
-                  className="rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-5 py-2.5 text-xs font-bold disabled:opacity-50 transition"
+                  className="rounded-lg bg-[#172b29] hover:bg-[#203b32] text-white px-5 py-2.5 text-xs font-bold disabled:opacity-50 transition"
                 >
                   {isAuditingLive ? 'Scanning...' : 'Scan Repository'}
                 </button>
               </form>
             </section>
 
-            {/* Agent Leaderboard & Discovery Bar */}
             <TrustLeaderboard
               agents={agents}
               onSelectAgent={agent => setSelectedAgent(agent)}
@@ -418,7 +449,7 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* INSTITUTIONAL VIEW: ECONOMIC CASE (BREX ROI) */}
+        {/* INSTITUTIONAL VIEWS */}
         {activeTab === 'economics' && (
           <div className="animate-fadeIn">
             <EconomicCaseView
@@ -427,14 +458,12 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* INSTITUTIONAL VIEW: UNDERWRITING METHODOLOGY */}
         {activeTab === 'underwriting' && (
           <div className="animate-fadeIn">
             <UnderwritingExplainer />
           </div>
         )}
 
-        {/* INSTITUTIONAL VIEW: PRICING */}
         {activeTab === 'pricing' && (
           <div className="animate-fadeIn">
             <BusinessAndPricingView
@@ -446,7 +475,6 @@ export default function WorkspacePage() {
           </div>
         )}
 
-        {/* INSTITUTIONAL VIEW: COMPETITIVE MOAT */}
         {activeTab === 'moat' && (
           <div className="animate-fadeIn">
             <CompetitiveMoatView />
@@ -454,71 +482,70 @@ export default function WorkspacePage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-white/[0.08] bg-white/95 dark:bg-[#0d131f]/95 backdrop-blur py-8 text-xs text-slate-600 dark:text-slate-400 font-sans transition-colors duration-200 mt-12">
+      <footer className="border-t border-[#dce3db] dark:border-[#21352e] bg-white/95 dark:bg-[#14221e]/95 backdrop-blur py-8 text-xs text-[#50625d] dark:text-[#9cb0a8] font-sans transition-colors duration-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center space-x-3 text-center sm:text-left">
             <div className="flex items-center space-x-2">
-              <TrustyIsotype className="w-6 h-6 text-[#0066FF] dark:text-[#38BDF8]" />
-              <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight font-sans">
-                TRUSTY<span className="text-[#0066FF] dark:text-[#38BDF8]">.bot</span>
+              <TrustyIsotype className="w-6 h-6 text-[#203b32] dark:text-[#c5e86c]" />
+              <span className="text-[#172b29] dark:text-[#f8f9f5] font-extrabold text-sm tracking-tight font-sans">
+                TRUSTY<span className="text-[#203b32] dark:text-[#c5e86c]">.bot</span>
               </span>
-              <span className="text-[9px] font-mono font-bold text-[#0066FF] bg-blue-50 dark:bg-blue-950/60 dark:text-sky-300 px-1.5 py-0.5 rounded border border-blue-200 dark:border-blue-800/60">
+              <span className="text-[9px] font-mono font-bold text-[#172b29] dark:text-[#c5e86c] bg-[#e9eddf] dark:bg-[#1c302a] px-1.5 py-0.5 rounded border border-[#dce3db] dark:border-[#21352e]">
                 INTENT CONSOLE
               </span>
             </div>
-            <span className="hidden sm:inline text-slate-300 dark:text-slate-700">—</span>
-            <span className="text-slate-500 dark:text-slate-400 font-mono text-[11px]">
+            <span className="hidden sm:inline text-[#dce3db]">—</span>
+            <span className="text-[#50625d] font-mono text-[11px]">
               INTENT PRECEDES CLEARING
             </span>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-600 dark:text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-[#50625d] dark:text-[#9cb0a8]">
             <button
               onClick={() => handleTabChange('mandates')}
-              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'mandates' ? 'text-[#0066FF] dark:text-sky-400 font-bold' : ''}`}
+              className={`hover:text-[#172b29] dark:hover:text-white transition ${activeTab === 'mandates' ? 'text-[#172b29] dark:text-[#c5e86c] font-bold' : ''}`}
             >
               Mandates
             </button>
             <span>•</span>
             <button
               onClick={() => handleTabChange('approvals')}
-              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'approvals' ? 'text-[#0066FF] dark:text-sky-400 font-bold' : ''}`}
+              className={`hover:text-[#172b29] dark:hover:text-white transition ${activeTab === 'approvals' ? 'text-[#172b29] dark:text-[#c5e86c] font-bold' : ''}`}
             >
               Review Queue ({pendingApprovalsCount})
             </button>
             <span>•</span>
             <button
               onClick={() => handleTabChange('decisions')}
-              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'decisions' ? 'text-[#0066FF] dark:text-sky-400 font-bold' : ''}`}
+              className={`hover:text-[#172b29] dark:hover:text-white transition ${activeTab === 'decisions' ? 'text-[#172b29] dark:text-[#c5e86c] font-bold' : ''}`}
             >
               Audit Trail
             </button>
             <span>•</span>
             <button
               onClick={() => handleTabChange('simulator')}
-              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'simulator' || activeTab === 'decision_api' ? 'text-[#0066FF] dark:text-sky-400 font-bold' : ''}`}
+              className={`hover:text-[#172b29] dark:hover:text-white transition ${activeTab === 'simulator' || activeTab === 'decision_api' ? 'text-[#172b29] dark:text-[#c5e86c] font-bold' : ''}`}
             >
               Simulator
             </button>
             <span>•</span>
             <button
               onClick={() => handleTabChange('agents')}
-              className={`hover:text-slate-900 dark:hover:text-white transition ${activeTab === 'agents' || activeTab === 'bureau' ? 'text-[#0066FF] dark:text-sky-400 font-bold' : ''}`}
+              className={`hover:text-[#172b29] dark:hover:text-white transition ${activeTab === 'agents' || activeTab === 'bureau' ? 'text-[#172b29] dark:text-[#c5e86c] font-bold' : ''}`}
             >
               Agent Tools
             </button>
             <span>•</span>
             <button
               onClick={() => setIsSpecsOpen(true)}
-              className="hover:text-slate-900 dark:hover:text-white transition"
+              className="hover:text-[#172b29] dark:hover:text-white transition"
             >
               Specs (.md)
             </button>
             <span>•</span>
             <Link
               href="/"
-              className="hover:text-slate-900 dark:hover:text-white transition underline underline-offset-2"
+              className="hover:text-[#172b29] dark:hover:text-white transition underline underline-offset-2"
             >
               Public Site
             </Link>
@@ -526,7 +553,6 @@ export default function WorkspacePage() {
         </div>
       </footer>
 
-      {/* Modals */}
       <CreateMandateModal
         isOpen={isCreateMandateOpen}
         onClose={() => setIsCreateMandateOpen(false)}
