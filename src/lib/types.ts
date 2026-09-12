@@ -249,9 +249,14 @@ export interface EconomicDecisionResult {
 }
 
 export type ActiveProductTab = 
-  | 'bureau' 
+  | 'mandates'
+  | 'approvals'
+  | 'decisions'
+  | 'simulator'
+  | 'agents'
+  | 'bureau' // legacy alias for agents
+  | 'decision_api' // legacy alias for simulator
   | 'economics' 
-  | 'decision_api' 
   | 'underwriting' 
   | 'pricing' 
   | 'moat';
@@ -273,4 +278,102 @@ export interface DiscoveryStats {
     manual_scan: number;
   };
 }
+
+// Intent Authorization Layer Contracts (Brex / Ramp / Slash)
+export interface HumanMandate {
+  id: string;
+  title: string;
+  version: string;
+  status: 'ACTIVE' | 'DRAFT' | 'REVOKED' | 'EXHAUSTED';
+  principalName: string;
+  principalRole: string;
+  description: string;
+  createdAt: string;
+  expiresAt: string;
+  budgetTotal: number;
+  budgetSpent: number;
+  budgetReserved: number;
+  currency: 'USD' | 'EUR' | 'GBP';
+  clearingRail: 'Brex' | 'Ramp' | 'Slash' | 'Multi-Rail';
+  cardIdentifier?: string; // e.g. "Brex Card ****4920"
+  itemsConstraint: {
+    category: string;
+    allowedBrands: string[];
+    minQuantity?: number;
+    maxQuantity: number;
+    specifications: string[];
+  };
+  deliveryAddress: {
+    label: string;
+    street: string;
+    city: string;
+    state: string;
+    zip: string;
+    isCorporateVerified: boolean;
+  };
+  allowedVendors: string[];
+  approvers: string[];
+  autoApprovalMax: number;
+}
+
+export interface CriterionCheck {
+  name: string;
+  expected: string;
+  actual: string;
+  passed: boolean;
+  severity?: 'blocker' | 'warning' | 'info';
+  notes?: string;
+}
+
+export interface ApprovalQueueItem {
+  id: string;
+  timestamp: string;
+  agentId: string;
+  agentName: string;
+  mandateId: string;
+  mandateTitle: string;
+  requestedAmount: number;
+  budgetLimit: number;
+  clearingRail: 'Brex' | 'Ramp' | 'Slash';
+  vendor: string;
+  status: 'PENDING_REVIEW' | 'APPROVED_EXCEPTION' | 'DECLINED' | 'ADJUSTMENT_REQUESTED';
+  mismatchType: 'QUANTITY_MISMATCH' | 'SPEC_MISMATCH' | 'DELIVERY_MISMATCH' | 'VENDOR_MISMATCH' | 'BUDGET_OVERFLOW';
+  mismatchSeverity: 'HIGH' | 'CRITICAL' | 'MEDIUM';
+  reason: string;
+  cartSnapshot: {
+    itemTitle: string;
+    quantity: number;
+    ramGb?: number;
+    unitPrice: number;
+    shippingAndTax: number;
+    total: number;
+    deliveryAddress: string;
+    cartHash: string;
+    sourceUrl?: string;
+  };
+  criteriaChecks: CriterionCheck[];
+  resolutionNote?: string;
+  resolvedAt?: string;
+  resolvedBy?: string;
+}
+
+export interface VerifiedDecisionRecord {
+  id: string;
+  timestamp: string;
+  agentId: string;
+  agentName: string;
+  mandateId: string;
+  mandateTitle: string;
+  decision: 'APPROVED' | 'DECLINED' | 'HUMAN_REVIEW_RESOLVED';
+  amount: number;
+  currency: string;
+  rail: 'Brex' | 'Ramp' | 'Slash';
+  vendor: string;
+  cartHash: string;
+  intentMatchRatio: number; // e.g. 1.0 (4/4) or 0.75
+  executionStatus: 'CONFIRMED_ON_RAIL' | 'BLOCKED_PRE_PAYMENT' | 'EXCEPTION_EXECUTED';
+  criteria: CriterionCheck[];
+  proofJson: Record<string, any>;
+}
+
 
